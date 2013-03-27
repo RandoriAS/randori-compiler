@@ -28,7 +28,7 @@ public class VersionInfo
 
     public static final String RANDORI_MINOR_VERSION = "2";
 
-    public static final String RANDORI_NANO_VERSION = "0";
+    public static final String RANDORI_NANO_VERSION = "1";
 
     // XXX TEMP
     public static final String RANDORI_BUILD = "1";

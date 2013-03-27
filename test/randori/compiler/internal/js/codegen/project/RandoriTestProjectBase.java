@@ -151,15 +151,15 @@ public abstract class RandoriTestProjectBase extends ASTestBase
         //super.addSourcePaths(sourcePaths);
         String base = TestConstants.RandoriASFramework;
         sourcePaths.add(new File(FilenameNormalization.normalize(base
-                + "HTMLCoreLib\\src")));
+                + "\\randori-libraries\\HTMLCoreLib\\src")));
         sourcePaths.add(new File(FilenameNormalization.normalize(base
-                + "JQuery\\src")));
+                + "\\randori-libraries\\JQuery\\src")));
         sourcePaths.add(new File(FilenameNormalization.normalize(base
-                + "Randori\\src")));
+                + "\\randori-framework\\src")));
         sourcePaths.add(new File(FilenameNormalization.normalize(base
-                + "RandoriGuice\\src")));
+                + "\\randori-guice-framework\\src")));
         sourcePaths.add(new File(FilenameNormalization.normalize(base
-                + "DemoApplication\\src")));
+                + "\\randori-demos-bundle\\HMSS\\src")));
     }
 
     @Override

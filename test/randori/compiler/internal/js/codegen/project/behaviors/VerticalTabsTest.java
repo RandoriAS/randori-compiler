@@ -22,6 +22,7 @@ package randori.compiler.internal.js.codegen.project.behaviors;
 import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.junit.Test;
 
+import randori.compiler.internal.constants.TestConstants;
 import randori.compiler.internal.js.codegen.project.RandoriTestProjectBase;
 
 /**
@@ -78,7 +79,7 @@ public class VerticalTabsTest extends RandoriTestProjectBase
 
     protected String getBasePath()
     {
-        return "C:\\Users\\Work\\Documents\\git\\RandoriAS\\DemoApplication\\src";
+        return TestConstants.RandoriASFramework + "\\randori-demos-bundle\\HMSS\\src";
     }
 
     @Override
