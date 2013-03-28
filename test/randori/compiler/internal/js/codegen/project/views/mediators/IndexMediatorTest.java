@@ -45,11 +45,12 @@ public class IndexMediatorTest extends RandoriTestProjectBase
     {
         IFunctionNode node = findFunction("onRegister", classNode);
         asBlockWalker.visitFunction(node);
-        assertOut("mediators.IndexMediator.prototype.onRegister = function() {"
-                + "\n\tvar menuItems = [{name:\"Targets\", url:\"views\\/targets.html\"}, "
-                + "{name:\"Labs\", url:\"views\\/labs.html\"}, {name:\"Intel\", "
-                + "url:\"views\\/intel.html\"}];\n\tthis.menu.menuItemSelected."
-                + "add($createStaticDelegate(this, this.menuItemSelected));\n\t"
+        assertOut("mediators.IndexMediator.prototype.onRegister = function() {\n\tvar "
+                + "menuItems = [{name:\"Targets\", url:\"views\\/targets.html\", "
+                + "isRedirect:true}, {name:\"Labs\", url:\"views\\/labs.html\", "
+                + "isRedirect:true}, {name:\"Intel\", url:\"views\\/intel.html\", "
+                + "isRedirect:true}];\n\tthis.menu.menuItemSelected.add("
+                + "$createStaticDelegate(this, this.menuItemSelected));\n\t"
                 + "this.menu.set_data(menuItems);\n}");
     }
 
@@ -71,7 +72,8 @@ public class IndexMediatorTest extends RandoriTestProjectBase
 
     protected String getBasePath()
     {
-        return TestConstants.RandoriASFramework + "\\randori-demos-bundle\\HMSS\\src";
+        return TestConstants.RandoriASFramework
+                + "\\randori-demos-bundle\\HMSS\\src";
     }
 
     @Override

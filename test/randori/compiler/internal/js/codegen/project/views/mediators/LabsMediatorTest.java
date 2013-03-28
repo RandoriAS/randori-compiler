@@ -35,8 +35,8 @@ public class LabsMediatorTest extends RandoriTestProjectBase
     {
         IFunctionNode node = findFunction("LabsMediator", classNode);
         asBlockWalker.visitFunction(node);
-        assertOut("mediators.LabsMediator = function() {\n\tthis.items = null;\n"
-                + "\tthis.service = null;\n\trandori.behaviors.AbstractMediator.call(this);\n}");
+        assertOut("mediators.LabsMediator = function() {\n\tthis.message = null;"
+                + "\n\trandori.behaviors.AbstractMediator.call(this);\n}");
     }
 
     @Test
@@ -45,7 +45,7 @@ public class LabsMediatorTest extends RandoriTestProjectBase
         IFunctionNode node = findFunction("onRegister", classNode);
         asBlockWalker.visitFunction(node);
         assertOut("mediators.LabsMediator.prototype.onRegister = function() {"
-                + "\n\tthis.service.get().then($createStaticDelegate(this, this.displayData));\n}");
+                + "\n\tthis.message.text(\"Labs Mediator Loaded and Registered\");\n}");
     }
 
     @Test
@@ -56,7 +56,8 @@ public class LabsMediatorTest extends RandoriTestProjectBase
 
     protected String getBasePath()
     {
-        return TestConstants.RandoriASFramework + "\\randori-demos-bundle\\HMSS\\src";
+        return TestConstants.RandoriASFramework
+                + "\\randori-demos-bundle\\HMSS\\src";
     }
 
     @Override
