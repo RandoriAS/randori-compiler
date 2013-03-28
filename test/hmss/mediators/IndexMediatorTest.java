@@ -17,13 +17,13 @@
  * @author Michael Schmalle <mschmalle@teotigraphix.com>
  */
 
-package randori.compiler.internal.js.codegen.project.views.mediators;
+package hmss.mediators;
 
 import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.junit.Test;
 
 import randori.compiler.internal.constants.TestConstants;
-import randori.compiler.internal.js.codegen.project.RandoriTestProjectBase;
+import randori.compiler.internal.js.codegen.RandoriTestProjectBase;
 
 /**
  * @author Michael Schmalle

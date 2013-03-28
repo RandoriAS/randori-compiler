@@ -22,7 +22,6 @@ package randori.compiler.internal.js.codegen;
 import org.junit.Test;
 
 import randori.compiler.internal.constants.TestConstants;
-import randori.compiler.internal.js.codegen.project.RandoriTestProjectBase;
 
 public class RandoriFrameworkTest extends RandoriTestProjectBase
 {

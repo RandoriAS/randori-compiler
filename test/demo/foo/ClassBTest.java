@@ -35,11 +35,12 @@ public class ClassBTest extends ResourceTestBase
     {
         IFunctionNode node = findFunction("ClassB", classNode);
         asBlockWalker.visitFunction(node);
-        assertOut("demo.foo.ClassB = function(param1, param2, param3) {\n\tthis.thenContracts = null;"
-                + "\n\tthis.field2 = 42;\n\tthis.field1 = \"Hello\";\n\tthis.j = null;\n\tif "
-                + "(arguments.length < 3) {\n\t\tif (arguments.length < 2) {\n\t\t\tparam2 "
-                + "= 42;\n\t\t}\n\t\tparam3 = 'foo';\n\t}\n\tdemo.foo.ClassA.call(this, "
-                + "param1);\n\tthis.field2 = param2;\n}");
+        assertOut("demo.foo.ClassB = function(param1, param2, param3) {\n\tthis.names = "
+                + "null;\n\tthis.thenContracts = null;\n\tthis.field2 = 42;\n\tthis.field1 "
+                + "= \"Hello\";\n\tthis.j = null;\n\tif (arguments.length < 3) {\n\t\tif "
+                + "(arguments.length < 2) {\n\t\t\tparam2 = 42;\n\t\t}\n\t\tparam3 "
+                + "= 'foo';\n\t}\n\tdemo.foo.ClassA.call(this, param1);\n\t"
+                + "this.field2 = param2;\n}");
     }
 
     @Test
@@ -407,11 +408,17 @@ public class ClassBTest extends ResourceTestBase
         IFunctionNode node = findFunction("private_constructor_invoke",
                 classNode);
         asBlockWalker.visitFunction(node);
-
         Assert.assertEquals(1, ((ASEmitter) asEmitter).getProblems().size());
+    }
 
-        //assertOut("demo.foo.ClassB.prototype.simple_get_assign = function() {"
-        //        + "\n\tvar a = this.get_foo();\n}");
+    @Test
+    public void local_array_literal()
+    {
+        IFunctionNode node = findFunction("local_array_literal", classNode);
+        asBlockWalker.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.local_array_literal = function() {"
+                + "\n\tvar o1 = {name:\"Mike\"};\n\tvar o2 = {name:\"Roland\"};\n\t"
+                + "var ar = [o1, o2];\n\tthis.names.set_data(ar);\n}");
     }
 
     @Test

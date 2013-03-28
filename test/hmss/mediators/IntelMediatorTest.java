@@ -17,38 +17,35 @@
  * @author Michael Schmalle <mschmalle@teotigraphix.com>
  */
 
-package randori.compiler.internal.js.codegen.project.services;
+package hmss.mediators;
 
 import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.junit.Test;
 
 import randori.compiler.internal.constants.TestConstants;
-import randori.compiler.internal.js.codegen.project.RandoriTestProjectBase;
+import randori.compiler.internal.js.codegen.RandoriTestProjectBase;
 
 /**
  * @author Michael Schmalle
  */
-public class TargetsServiceTest extends RandoriTestProjectBase
+public class IntelMediatorTest extends RandoriTestProjectBase
 {
     @Test
     public void test_constructor()
     {
-        IFunctionNode node = findFunction("TargetsService", classNode);
+        IFunctionNode node = findFunction("IntelMediator", classNode);
         asBlockWalker.visitFunction(node);
-        assertOut("services.TargetsService = function(xmlHttpRequest, config, targets) {"
-                + "\n\tthis.path = null;\n\trandori.service.AbstractService.call("
-                + "this, xmlHttpRequest);\n\tthis.config = config;\n\tthis.targets = "
-                + "targets;\n\tthis.path = \"assets\\/data\\/targets.txt\";\n}");
+        assertOut("mediators.IntelMediator = function() {\n\t"
+                + "this.message = null;\n\trandori.behaviors.AbstractMediator.call(this);\n}");
     }
 
     @Test
-    public void test_get()
+    public void test_onRegister()
     {
-        IFunctionNode node = findFunction("get", classNode);
+        IFunctionNode node = findFunction("onRegister", classNode);
         asBlockWalker.visitFunction(node);
-        assertOut("services.TargetsService.prototype.get = function() {"
-                + "\n\tvar promise = this.sendRequest(\"GET\", this.path);\n\tvar "
-                + "parserPromise = promise.then(this.targets.parseResult);\n\treturn parserPromise;\n}");
+        assertOut("mediators.IntelMediator.prototype.onRegister = function() {"
+                + "\n\tthis.message.text(\"Intel Mediator Loaded and Registered\");\n}");
     }
 
     @Test
@@ -65,6 +62,6 @@ public class TargetsServiceTest extends RandoriTestProjectBase
     @Override
     protected String getTypeUnderTest()
     {
-        return "services.TargetsService";
+        return "mediators.IntelMediator";
     }
 }

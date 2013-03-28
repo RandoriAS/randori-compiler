@@ -10,6 +10,7 @@ import randori.webkit.fileapi.FileReader;
 import randori.webkit.html.HTMLBRElement;
 import randori.webkit.page.Location;
 import randori.webkit.page.Window;
+import randori.behaviors.SimpleList;
 
 public class ClassB extends ClassA
 {
@@ -302,5 +303,15 @@ public class ClassB extends ClassA
         location.port = "420";
     }
     
+    [View]
+    public var names:SimpleList;
+    
+    public function local_array_literal():void
+    {
+        var o1:Object = {name:"Mike"};
+        var o2:Object = {name:"Roland"};
+        var ar:Array = [o1,o2];
+        names.data = ar;
+    }
 }
 }

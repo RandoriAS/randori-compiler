@@ -17,7 +17,7 @@
  * @author Michael Schmalle <mschmalle@teotigraphix.com>
  */
 
-package randori.compiler.internal.js.codegen.project;
+package randori.compiler.internal.js.codegen;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;

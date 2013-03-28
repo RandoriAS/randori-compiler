@@ -1,10 +1,10 @@
-package randori.compiler.internal.js.codegen.project.services;
+package hmss.services;
 
 import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.junit.Test;
 
 import randori.compiler.internal.constants.TestConstants;
-import randori.compiler.internal.js.codegen.project.RandoriTestProjectBase;
+import randori.compiler.internal.js.codegen.RandoriTestProjectBase;
 
 /**
  * @author Michael Schmalle

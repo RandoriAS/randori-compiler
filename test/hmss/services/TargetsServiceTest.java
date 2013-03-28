@@ -17,35 +17,38 @@
  * @author Michael Schmalle <mschmalle@teotigraphix.com>
  */
 
-package randori.compiler.internal.js.codegen.project.views.mediators;
+package hmss.services;
 
 import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.junit.Test;
 
 import randori.compiler.internal.constants.TestConstants;
-import randori.compiler.internal.js.codegen.project.RandoriTestProjectBase;
+import randori.compiler.internal.js.codegen.RandoriTestProjectBase;
 
 /**
  * @author Michael Schmalle
  */
-public class LabsMediatorTest extends RandoriTestProjectBase
+public class TargetsServiceTest extends RandoriTestProjectBase
 {
     @Test
     public void test_constructor()
     {
-        IFunctionNode node = findFunction("LabsMediator", classNode);
+        IFunctionNode node = findFunction("TargetsService", classNode);
         asBlockWalker.visitFunction(node);
-        assertOut("mediators.LabsMediator = function() {\n\tthis.message = null;"
-                + "\n\trandori.behaviors.AbstractMediator.call(this);\n}");
+        assertOut("services.TargetsService = function(xmlHttpRequest, config, targets) {"
+                + "\n\tthis.path = null;\n\trandori.service.AbstractService.call("
+                + "this, xmlHttpRequest);\n\tthis.config = config;\n\tthis.targets = "
+                + "targets;\n\tthis.path = \"assets\\/data\\/targets.txt\";\n}");
     }
 
     @Test
-    public void test_onRegister()
+    public void test_get()
     {
-        IFunctionNode node = findFunction("onRegister", classNode);
+        IFunctionNode node = findFunction("get", classNode);
         asBlockWalker.visitFunction(node);
-        assertOut("mediators.LabsMediator.prototype.onRegister = function() {"
-                + "\n\tthis.message.text(\"Labs Mediator Loaded and Registered\");\n}");
+        assertOut("services.TargetsService.prototype.get = function() {"
+                + "\n\tvar promise = this.sendRequest(\"GET\", this.path);\n\tvar "
+                + "parserPromise = promise.then(this.targets.parseResult);\n\treturn parserPromise;\n}");
     }
 
     @Test
@@ -56,13 +59,12 @@ public class LabsMediatorTest extends RandoriTestProjectBase
 
     protected String getBasePath()
     {
-        return TestConstants.RandoriASFramework
-                + "\\randori-demos-bundle\\HMSS\\src";
+        return TestConstants.RandoriASFramework + "\\randori-demos-bundle\\HMSS\\src";
     }
 
     @Override
     protected String getTypeUnderTest()
     {
-        return "mediators.LabsMediator";
+        return "services.TargetsService";
     }
 }

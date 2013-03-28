@@ -17,26 +17,26 @@
  * @author Michael Schmalle <mschmalle@teotigraphix.com>
  */
 
-package randori.compiler.internal.js.codegen.project.views.mediators;
+package hmss.behaviors;
 
 import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.junit.Test;
 
 import randori.compiler.internal.constants.TestConstants;
-import randori.compiler.internal.js.codegen.project.RandoriTestProjectBase;
+import randori.compiler.internal.js.codegen.RandoriTestProjectBase;
 
 /**
  * @author Michael Schmalle
  */
-public class TargetsMediatorTest extends RandoriTestProjectBase
+public class EchoBehaviorTest extends RandoriTestProjectBase
 {
     @Test
     public void test_constructor()
     {
-        IFunctionNode node = findFunction("TargetsMediator", classNode);
+        IFunctionNode node = findFunction("EchoBehavior", classNode);
         asBlockWalker.visitFunction(node);
-        assertOut("mediators.TargetsMediator = function() {\n\tthis.targetList "
-                + "= null;\n\tthis.service = null;\n\trandori.behaviors.AbstractMediator.call(this);\n}");
+        assertOut("behaviors.EchoBehavior = function() {\n\t"
+                + "randori.behaviors.AbstractBehavior.call(this);\n}");
     }
 
     @Test
@@ -44,17 +44,8 @@ public class TargetsMediatorTest extends RandoriTestProjectBase
     {
         IFunctionNode node = findFunction("onRegister", classNode);
         asBlockWalker.visitFunction(node);
-        assertOut("mediators.TargetsMediator.prototype.onRegister = function() {"
-                + "\n\tthis.service.get().then($createStaticDelegate(this, this.handleResult));\n}");
-    }
-
-    @Test
-    public void test_handleResult()
-    {
-        IFunctionNode node = findFunction("handleResult", classNode);
-        asBlockWalker.visitFunction(node);
-        assertOut("mediators.TargetsMediator.prototype.handleResult = function(result) {"
-                + "\n\tthis.targetList.set_data(result);\n}");
+        assertOut("behaviors.EchoBehavior.prototype.onRegister = function() {"
+                + "\n\tthis.decoratedElement.innerText = \"Echo\";\n}");
     }
 
     @Test
@@ -71,6 +62,6 @@ public class TargetsMediatorTest extends RandoriTestProjectBase
     @Override
     protected String getTypeUnderTest()
     {
-        return "mediators.TargetsMediator";
+        return "behaviors.EchoBehavior";
     }
 }

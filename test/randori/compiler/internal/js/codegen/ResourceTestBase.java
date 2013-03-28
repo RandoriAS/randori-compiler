@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.apache.flex.utils.FilenameNormalization;
 
-import randori.compiler.internal.js.codegen.project.RandoriTestProjectBase;
 
 /**
  * @author Michael Schmalle
