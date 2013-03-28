@@ -33,6 +33,7 @@ import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 
 import randori.compiler.codegen.js.ISessionModel;
 import randori.compiler.internal.utils.MetaDataUtils;
+import randori.compiler.internal.utils.MetaDataUtils.MetaData;
 
 /**
  * The default implementation of {@link ISessionModel}.
@@ -91,10 +92,26 @@ public class SessionModel implements ISessionModel
             return;
 
         // if this class has export="false" pass
-        if (!MetaDataUtils.isExport(definition))
+        //if (!MetaDataUtils.isExport(definition))
+        //    return;
+        if (!isExport(definition))
             return;
 
         dependencies.put(definition.getQualifiedName(), definition);
+    }
+
+    private boolean isExport(ITypeDefinition definition)
+    {
+        IMetaTag tag = MetaDataUtils.findTag(definition, MetaData.JavaScript);
+        if (tag != null)
+        {
+            // only if the tag has export="false" will we return false
+            String value = tag.getAttributeValue("export");
+            if (value != null && value.equals("false"))
+                return false;
+        }
+
+        return true;
     }
 
     @Override

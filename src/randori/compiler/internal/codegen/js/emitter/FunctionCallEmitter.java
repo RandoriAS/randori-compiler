@@ -378,6 +378,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         if (type instanceof ClassTraitsDefinition)
         {
             write(type.getQualifiedName());
+            getModel().addDependency(type);
         }
         else if (type instanceof IClassDefinition
                 && type.getBaseName().equals("Function"))
