@@ -33,6 +33,11 @@ import randori.compiler.driver.IRandoriApplication;
 public interface IRandoriTargetSettings extends ITargetSettings
 {
     /**
+     * Returns the application name for the compile session.
+     */
+    String getAppName();
+
+    /**
      * The base path that all output will be rendered to in the application's
      * project.
      * <p>

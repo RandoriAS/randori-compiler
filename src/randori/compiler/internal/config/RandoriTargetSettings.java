@@ -48,6 +48,12 @@ public class RandoriTargetSettings extends TargetSettings implements
     }
 
     @Override
+    public String getAppName()
+    {
+        return configuration.getAppName();
+    }
+
+    @Override
     public String getJsBasePath()
     {
         return configuration.getJsBasePath();

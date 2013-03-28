@@ -57,6 +57,25 @@ public class RandoriConfiguration extends Configuration
     }
 
     //
+    // 'app-name'
+    //
+
+    private String appName = "";
+
+    public String getAppName()
+    {
+        return appName;
+    }
+
+    @Config
+    @Mapping("app-name")
+    public void setAppName(ConfigurationValue cv, String value)
+            throws ConfigurationException
+    {
+        appName = value;
+    }
+
+    //
     // 'js-base-path'
     //
 

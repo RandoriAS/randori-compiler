@@ -71,16 +71,16 @@ public abstract class BaseCompilationSet
 
     protected IRandoriTargetSettings settings;
 
-    private File outputDirectory;
+    protected File outputDirectory;
 
     private File outputFile;
 
     // TODO (mschmalle) I'm sure this needs a refactor to Writer, but this was quick and dirty
     protected StringBuilder builder;
 
-    private IRandoriBackend backend;
+    protected IRandoriBackend backend;
 
-    private List<ICompilerProblem> problems;
+    protected List<ICompilerProblem> problems;
 
     public BaseCompilationSet(FlexProject project,
             IRandoriTargetSettings settings)
@@ -328,6 +328,7 @@ public abstract class BaseCompilationSet
         {
             out = new BufferedOutputStream(new FileOutputStream(outputFile));
             out.write(builder.toString().getBytes());
+            out.close();
         }
         catch (IOException e)
         {

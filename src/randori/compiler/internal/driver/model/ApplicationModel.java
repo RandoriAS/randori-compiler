@@ -34,7 +34,6 @@ import org.apache.flex.compiler.units.ICompilationUnit;
 
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriBackend;
-import randori.compiler.internal.driver.RandoriBackend;
 import randori.compiler.internal.utils.FileUtils;
 
 /**
@@ -52,12 +51,6 @@ public class ApplicationModel extends BaseCompilationSet
 
     private static final String GUICE = "guice";
 
-    private List<ICompilerProblem> problems;
-
-    private RandoriBackend backend;
-
-    private String outputPath;
-
     public ApplicationModel(FlexProject project, IRandoriTargetSettings settings)
     {
         super(project, settings);
@@ -74,9 +67,7 @@ public class ApplicationModel extends BaseCompilationSet
     public void generate(IRandoriBackend backend,
             List<ICompilerProblem> problems, File output)
     {
-        this.backend = (RandoriBackend) backend;
-        this.problems = problems;
-        this.outputPath = output.getAbsolutePath();
+        super.generate(backend, problems, output);
 
         // as you can see, we override generate to allow monolithic or individual
         // file export here using the superclasses methods to do the dirty work
@@ -99,9 +90,13 @@ public class ApplicationModel extends BaseCompilationSet
         else
         {
             String basePath = settings.getJsBasePath();
-            // XXX (mschmalle) need to actually extract the application name
-            // for the source path, this will depend on the todo in the main header comment
-            writeFull(basePath, "DemoApplication.js");
+            String appName = settings.getAppName();
+            if (appName == null || appName.equals(""))
+            {
+                // TODO Create a Problem that app-name is not configured, this should actually
+                // be done in the configure() method of the compiler
+            }
+            writeFull(basePath, appName + ".js");
         }
     }
 
@@ -117,7 +112,7 @@ public class ApplicationModel extends BaseCompilationSet
     {
         String basePath = settings.getJsBasePath();
 
-        File outputFolder = new File(outputPath, basePath);
+        File outputFolder = new File(outputDirectory, basePath);
         if (!outputFolder.exists())
             outputFolder.mkdirs();
 
