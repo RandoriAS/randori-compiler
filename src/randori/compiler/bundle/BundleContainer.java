@@ -60,9 +60,16 @@ public class BundleContainer implements IBundleContainer
     @Override
     public IBundleCategory addCategory(IBundleCategoryType type)
     {
-        IBundleCategory entry = new BundleCategory(this, type);
-        categories.put(type, entry);
-        return entry;
+        if (categories.containsKey(type))
+        {
+            return categories.get(type);
+        }
+        else
+        {
+            IBundleCategory entry = new BundleCategory(this, type);
+            categories.put(type, entry);
+            return entry;
+        }
     }
 
     @Override

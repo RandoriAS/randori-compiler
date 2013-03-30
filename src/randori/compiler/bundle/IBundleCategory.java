@@ -96,12 +96,12 @@ public interface IBundleCategory
      * Adds a file entry to this {@link BundleCategory}.
      * 
      * @param file The full path he the {@link File} location on disk.
-     * @param reletivePath The path given to the serializer when this file is
+     * @param relativePath The path given to the serializer when this file is
      * added to the {@link IBundle}.
      */
-    IBundleEntry addFile(File file, String reletivePath);
+    IBundleEntry addFile(File file, String relativePath);
 
-    IBundleEntry addFile(String reletivePath);
+    IBundleEntry addFile(String relativePath);
 
     /**
      * Returns a collection of all entries found on the {@link IBundleCategory}.
