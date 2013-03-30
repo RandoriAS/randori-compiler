@@ -33,7 +33,7 @@ import org.apache.flex.swc.ISWC;
 /**
  * @author Michael Schmalle
  */
-public class Bundle implements IBundle
+public class Bundle implements IMutableBundle
 {
 
     private final File file;

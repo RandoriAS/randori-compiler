@@ -32,12 +32,7 @@ import org.apache.flex.compiler.problems.FileInLibraryIOProblem;
 import org.apache.flex.swc.io.SWCReader;
 import org.apache.flex.utils.FilenameNormalization;
 
-import randori.compiler.bundle.Bundle;
-import randori.compiler.bundle.BundleContainer;
-import randori.compiler.bundle.BundleLibrary;
-import randori.compiler.bundle.BundleVersion;
-import randori.compiler.bundle.IBundleCategory;
-import randori.compiler.bundle.IBundleContainer;
+import randori.compiler.bundle.*;
 
 /**
  * @author Michael Schmalle
@@ -47,13 +42,13 @@ public class StAXManifestReader
     private static final Object TAG_LIBRARY = "library";
 
     private final XMLStreamReader reader;
-    private final Bundle bundle;
+    private final IMutableBundle bundle;
 
     private BundleLibrary library;
 
     private BundleVersion version;
 
-    public StAXManifestReader(final InputStream in, final Bundle bundle)
+    public StAXManifestReader(final InputStream in, final IMutableBundle bundle)
             throws XMLStreamException
     {
         if (bundle == null)
