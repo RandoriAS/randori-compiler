@@ -57,17 +57,27 @@ public interface IBundleCategory
          */
         MONO_MINIFIED("mono_mini");
 
-        private String name;
+        private String value;
 
-        Type(String name)
+        Type(String value)
         {
-            this.name = name;
+            this.value = value;
         }
 
         @Override
-        public String getName()
+        public String getValue()
         {
-            return name;
+            return value;
+        }
+        
+        public static Type toType(String type)
+        {
+            for (Type iterable : values())
+            {
+                if (iterable.getValue().equals(type))
+                    return iterable;
+            }
+            return null;
         }
     }
 
@@ -90,6 +100,8 @@ public interface IBundleCategory
      * added to the {@link IBundle}.
      */
     IBundleEntry addFile(File file, String reletivePath);
+
+    IBundleEntry addFile(String reletivePath);
 
     /**
      * Returns a collection of all entries found on the {@link IBundleCategory}.

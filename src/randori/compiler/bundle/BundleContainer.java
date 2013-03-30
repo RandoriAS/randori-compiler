@@ -48,7 +48,7 @@ public class BundleContainer implements IBundleContainer
     @Override
     public String getName()
     {
-        return type.getName();
+        return type.getValue();
     }
 
     public BundleContainer(IBundleLibrary library, IBundleContainerType type)

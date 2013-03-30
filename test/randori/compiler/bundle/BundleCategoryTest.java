@@ -61,7 +61,7 @@ public class BundleCategoryTest extends BaseBundleTest
     public void test_getType()
     {
         assertEquals(IBundleCategory.Type.SWC, category.getType());
-        assertEquals("swc", category.getType().getName());
+        assertEquals("swc", category.getType().getValue());
         assertEquals("swc", category.getName());
     }
 

@@ -77,7 +77,7 @@ public class BundleLibrary implements IBundleLibrary
     public IBundleContainer addContainer(IBundleContainerType type)
     {
         if (containers.containsKey(type))
-            return null;
+            return containers.get(type);
 
         IBundleContainer container = new BundleContainer(this, type);
         containers.put(type, container);

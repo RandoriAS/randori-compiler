@@ -27,5 +27,5 @@ public interface IBundleContainerType
     /**
      * The name of the container type.
      */
-    String getName();
+    String getValue();
 }

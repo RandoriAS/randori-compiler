@@ -27,8 +27,10 @@ import java.io.IOException;
 import org.apache.flex.swc.SWC;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 /**
  * @author Michael Schmalle
  */

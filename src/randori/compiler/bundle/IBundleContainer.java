@@ -46,17 +46,26 @@ public interface IBundleContainer
          */
         AS("as");
 
-        private String name;
+        private String value;
 
-        Type(String name)
+        Type(String value)
         {
-            this.name = name;
+            this.value = value;
         }
 
-        @Override
-        public String getName()
+        public String getValue()
         {
-            return name;
+            return value;
+        }
+
+        public static Type toType(String type)
+        {
+            for (Type iterable : values())
+            {
+                if (iterable.getValue().equals(type))
+                    return iterable;
+            }
+            return null;
         }
     }
 
@@ -69,7 +78,7 @@ public interface IBundleContainer
      * Returns the type of {@link IBundleContainer}.
      */
     IBundleContainerType getType();
-    
+
     /**
      * The name of the container.
      */

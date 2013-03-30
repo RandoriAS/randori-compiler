@@ -21,16 +21,28 @@ package randori.compiler.bundle;
 
 import java.io.File;
 
+import randori.compiler.bundle.io.IBundleReader;
+
 /**
  * @author Michael Schmalle
  */
 public class BundleEntry implements IBundleEntry
 {
 
-    private final File file;
+    private File file;
 
     private final String path;
-
+    
+    /**
+     * Creates an entry from the {@link IBundleReader}.
+     * 
+     * @param path The path of the entry in the {@link IBundle}.
+     */
+    public BundleEntry(String path)
+    {
+        this.path = path;
+    }
+    
     public BundleEntry(File file, String path)
     {
         this.file = file;

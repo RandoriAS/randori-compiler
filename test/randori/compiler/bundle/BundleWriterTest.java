@@ -47,6 +47,7 @@ import randori.compiler.bundle.IBundleLibrary;
 import randori.compiler.bundle.IBundleVersion;
 import randori.compiler.bundle.io.BundleWriter;
 import randori.compiler.common.VersionInfo;
+import randori.compiler.internal.constants.TestConstants;
 
 public class BundleWriterTest
 {
@@ -56,13 +57,13 @@ public class BundleWriterTest
 
     private static final String BUILTIN = "builtin";
 
-    private static final String RANDORI = "Randori";
+    private static final String RANDORI = "randori-framework";
 
-    private static final String RANDORI_GUICE = "RandoriGuice";
+    private static final String RANDORI_GUICE = "randori-guice-framework";
 
     // File tempDir = new File(TestConstants.RandoriASFramework);
-    File tempDir = new File(
-            "C:\\Users\\Work\\Documents\\git\\RandoriCompiler\\temp");
+    File tempDir = new File(TestConstants.RandoriASFramework
+            + "\\randori-compiler\\temp");
 
     private Bundle bundle;
 
@@ -87,7 +88,8 @@ public class BundleWriterTest
 
     private void createSDKBundle() throws IOException
     {
-        String path = "C:\\Users\\Work\\Documents\\git\\RandoriCompiler\\temp\\RandoriSDKBundle.zip";
+        String path = TestConstants.RandoriASFramework
+                + "\\randori-compiler\\temp\\randori-sdk.zip";
 
         bundleFile = new File(path);
         bundle = new Bundle(bundleFile);
@@ -98,32 +100,29 @@ public class BundleWriterTest
         randoriLibrary = new BundleLibrary(RANDORI);
         randoriGuiceLibrary = new BundleLibrary(RANDORI_GUICE);
 
+        randoriLibrary.addSWC(new SWC(new File(TestConstants.RandoriASFramework
+                + "\\randori-sdk\\bin\\builtin.swc")));
         randoriLibrary.addSWC(new SWC(new File(tempDir,
-                "/Randori/bin/builtin.swc")));
-        randoriLibrary.addSWC(new SWC(new File(tempDir,
-                "/Randori/bin/Randori.swc")));
-        randoriLibrary.addSWC(new SWC(new File(tempDir,
-                "/Randori/bin/JQuery.swc")));
-        randoriLibrary.addSWC(new SWC(new File(tempDir,
-                "/Randori/bin/HTMLCoreLib.swc")));
+                "\\randori-framework.swc")));
+        randoriLibrary.addSWC(new SWC(new File(tempDir, "\\JQuery.swc")));
+        randoriLibrary.addSWC(new SWC(new File(tempDir, "\\HTMLCoreLib.swc")));
 
         IBundleContainer container = randoriLibrary.addContainer(Type.JS);
-        IBundleCategory entry = container.addCategory(IBundleCategory.Type.MONO);
+        IBundleCategory entry = container
+                .addCategory(IBundleCategory.Type.MONO);
         // for now this takes care of wrapping it in a source entry
-        entry.addFile(new File(tempDir, "/Randori/src/Randori.js"),
-                "Randori.js");
+        entry.addFile(new File(tempDir, "\\Randori.js"), "Randori.js");
 
         //---------------------------------------------------
 
         randoriGuiceLibrary.addSWC(new SWC(new File(tempDir,
-                "/RandoriGuice/bin/RandoriGuice.swc")));
+                "\\randori-guice-framework.swc")));
 
         container = randoriGuiceLibrary.addContainer(Type.JS);
         entry = container.addCategory(IBundleCategory.Type.MONO);
 
         // for now this takes care of wrapping it in a source entry
-        entry.addFile(new File(tempDir, "/RandoriGuice/src/RandoriGuice.js"),
-                "RandoriGuice.js");
+        entry.addFile(new File(tempDir, "\\RandoriGuice.js"), "RandoriGuice.js");
 
         // dd the libraries to the bundle
         bundle.addLibrary(randoriLibrary);
@@ -206,7 +205,8 @@ public class BundleWriterTest
     @Test
     public void test_getSWCLibrary_RandoriGuice() throws IOException
     {
-        assertNotNull(bundle.getSWCLibrary(RANDORI_GUICE, "RandoriGuice"));
+        assertNotNull(bundle.getSWCLibrary(RANDORI_GUICE,
+                "randori-guice-framework"));
     }
 
     @Test

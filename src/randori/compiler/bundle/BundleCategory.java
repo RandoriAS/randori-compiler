@@ -39,7 +39,7 @@ public class BundleCategory implements IBundleCategory
     @Override
     public String getName()
     {
-        return type.getName();
+        return type.getValue();
     }
 
     @Override
@@ -73,11 +73,20 @@ public class BundleCategory implements IBundleCategory
     }
 
     @Override
-    public IBundleEntry addFile(File file, String path)
+    public IBundleEntry addFile(File file, String reletivePath2)
     {
-        String reletivePath = BundleUtils.toPath(this, path);
-        BundleEntry entry = new BundleEntry(file, reletivePath);
-        entries.put(reletivePath, entry);
+        String path = BundleUtils.toPath(this, reletivePath2);
+        BundleEntry entry = new BundleEntry(file, path);
+        entries.put(path, entry);
+        return entry;
+    }
+
+    @Override
+    public IBundleEntry addFile(String reletivePath)
+    {
+        String path = BundleUtils.toPath(this, reletivePath);
+        BundleEntry entry = new BundleEntry(path);
+        entries.put(path, entry);
         return entry;
     }
 

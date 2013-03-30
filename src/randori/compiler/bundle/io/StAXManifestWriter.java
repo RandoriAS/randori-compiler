@@ -99,7 +99,7 @@ public class StAXManifestWriter
 
         for (IBundleContainer container : library.getContainers())
         {
-            xmlWriter.writeStartElement(container.getType().getName());
+            //xmlWriter.writeStartElement(container.getType().getName());
 
             for (IBundleCategory entry : container.getCategories())
             {
@@ -108,15 +108,15 @@ public class StAXManifestWriter
                 for (IBundleEntry element : entry.getEntries())
                 {
                     // writeFile(element.getFile(), element.getPath());
-                    xmlWriter.writeEmptyElement(entry.getType().getName());
+                    xmlWriter.writeEmptyElement(container.getName());
                     xmlWriter.writeAttribute("path", element.getPath());
-                    xmlWriter.writeAttribute("type", entry.getType().getName());
+                    xmlWriter.writeAttribute("type", entry.getType().getValue());
                 }
 
                 // xmlWriter.writeEndElement();
             }
 
-            xmlWriter.writeEndElement();
+            //xmlWriter.writeEndElement();
         }
     }
 

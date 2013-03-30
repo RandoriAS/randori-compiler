@@ -39,7 +39,7 @@ public class BundleUtils
         sb.append(SLASH);
         sb.append(category.getContainer().getName());
         sb.append(SLASH);
-        sb.append(category.getType().getName());
+        sb.append(category.getType().getValue());
         sb.append(SLASH);
         sb.append(path);
         return sb.toString();
