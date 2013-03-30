@@ -19,6 +19,7 @@
 
 package randori.compiler.bundle.io;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -92,9 +93,6 @@ public class StAXManifestReader
 
     public void parse()
     {
-        final String file = FilenameNormalization.normalize(bundle
-                .getBundleFile().getAbsolutePath());
-
         try
         {
             while (reader.hasNext())
@@ -174,6 +172,8 @@ public class StAXManifestReader
         }
         catch (XMLStreamException e)
         {
+            File bundleFile = bundle.getBundleFile();
+            final String file = (bundleFile != null) ? FilenameNormalization.normalize(bundleFile.getAbsolutePath()) : "";
             bundle.addProblem(new FileInLibraryIOProblem(SWCReader.CATALOG_XML,
                     file, e.getLocalizedMessage()));
         }
