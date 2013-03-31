@@ -34,7 +34,7 @@ public class IndexMediatorTest extends RandoriTestProjectBase
     public void test_constructor()
     {
         IFunctionNode node = findFunction("IndexMediator", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("mediators.IndexMediator = function() {"
                 + "\n\tthis.viewStack = null;\n\tthis.menu = null;\n\t"
                 + "randori.behaviors.AbstractMediator.call(this);\n}");
@@ -44,7 +44,7 @@ public class IndexMediatorTest extends RandoriTestProjectBase
     public void test_onRegister()
     {
         IFunctionNode node = findFunction("onRegister", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("mediators.IndexMediator.prototype.onRegister = function() {\n\tvar "
                 + "menuItems = [{name:\"Targets\", url:\"views\\/targets.html\", "
                 + "isRedirect:true}, {name:\"Labs\", url:\"views\\/labs.html\", "
@@ -58,7 +58,7 @@ public class IndexMediatorTest extends RandoriTestProjectBase
     public void test_menuItemSelected()
     {
         IFunctionNode node = findFunction("menuItemSelected", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("mediators.IndexMediator.prototype.menuItemSelected = function(menuData) {"
                 + "\n\tthis.viewStack.popView();\n\tvar promise = this.viewStack.pushView("
                 + "menuData.url);\n\tpromise.then(function(result) {\n\t});\n}");
@@ -67,7 +67,7 @@ public class IndexMediatorTest extends RandoriTestProjectBase
     @Test
     public void test_file()
     {
-        asBlockWalker.visitFile(fileNode);
+        visitor.visitFile(fileNode);
     }
 
     protected String getBasePath()

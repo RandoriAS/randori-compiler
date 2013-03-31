@@ -34,7 +34,7 @@ public class GenericJsonParser extends RandoriTestProjectBase
     public void test_constructor()
     {
         IFunctionNode node = findFunction("GenericJsonParser", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("services.parser.GenericJsonParser = function() {"
                 + "\n\trandori.service.parser.AbstractParser.call(this);\n}");
     }
@@ -43,7 +43,7 @@ public class GenericJsonParser extends RandoriTestProjectBase
     public void test_parseResult()
     {
         IFunctionNode node = findFunction("parseResult", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("services.parser.GenericJsonParser.prototype.parseResult = function(result) {"
                 + "\n\tvar json = JSON.parse(result);\n\treturn json;\n}");
     }
@@ -51,7 +51,7 @@ public class GenericJsonParser extends RandoriTestProjectBase
     @Test
     public void test_file()
     {
-        asBlockWalker.visitFile(fileNode);
+        visitor.visitFile(fileNode);
     }
 
     protected String getBasePath()

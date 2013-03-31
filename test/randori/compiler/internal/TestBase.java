@@ -20,34 +20,20 @@
 package randori.compiler.internal;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.flex.compiler.internal.projects.FlexProject;
 import org.apache.flex.compiler.internal.projects.FlexProjectConfigurator;
-import org.apache.flex.compiler.internal.projects.ISourceFileHandler;
 import org.apache.flex.compiler.internal.tree.as.FunctionNode;
 import org.apache.flex.compiler.internal.workspaces.Workspace;
 import org.apache.flex.compiler.mxml.IMXMLNamespaceMapping;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.as.IASNode;
-import org.apache.flex.compiler.tree.as.IFileNode;
-import org.apache.flex.compiler.tree.mxml.IMXMLFileNode;
-import org.apache.flex.compiler.units.ICompilationUnit;
 import org.apache.flex.utils.FilenameNormalization;
 import org.junit.After;
 import org.junit.Before;
@@ -56,42 +42,43 @@ import org.junit.Ignore;
 import randori.compiler.codegen.as.IASEmitter;
 import randori.compiler.driver.IBackend;
 import randori.compiler.internal.codegen.as.ASFilterWriter;
+import randori.compiler.internal.constants.TestConstants;
+import randori.compiler.internal.driver.as.ASBackend;
 import randori.compiler.visitor.as.IASBlockWalker;
 
 @Ignore
+/**
+ * @author Michael Schmalle
+ */
 public class TestBase
 {
     protected List<ICompilerProblem> errors;
 
-    protected static EnvProperties env = EnvProperties.initiate();
-
     protected static Workspace workspace = new Workspace();
+
     protected FlexProject project;
 
     protected IBackend backend;
+
     protected ASFilterWriter writer;
 
-    protected IASEmitter asEmitter;
+    protected IASEmitter emitter;
 
-    protected IASBlockWalker asBlockWalker;
-
-    protected String inputFileExtension;
+    protected IASBlockWalker visitor;
 
     protected String mCode;
 
     protected File tempDir;
 
     private List<File> sourcePaths = new ArrayList<File>();
+
     private List<File> libraries = new ArrayList<File>();
+
     private List<IMXMLNamespaceMapping> namespaceMappings = new ArrayList<IMXMLNamespaceMapping>();
 
     @Before
     public void setUp()
     {
-        assertNotNull("Environment variable FLEX_HOME is not set", env.SDK);
-        assertNotNull("Environment variable PLAYERGLOBAL_HOME is not set",
-                env.FPSDK);
-
         errors = new ArrayList<ICompilerProblem>();
 
         project = new FlexProject(workspace);
@@ -99,16 +86,8 @@ public class TestBase
 
         backend = createBackend();
         writer = backend.createWriterBuffer(project);
-
-        try
-        {
-            ISourceFileHandler sfh = backend.getSourceFileHandlerInstance();
-            inputFileExtension = "." + sfh.getExtensions()[0];
-        }
-        catch (Exception e)
-        {
-            inputFileExtension = ".as";
-        }
+        emitter = backend.createEmitter(writer);
+        visitor = backend.createWalker(project, errors, emitter);
 
         sourcePaths = new ArrayList<File>();
         libraries = new ArrayList<File>();
@@ -122,13 +101,13 @@ public class TestBase
     {
         backend = null;
         writer = null;
-        asEmitter = null;
-        asBlockWalker = null;
+        emitter = null;
+        visitor = null;
     }
 
     protected IBackend createBackend()
     {
-        return null;
+        return new ASBackend();
     }
 
     protected void assertOut(String code)
@@ -136,142 +115,6 @@ public class TestBase
         mCode = writer.toString();
         //System.out.println(mCode);
         assertThat(mCode, is(code));
-    }
-
-    @Override
-    public String toString()
-    {
-        return writer.toString();
-    }
-
-    protected IFileNode compileAS(String input)
-    {
-        return compileAS(input, false, "");
-    }
-
-    protected IFileNode compileAS(String input, boolean isFileName,
-            String inputDir)
-    {
-        return compileAS(input, isFileName, inputDir, true);
-    }
-
-    protected IFileNode compileAS(String input, boolean isFileName,
-            String inputDir, boolean useTempFile)
-    {
-        return (IFileNode) compile(input, isFileName, inputDir, useTempFile);
-    }
-
-    protected IASNode compile(String input, boolean isFileName,
-            String inputDir, boolean useTempFile)
-    {
-        File tempFile = (useTempFile) ? writeCodeToTempFile(input, isFileName,
-                inputDir) : new File(FilenameNormalization.normalize(inputDir
-                + File.separator + input + inputFileExtension));
-
-        addDependencies();
-
-        String normalizedMainFileName = FilenameNormalization
-                .normalize(tempFile.getAbsolutePath());
-
-        Collection<ICompilationUnit> mainFileCompilationUnits = workspace
-                .getCompilationUnits(normalizedMainFileName, project);
-
-        ICompilationUnit cu = null;
-        for (ICompilationUnit cu2 : mainFileCompilationUnits)
-        {
-            if (cu2 != null)
-                cu = cu2;
-        }
-
-        IASNode fileNode = null;
-        try
-        {
-            fileNode = cu.getSyntaxTreeRequest().get().getAST();
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
-
-        return fileNode;
-    }
-
-    protected IMXMLFileNode compileMXML(String input)
-    {
-        return compileMXML(input, false, "");
-    }
-
-    protected IMXMLFileNode compileMXML(String input, boolean isFileName,
-            String inputDir)
-    {
-        return compileMXML(input, isFileName, inputDir, true);
-    }
-
-    protected IMXMLFileNode compileMXML(String input, boolean isFileName,
-            String inputDir, boolean useTempFile)
-    {
-        return (IMXMLFileNode) compile(input, isFileName, inputDir, useTempFile);
-    }
-
-    protected File writeCodeToTempFile(String input, boolean isFileName,
-            String inputDir)
-    {
-        File tempASFile = null;
-        try
-        {
-            String tempFileName = (isFileName) ? input : getClass()
-                    .getSimpleName();
-
-            tempASFile = File.createTempFile(tempFileName, inputFileExtension,
-                    tempDir);
-            tempASFile.deleteOnExit();
-
-            String code = "";
-            if (!isFileName)
-            {
-                code = input;
-            }
-            else
-            {
-                code = getCodeFromFile(input, false, inputDir);
-            }
-
-            BufferedWriter out = new BufferedWriter(new FileWriter(tempASFile));
-            out.write(code);
-            out.close();
-        }
-        catch (IOException e1)
-        {
-            e1.printStackTrace();
-        }
-
-        return tempASFile;
-    }
-
-    protected void writeResultToFile(String result, String fileName)
-    {
-        BufferedWriter writer = null;
-        try
-        {
-            writer = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(new File(tempDir, fileName + ".js")),
-                    "utf-8"));
-            writer.write(result);
-        }
-        catch (IOException e1)
-        {
-            e1.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                writer.close();
-            }
-            catch (Exception ex)
-            {
-            }
-        }
     }
 
     /**
@@ -294,6 +137,9 @@ public class TestBase
 
     protected void addLibraries(List<File> libraries)
     {
+        String base = TestConstants.RandoriASFramework;
+        libraries.add(new File(FilenameNormalization.normalize(base
+                + "\\randori-sdk\\randori-framework\\bin\\swc\\builtin.swc")));
     }
 
     protected void addSourcePaths(List<File> sourcePaths)
@@ -304,39 +150,6 @@ public class TestBase
     protected void addNamespaceMappings(
             List<IMXMLNamespaceMapping> namespaceMappings)
     {
-    }
-
-    protected String getCodeFromFile(String fileName, boolean isJS,
-            String sourceDir)
-    {
-        String testFileDir = FilenameNormalization.normalize("test-files");
-
-        File testFile = new File(testFileDir + File.separator + sourceDir
-                + File.separator + fileName
-                + (isJS ? ".js" : inputFileExtension));
-
-        String code = "";
-        try
-        {
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(testFile), "UTF8"));
-
-            String line = in.readLine();
-
-            while (line != null)
-            {
-                code += line + "\n";
-                line = in.readLine();
-            }
-            code = code.substring(0, code.length() - 1);
-
-            in.close();
-        }
-        catch (Exception e)
-        {
-        }
-
-        return code;
     }
 
     protected IASNode findFirstDescendantOfType(IASNode node,
@@ -361,4 +174,9 @@ public class TestBase
         return null;
     }
 
+    @Override
+    public String toString()
+    {
+        return writer.toString();
+    }
 }

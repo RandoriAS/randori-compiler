@@ -41,7 +41,7 @@ public class NoConstructorClassTest extends ResourceTestBase
     @Test
     public void test_file()
     {
-        asBlockWalker.visitFile(fileNode);
+        visitor.visitFile(fileNode);
         assertOut("if (typeof demo == \"undefined\")\n\tvar demo = {};\nif (typeof "
                 + "demo.foo == \"undefined\")\n\tdemo.foo = {};\n\ndemo.foo.NoConstructorClass = "
                 + "function() {\n\tthis.port = null;\n\tthis.debugMode = true;\n\t\n};\n\ndemo.foo."

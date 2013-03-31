@@ -34,7 +34,7 @@ public class TestModuleTest extends ResourceTestBase
     public void configure()
     {
         IFunctionNode node = findFunction("configure", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.inject.TestModule.prototype.configure = function(binder) "
                 + "{\n\tguice.GuiceModule.prototype.configure.call(this,binder);\n\t"
                 + "binder.bind(demo.inject.InjectTest).to(demo.inject.EmptyInherit);\n}");
@@ -43,7 +43,7 @@ public class TestModuleTest extends ResourceTestBase
     @Test
     public void test_file()
     {
-        asBlockWalker.visitFile(fileNode);
+        visitor.visitFile(fileNode);
         assertOut("if (typeof demo == \"undefined\")\n\tvar demo = {};\nif (typeof demo.inject == "
                 + "\"undefined\")\n\tdemo.inject = {};\n\ndemo.inject.TestModule = function() "
                 + "{\n\tguice.GuiceModule.call(this);\n\t\n};\n\ndemo.inject.TestModule.prototype."

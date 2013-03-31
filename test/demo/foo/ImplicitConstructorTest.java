@@ -9,7 +9,7 @@ public class ImplicitConstructorTest extends ResourceTestBase
     @Test
     public void test_file()
     {
-        asBlockWalker.visitFile(fileNode);
+        visitor.visitFile(fileNode);
         assertOut("if (typeof demo == \"undefined\")\n\tvar demo = {};\nif (typeof demo.foo "
                 + "== \"undefined\")\n\tdemo.foo = {};\n\ndemo.foo.ImplicitConstructor = function()"
                 + " {\n\tthis.message = null;\n\trandori.behaviors.AbstractMediator.call(this);\n\t\n};"

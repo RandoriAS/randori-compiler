@@ -34,7 +34,7 @@ public class TargetsMediatorTest extends RandoriTestProjectBase
     public void test_constructor()
     {
         IFunctionNode node = findFunction("TargetsMediator", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("mediators.TargetsMediator = function() {\n\tthis.targetList "
                 + "= null;\n\tthis.service = null;\n\trandori.behaviors.AbstractMediator.call(this);\n}");
     }
@@ -43,7 +43,7 @@ public class TargetsMediatorTest extends RandoriTestProjectBase
     public void test_onRegister()
     {
         IFunctionNode node = findFunction("onRegister", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("mediators.TargetsMediator.prototype.onRegister = function() {"
                 + "\n\tthis.service.get().then($createStaticDelegate(this, this.handleResult));\n}");
     }
@@ -52,7 +52,7 @@ public class TargetsMediatorTest extends RandoriTestProjectBase
     public void test_handleResult()
     {
         IFunctionNode node = findFunction("handleResult", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("mediators.TargetsMediator.prototype.handleResult = function(result) {"
                 + "\n\tthis.targetList.set_data(result);\n}");
     }
@@ -60,7 +60,7 @@ public class TargetsMediatorTest extends RandoriTestProjectBase
     @Test
     public void test_file()
     {
-        asBlockWalker.visitFile(fileNode);
+        visitor.visitFile(fileNode);
     }
 
     protected String getBasePath()

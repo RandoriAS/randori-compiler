@@ -81,12 +81,6 @@ public class SDKBundleTest
         //Assert.assertEquals(0, problems.size());
     }
 
-    private void buildRandoriGuiceJS()
-    {
-        // TODO Auto-generated method stub
-
-    }
-
     private void buildJQuerySWC()
     {
         CompilerArguments arguments = new CompilerArguments();
@@ -173,20 +167,25 @@ public class SDKBundleTest
         createSDKBundle();
     }
 
+    @SuppressWarnings("unused")
     private static final String J_QUERY = "JQuery";
 
+    @SuppressWarnings("unused")
     private static final String HTML_CORE_LIB = "HTMLCoreLib";
 
+    @SuppressWarnings("unused")
     private static final String BUILTIN = "builtin";
 
     private static final String RANDORI = "randori-framework";
 
+    @SuppressWarnings("unused")
     private static final String RANDORI_GUICE = "randori-guice-framework";
 
     private Bundle bundle;
 
     private BundleLibrary randoriLibrary;
 
+    @SuppressWarnings("unused")
     private BundleLibrary randoriGuiceLibrary;
 
     private File bundleFile;

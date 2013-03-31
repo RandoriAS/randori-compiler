@@ -31,7 +31,7 @@ public class InjectConstructorParamTypesTest extends ResourceTestBase
     @Test
     public void test_file()
     {
-        asBlockWalker.visitFile(fileNode);
+        visitor.visitFile(fileNode);
         assertOut("if (typeof demo == \"undefined\")\n\tvar demo = {};\nif (typeof demo.inject "
                 + "== \"undefined\")\n\tdemo.inject = {};\n\ndemo.inject.InjectConstructorParamTypes"
                 + " = function(p1, p2, p3) {\n};\n\ndemo.inject.InjectConstructorParamTypes.className"

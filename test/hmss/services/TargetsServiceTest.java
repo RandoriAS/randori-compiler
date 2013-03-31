@@ -34,7 +34,7 @@ public class TargetsServiceTest extends RandoriTestProjectBase
     public void test_constructor()
     {
         IFunctionNode node = findFunction("TargetsService", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("services.TargetsService = function(xmlHttpRequest, config, targets) {"
                 + "\n\tthis.path = null;\n\trandori.service.AbstractService.call("
                 + "this, xmlHttpRequest);\n\tthis.config = config;\n\tthis.targets = "
@@ -45,7 +45,7 @@ public class TargetsServiceTest extends RandoriTestProjectBase
     public void test_get()
     {
         IFunctionNode node = findFunction("get", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("services.TargetsService.prototype.get = function() {"
                 + "\n\tvar promise = this.sendRequest(\"GET\", this.path);\n\tvar "
                 + "parserPromise = promise.then(this.targets.parseResult);\n\treturn parserPromise;\n}");
@@ -54,7 +54,7 @@ public class TargetsServiceTest extends RandoriTestProjectBase
     @Test
     public void test_file()
     {
-        asBlockWalker.visitFile(fileNode);
+        visitor.visitFile(fileNode);
     }
 
     protected String getBasePath()

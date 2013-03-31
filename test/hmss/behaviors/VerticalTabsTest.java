@@ -34,7 +34,7 @@ public class VerticalTabsTest extends RandoriTestProjectBase
     public void test_constructor()
     {
         IFunctionNode node = findFunction("VerticalTabs", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("behaviors.VerticalTabs = function(walker) {\n\tthis.menuItemSelected "
                 + "= null;\n\trandori.behaviors.List.call(this, walker);\n\tthis.menuItemSelected"
                 + " = new randori.signal.SimpleSignal();\n}");
@@ -44,7 +44,7 @@ public class VerticalTabsTest extends RandoriTestProjectBase
     public void test_renderList()
     {
         IFunctionNode node = findFunction("renderList", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("behaviors.VerticalTabs.prototype.renderList = function() {"
                 + "\n\trandori.behaviors.List.prototype.renderList.call(this);\n\t"
                 + "var children = this.decoratedNode.children();\n\tvar first = "
@@ -56,7 +56,7 @@ public class VerticalTabsTest extends RandoriTestProjectBase
     public void test_onRegister()
     {
         IFunctionNode node = findFunction("onRegister", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("behaviors.VerticalTabs.prototype.onRegister = function() {"
                 + "\n\tthis.listChanged.add($createStaticDelegate(this, this.listChangedHandler));"
                 + "\n\trandori.behaviors.List.prototype.onRegister.call(this);\n}");
@@ -66,7 +66,7 @@ public class VerticalTabsTest extends RandoriTestProjectBase
     public void test_listChangedHandler()
     {
         IFunctionNode node = findFunction("listChangedHandler", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("behaviors.VerticalTabs.prototype.listChangedHandler = function(index, data) {"
                 + "\n\tif (data != null) {\n\t\tthis.menuItemSelected.dispatch(data);\n\t}\n}");
     }
@@ -74,7 +74,7 @@ public class VerticalTabsTest extends RandoriTestProjectBase
     @Test
     public void test_file()
     {
-        asBlockWalker.visitFile(fileNode);
+        visitor.visitFile(fileNode);
     }
 
     protected String getBasePath()

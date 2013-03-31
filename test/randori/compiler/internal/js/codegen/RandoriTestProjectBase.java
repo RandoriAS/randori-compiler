@@ -19,9 +19,6 @@
 
 package randori.compiler.internal.js.codegen;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
@@ -44,14 +41,14 @@ import org.apache.flex.utils.FilenameNormalization;
 import org.junit.Assert;
 
 import randori.compiler.driver.IBackend;
-import randori.compiler.internal.ASTestBase;
+import randori.compiler.internal.TestBase;
 import randori.compiler.internal.constants.TestConstants;
 import randori.compiler.internal.driver.RandoriBackend;
 
 /**
  * @author Michael Schmalle
  */
-public abstract class RandoriTestProjectBase extends ASTestBase
+public abstract class RandoriTestProjectBase extends TestBase
 {
     private String normalizedMainFileName;
 
@@ -88,8 +85,6 @@ public abstract class RandoriTestProjectBase extends ASTestBase
     {
         return null;
     }
-
-    //private static EnvProperties env = EnvProperties.initiate();
 
     protected IFileNode compile(String main)
     {
@@ -134,6 +129,7 @@ public abstract class RandoriTestProjectBase extends ASTestBase
     protected void addLibraries(List<File> libraries)
     {
         super.addLibraries(libraries);
+        @SuppressWarnings("unused")
         String base = TestConstants.RandoriASFramework;
         //        libraries.add(new File(FilenameNormalization.normalize(base
         //                + "HTMLCoreLib\\bin\\HTMLCoreLib.swc")));
@@ -188,13 +184,6 @@ public abstract class RandoriTestProjectBase extends ASTestBase
                 return (IFunctionNode) inode;
         }
         return null;
-    }
-
-    protected void assertOut(String code)
-    {
-        mCode = writer.toString();
-        //System.out.println(mCode);
-        assertThat(mCode, is(code));
     }
 
     protected IGetterNode findGetter(String name, IClassNode node)

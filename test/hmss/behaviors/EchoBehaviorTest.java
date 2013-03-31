@@ -34,7 +34,7 @@ public class EchoBehaviorTest extends RandoriTestProjectBase
     public void test_constructor()
     {
         IFunctionNode node = findFunction("EchoBehavior", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("behaviors.EchoBehavior = function() {\n\t"
                 + "randori.behaviors.AbstractBehavior.call(this);\n}");
     }
@@ -43,7 +43,7 @@ public class EchoBehaviorTest extends RandoriTestProjectBase
     public void test_onRegister()
     {
         IFunctionNode node = findFunction("onRegister", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("behaviors.EchoBehavior.prototype.onRegister = function() {"
                 + "\n\tthis.decoratedElement.innerText = \"Echo\";\n}");
     }
@@ -51,7 +51,7 @@ public class EchoBehaviorTest extends RandoriTestProjectBase
     @Test
     public void test_file()
     {
-        asBlockWalker.visitFile(fileNode);
+        visitor.visitFile(fileNode);
     }
 
     protected String getBasePath()

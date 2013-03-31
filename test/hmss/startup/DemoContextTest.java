@@ -34,7 +34,7 @@ public class DemoContextTest extends RandoriTestProjectBase
     public void test_constructor()
     {
         IFunctionNode node = findFunction("DemoContext", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("startup.DemoContext = function() {\n\tguice.GuiceModule.call(this);\n}");
     }
 
@@ -42,14 +42,14 @@ public class DemoContextTest extends RandoriTestProjectBase
     public void test_configure()
     {
         IFunctionNode node = findFunction("configure", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("startup.DemoContext.prototype.configure = function(binder) {\n}");
     }
 
     @Test
     public void test_file()
     {
-        asBlockWalker.visitFile(fileNode);
+        visitor.visitFile(fileNode);
     }
 
     protected String getBasePath()

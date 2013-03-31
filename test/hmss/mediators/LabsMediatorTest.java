@@ -34,7 +34,7 @@ public class LabsMediatorTest extends RandoriTestProjectBase
     public void test_constructor()
     {
         IFunctionNode node = findFunction("LabsMediator", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("mediators.LabsMediator = function() {\n\tthis.message = null;"
                 + "\n\trandori.behaviors.AbstractMediator.call(this);\n}");
     }
@@ -43,7 +43,7 @@ public class LabsMediatorTest extends RandoriTestProjectBase
     public void test_onRegister()
     {
         IFunctionNode node = findFunction("onRegister", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("mediators.LabsMediator.prototype.onRegister = function() {"
                 + "\n\tthis.message.text(\"Labs Mediator Loaded and Registered\");\n}");
     }
@@ -51,7 +51,7 @@ public class LabsMediatorTest extends RandoriTestProjectBase
     @Test
     public void test_file()
     {
-        asBlockWalker.visitFile(fileNode);
+        visitor.visitFile(fileNode);
     }
 
     protected String getBasePath()

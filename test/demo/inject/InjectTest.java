@@ -31,7 +31,7 @@ public class InjectTest extends ResourceTestBase
     @Test
     public void test_file()
     {
-        asBlockWalker.visitFile(fileNode);
+        visitor.visitFile(fileNode);
         assertOut("if (typeof demo == \"undefined\")\n\tvar demo = {};\nif (typeof "
                 + "demo.inject == \"undefined\")\n\tdemo.inject = {};\n\ndemo.inject."
                 + "InjectTest = function(param1, param2) {\n\tthis.injectField = null;"

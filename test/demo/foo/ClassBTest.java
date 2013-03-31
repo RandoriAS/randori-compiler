@@ -34,7 +34,7 @@ public class ClassBTest extends ResourceTestBase
     public void test_constructor()
     {
         IFunctionNode node = findFunction("ClassB", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB = function(param1, param2, param3) {\n\tthis.names = "
                 + "null;\n\tthis.thenContracts = null;\n\tthis.field2 = 42;\n\tthis.field1 "
                 + "= \"Hello\";\n\tthis.j = null;\n\tif (arguments.length < 3) {\n\t\tif "
@@ -47,7 +47,7 @@ public class ClassBTest extends ResourceTestBase
     public void test_method1()
     {
         IFunctionNode node = findFunction("method1", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         //assertOut("");
     }
 
@@ -55,7 +55,7 @@ public class ClassBTest extends ResourceTestBase
     public void test_while_binary_getter()
     {
         IFunctionNode node = findFunction("while_binary_getter", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.while_binary_getter = function() {\n\t"
                 + "while (this.thenContracts.length > 0) {\n\t}\n}");
     }
@@ -64,7 +64,7 @@ public class ClassBTest extends ResourceTestBase
     public void this_no_parent()
     {
         IFunctionNode node = findFunction("this_no_parent", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.this_no_parent = function() {\n\tvar foo = this;\n}");
     }
 
@@ -72,7 +72,7 @@ public class ClassBTest extends ResourceTestBase
     public void for_each_statement()
     {
         IFunctionNode node = findFunction("for_each_statement", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.for_each_statement = function() {"
                 + "\n\tfor (var id in this.thenContracts) {\n\t}\n}");
     }
@@ -81,7 +81,7 @@ public class ClassBTest extends ResourceTestBase
     public void for_with_vector_length()
     {
         IFunctionNode node = findFunction("for_with_vector_length", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.for_with_vector_length = function() {"
                 + "\n\tvar viewPoints = [];\n\tfor (var i = 0; i < viewPoints.length; i++) {\n\t}\n}");
     }
@@ -90,7 +90,7 @@ public class ClassBTest extends ResourceTestBase
     public void as_cast()
     {
         IFunctionNode node = findFunction("as_cast", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.as_cast = function() {\n\tvar a;\n\tvar b = a;\n}");
     }
 
@@ -98,7 +98,7 @@ public class ClassBTest extends ResourceTestBase
     public void is_type_check()
     {
         IFunctionNode node = findFunction("is_type_check", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.is_type_check = function() {\n\t"
                 + "if (this.field1 instanceof Array) {\n\t}\n}");
     }
@@ -107,7 +107,7 @@ public class ClassBTest extends ResourceTestBase
     public void undefined_literal()
     {
         IFunctionNode node = findFunction("undefined_literal", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.undefined_literal = function() {"
                 + "\n\tif (this.field1 != undefined) {\n\t}\n}");
     }
@@ -116,7 +116,7 @@ public class ClassBTest extends ResourceTestBase
     public void static_var_qualified()
     {
         IFunctionNode node = findFunction("static_var_qualified", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.static_var_qualified = function() {"
                 + "\n\tdemo.foo.ClassB.FOO[this.get_foo()] = \"bar\";\n}");
     }
@@ -126,7 +126,7 @@ public class ClassBTest extends ResourceTestBase
     {
         IFunctionNode node = findFunction("static_var_qualified_prepend_Type",
                 classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.static_var_qualified_prepend_Type = function() {"
                 + "\n\tdemo.foo.ClassB.FOO[this.get_foo()] = \"bar\";\n}");
     }
@@ -135,7 +135,7 @@ public class ClassBTest extends ResourceTestBase
     public void FileReader_get()
     {
         IGetterNode node = findGetter("FileReader_", classNode);
-        asBlockWalker.visitGetter(node);
+        visitor.visitGetter(node);
         assertOut("demo.foo.ClassB.get_FileReader = function() {\n\treturn null;\n}");
     }
 
@@ -143,7 +143,7 @@ public class ClassBTest extends ResourceTestBase
     public void FileReader_set()
     {
         ISetterNode node = findSetter("FileReader_", classNode);
-        asBlockWalker.visitSetter(node);
+        visitor.visitSetter(node);
         assertOut("demo.foo.ClassB.set_FileReader = function(value) {\n}");
     }
 
@@ -152,7 +152,7 @@ public class ClassBTest extends ResourceTestBase
     {
         IFunctionNode node = findFunction("FileReader_use_get_set_rename",
                 classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.FileReader_use_get_set_rename = function() {"
                 + "\n\tset_FileReader(new FileReader());\n\t"
                 + "var a = demo.foo.ClassB.get_FileReader();\n}");
@@ -162,7 +162,7 @@ public class ClassBTest extends ResourceTestBase
     public void method_call_rename()
     {
         IFunctionNode node = findFunction("method_call_rename", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.method_call_rename = function() {\n\tthis.j.show();\n}");
     }
 
@@ -170,7 +170,7 @@ public class ClassBTest extends ResourceTestBase
     public void method_annotation_rename()
     {
         IFunctionNode node = findFunction("method_annotation_rename", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.fooBar = function() {\n}");
     }
 
@@ -178,7 +178,7 @@ public class ClassBTest extends ResourceTestBase
     public void default_parameters()
     {
         IFunctionNode node = findFunction("default_parameters", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.default_parameters = function(foo, bar, baz) {"
                 + "\n\tif (arguments.length < 3) {\n\t\tif (arguments.length < 2) {"
                 + "\n\t\t\tbar = \"42\";\n\t\t}\n\t\tbaz = 0.42;\n\t}\n\tvar a = baz;\n}");
@@ -188,7 +188,7 @@ public class ClassBTest extends ResourceTestBase
     public void window_static_method()
     {
         IFunctionNode node = findFunction("window_static_method", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.window_static_method = function() {\n\talert(\"foo\");\n}");
     }
 
@@ -196,7 +196,7 @@ public class ClassBTest extends ResourceTestBase
     public void window_static_accessor()
     {
         IFunctionNode node = findFunction("window_static_accessor", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.window_static_accessor = function() {\n\t"
                 + "if (console != null)\n\t\tconsole.log(\"foo\");\n}");
     }
@@ -206,7 +206,7 @@ public class ClassBTest extends ResourceTestBase
     {
         IFunctionNode node = findFunction("member_accessor_get_and_set",
                 classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.member_accessor_get_and_set = function() {"
                 + "\n\tvar c;\n\tc.get_foo().bar(42);\n}");
     }
@@ -215,7 +215,7 @@ public class ClassBTest extends ResourceTestBase
     public void window_reduction()
     {
         IFunctionNode node = findFunction("window_reduction", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.window_reduction = function() {\n\tvar nextLevel = window;\n}");
     }
 
@@ -224,7 +224,7 @@ public class ClassBTest extends ResourceTestBase
     {
         IFunctionNode node = findFunction("this_get_accessor_explicit",
                 classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.this_get_accessor_explicit = function() {"
                 + "\n\tvar c;\n\tc = this.get_accessor1();\n}");
     }
@@ -234,7 +234,7 @@ public class ClassBTest extends ResourceTestBase
     {
         IFunctionNode node = findFunction("this_get_accessor_anytype_access",
                 classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.this_get_accessor_anytype_access = function() {"
                 + "\n\tif (this.get_type().injectionPoints == null) {\n\t}\n}");
     }
@@ -243,7 +243,7 @@ public class ClassBTest extends ResourceTestBase
     public void new_anytype()
     {
         IFunctionNode node = findFunction("new_anytype", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.new_anytype = function() {\n\tvar "
                 + "instance = null;\n\tif (false)\n\t\tinstance = new (this.get_type())();\n}");
     }
@@ -253,7 +253,7 @@ public class ClassBTest extends ResourceTestBase
     {
         // JQueryStatic.J transformed to JQuery
         IFunctionNode node = findFunction("JQueryStatic_J", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.JQueryStatic_J = function() {"
                 + "\n\tthis.get_foo().injectPotentialNode(demo.foo.ClassB.FOO, "
                 + "jQuery(this.field1));\n}");
@@ -264,7 +264,7 @@ public class ClassBTest extends ResourceTestBase
     {
         IFunctionNode node = findFunction(
                 "anonymous_function_argument_delegate", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.anonymous_function_argument_delegate = "
                 + "function() {\n\tsetTimeout(function() {\n\t\tthis.method1("
                 + "this.get_foo());\n\t}, 1);\n}");
@@ -275,7 +275,7 @@ public class ClassBTest extends ResourceTestBase
     {
         IFunctionNode node = findFunction("anonymous_function_field_delegate",
                 classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.anonymous_function_field_delegate = function() "
                 + "{\n\tdemo.foo.ClassB.onSelectHandler = function(event) {"
                 + "\n\t\tthis.set_foo(\"Hello\");\n\t};\n}");
@@ -285,7 +285,7 @@ public class ClassBTest extends ResourceTestBase
     public void jscontext()
     {
         IFunctionNode node = findFunction("jscontext", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.jscontext = function() {"
                 + "\nfoo();\r\nvar i = \"was included\";\n}");
     }
@@ -294,7 +294,7 @@ public class ClassBTest extends ResourceTestBase
     public void conditional_lhs_getter()
     {
         IFunctionNode node = findFunction("conditional_lhs_getter", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.conditional_lhs_getter = function() {"
                 + "\n\tif ((this.get_data() == null) || (this.get_data().length == 0)) {"
                 + "\n\t\treturn;\n\t}\n}");
@@ -305,7 +305,7 @@ public class ClassBTest extends ResourceTestBase
     {
         IFunctionNode node = findFunction("functioncall_getter_invoke",
                 classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.functioncall_getter_invoke = function() {"
                 + "\n\tvar a;\n\ta = this.get_renderFunction()(this.j, this.get_data()[this.j]);\n}");
     }
@@ -314,7 +314,7 @@ public class ClassBTest extends ResourceTestBase
     public void const_string()
     {
         IFunctionNode node = findFunction("const_string", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.const_string = function() {"
                 + "\n\tconst RANDORI_VENDOR_ITEM_EXPRESSION = \";\";\n\tvar "
                 + "anyVendorItems = new RegExp(RANDORI_VENDOR_ITEM_EXPRESSION, \"g\")"
@@ -326,7 +326,7 @@ public class ClassBTest extends ResourceTestBase
     {
         IFunctionNode node = findFunction("transform_rest_to_arguments",
                 classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.transform_rest_to_arguments = function(args) {"
                 + "\n\tvar listener;\n\twhile (this.thenContracts.length > 0) {\n\t\t"
                 + "listener = this.thenContracts.pop();\n\t\tlistener.apply(this, arguments);\n\t}\n}");
@@ -336,7 +336,7 @@ public class ClassBTest extends ResourceTestBase
     public void new_HTMLBRElement()
     {
         IFunctionNode node = findFunction("new_HTMLBRElement", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.new_HTMLBRElement = function() {\n\t"
                 + "var breakIt = document.createElement('br');\n\tbreakIt.onchange = "
                 + "function() {\n\t\tconsole.log(\"We did it!\");\n\t};\n}");
@@ -347,7 +347,7 @@ public class ClassBTest extends ResourceTestBase
     {
         IFunctionNode node = findFunction(
                 "proto_default_parameter_arg_replacement", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.new_HTMLBRElement = function() {"
                 + "\n\tvar breakIt = document.createElement('br');\n\tbreakIt.onchange = "
                 + "$createAnonDelegate(this, function() {\n\t\tconsole.log(\"We did it!\");\n\t});\n}");
@@ -357,7 +357,7 @@ public class ClassBTest extends ResourceTestBase
     public void getter_in_return()
     {
         IFunctionNode node = findFunction("getter_in_return", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.getter_in_return = function() {"
                 + "\n\treturn this.get_data();\n}");
     }
@@ -366,7 +366,7 @@ public class ClassBTest extends ResourceTestBase
     public void static_delegate()
     {
         IFunctionNode node = findFunction("static_delegate", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.static_delegate = function() {"
                 + "\n\tvar something;\n\tsomething($createStaticDelegate(this, handleMe));\n}");
     }
@@ -375,7 +375,7 @@ public class ClassBTest extends ResourceTestBase
     public void remove_type_cast()
     {
         IFunctionNode node = findFunction("remove_type_cast", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.remove_type_cast = function() {"
                 + "\n\tvar a = this.get_foo();\n}");
     }
@@ -384,7 +384,7 @@ public class ClassBTest extends ResourceTestBase
     public void simple_get_assign()
     {
         IFunctionNode node = findFunction("simple_get_assign", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.simple_get_assign = function() {"
                 + "\n\tvar a = this.get_foo();\n}");
     }
@@ -393,7 +393,7 @@ public class ClassBTest extends ResourceTestBase
     public void json_with_default_params()
     {
         IFunctionNode node = findFunction("json_with_default_params", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.json_with_default_params = function() {"
                 + "\n\tvar menuItems = [{name:\"Targets\", url:\"views\\/targets.html\","
                 + " isRedirect:true, param4:\"bah\", param5:42}, {name:\"Labs\", "
@@ -407,15 +407,15 @@ public class ClassBTest extends ResourceTestBase
     {
         IFunctionNode node = findFunction("private_constructor_invoke",
                 classNode);
-        asBlockWalker.visitFunction(node);
-        Assert.assertEquals(1, ((ASEmitter) asEmitter).getProblems().size());
+        visitor.visitFunction(node);
+        Assert.assertEquals(1, ((ASEmitter) emitter).getProblems().size());
     }
 
     @Test
     public void local_array_literal()
     {
         IFunctionNode node = findFunction("local_array_literal", classNode);
-        asBlockWalker.visitFunction(node);
+        visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.local_array_literal = function() {"
                 + "\n\tvar o1 = {name:\"Mike\"};\n\tvar o2 = {name:\"Roland\"};\n\t"
                 + "var ar = [o1, o2];\n\tthis.names.set_data(ar);\n}");
@@ -424,7 +424,7 @@ public class ClassBTest extends ResourceTestBase
     @Test
     public void test_file()
     {
-        asBlockWalker.visitFile(fileNode);
+        visitor.visitFile(fileNode);
         //assertOut("");
     }
 
