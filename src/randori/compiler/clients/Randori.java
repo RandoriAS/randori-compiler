@@ -34,7 +34,6 @@ import org.apache.flex.compiler.config.Configuration;
 import org.apache.flex.compiler.config.ConfigurationBuffer;
 import org.apache.flex.compiler.config.Configurator;
 import org.apache.flex.compiler.config.ICompilerSettingsConstants;
-import org.apache.flex.compiler.driver.IBackend;
 import org.apache.flex.compiler.exceptions.ConfigurationException;
 import org.apache.flex.compiler.exceptions.ConfigurationException.IOError;
 import org.apache.flex.compiler.exceptions.ConfigurationException.MustSpecifyTarget;
@@ -53,6 +52,7 @@ import org.apache.flex.compiler.targets.ITarget;
 import org.apache.flex.compiler.targets.ITargetSettings;
 import org.apache.flex.compiler.units.ICompilationUnit;
 
+import randori.compiler.driver.IBackend;
 import randori.compiler.driver.IRandoriApplication;
 import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.internal.driver.RandoriBackend;
@@ -326,7 +326,7 @@ public class Randori
                 problems.getErrorsAndWarnings(errors, warnings);
                 if (errors.size() > 0)
                     return false;
-                
+
                 RandoriBackend randoriBackend = (RandoriBackend) backend;
                 if (!randoriBackend.isParseOnly())
                 {

@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.apache.flex.utils.FilenameNormalization;
 
-
 /**
  * @author Michael Schmalle
  */
@@ -34,9 +33,10 @@ public abstract class ResourceTestBase extends RandoriTestProjectBase
     protected void addSourcePaths(List<File> sourcePaths)
     {
         super.addSourcePaths(sourcePaths);
-        sourcePaths.add(new File(FilenameNormalization.normalize("test/resources")));
+        sourcePaths.add(new File(FilenameNormalization
+                .normalize("test/resources")));
     }
-    
+
     @Override
     protected String getBasePath()
     {

@@ -69,7 +69,7 @@ public interface IBundleCategory
         {
             return value;
         }
-        
+
         public static Type toType(String type)
         {
             for (Type iterable : values())

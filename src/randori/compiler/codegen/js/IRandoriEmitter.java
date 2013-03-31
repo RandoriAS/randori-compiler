@@ -21,7 +21,6 @@ package randori.compiler.codegen.js;
 
 import java.util.Collection;
 
-import org.apache.flex.compiler.codegen.js.IJSEmitter;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
 import org.apache.flex.compiler.tree.as.IFunctionNode;
@@ -35,9 +34,9 @@ import org.apache.flex.compiler.tree.as.IFunctionNode;
 public interface IRandoriEmitter extends IJSEmitter
 {
     public static final String ANON_DELEGATE_NAME = "$createAnonDelegate";
-    
+
     public static final String STATIC_DELEGATE_NAME = "$createStaticDelegate";
-    
+
     // TODO (mschmalle) this should be in IASEmitter
     Collection<ICompilerProblem> getProblems();
 

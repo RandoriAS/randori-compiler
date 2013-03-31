@@ -124,7 +124,7 @@ public class RandoriTarget extends Target implements IRandoriTarget
 
             // multithreaded parse, ast, scope, definition creation
             buildAndCollectProblems(compilationUnitSet, problems);
-            
+
             // !!! end multithreaded parsing
             // all units have been parsed; scopes and definitions have been created
             List<ICompilationUnit> reachableCompilationUnits = project

@@ -29,6 +29,7 @@ import org.apache.flex.compiler.common.ASModifier;
 import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
+import org.apache.flex.compiler.definitions.IInterfaceDefinition;
 import org.apache.flex.compiler.definitions.IParameterDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
@@ -410,10 +411,17 @@ public class DefinitionUtils
             }
             i++;
         }
-    
+
         if (!hasDefaults)
             return null;
-    
+
         return result;
+    }
+
+    public static final boolean isMemberDefinition(IDefinition definition)
+    {
+        return definition != null
+                && (definition.getParent() instanceof IClassDefinition || definition
+                        .getParent() instanceof IInterfaceDefinition);
     }
 }

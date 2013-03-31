@@ -23,7 +23,6 @@ import java.io.FilterWriter;
 import java.util.List;
 
 import org.apache.flex.compiler.config.Configurator;
-import org.apache.flex.compiler.internal.driver.as.ASBackend;
 import org.apache.flex.compiler.internal.projects.CompilerProject;
 import org.apache.flex.compiler.internal.projects.ISourceFileHandler;
 import org.apache.flex.compiler.internal.targets.RandoriTarget;
@@ -40,6 +39,7 @@ import randori.compiler.internal.codegen.js.RandoriEmitter;
 import randori.compiler.internal.codegen.js.RandoriWriter;
 import randori.compiler.internal.config.RandoriConfiguration;
 import randori.compiler.internal.config.RandoriConfigurator;
+import randori.compiler.internal.driver.as.ASBackend;
 
 /**
  * The backend for the {@link IRandoriEmitter}.
@@ -89,7 +89,7 @@ public class RandoriBackend extends ASBackend implements IRandoriBackend
     public IRandoriEmitter createEmitter(FilterWriter out)
     {
         IRandoriEmitter emitter = new RandoriEmitter(out);
-        emitter.setDocEmitter(createDocEmitter(emitter));
+        //emitter.setDocEmitter(createDocEmitter(emitter));
         return emitter;
     }
 

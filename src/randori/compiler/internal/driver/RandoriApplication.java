@@ -67,7 +67,7 @@ public class RandoriApplication implements IRandoriApplication
         }
 
         this.compilationUnits = units;
-        
+
         // XXX need to check whether the lib paths contain Randori.swc or RandoriGuice.swc
         guice = new RandoriGuiceModel(project, settings);
         randori = new RandoriModel(project, settings);

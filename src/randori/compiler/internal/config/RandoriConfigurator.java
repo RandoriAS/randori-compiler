@@ -26,7 +26,6 @@ import org.apache.flex.compiler.targets.ITarget.TargetType;
 
 import randori.compiler.config.IRandoriTargetSettings;
 
-
 /**
  * An override of the {@link Configurator} to allow a custom target settings
  * implementation.
@@ -51,7 +50,7 @@ public class RandoriConfigurator extends Configurator
     {
         // I am not quite sure if I can leave this super call out yet
         super.getTargetSettings(targetType);
-        
+
         // this is queried in RandoriBackend and is passed the RandoriConfiguration
         return new RandoriTargetSettings(getConfiguration());
     }

@@ -110,7 +110,8 @@ public class StAXManifestWriter
                     // writeFile(element.getFile(), element.getPath());
                     xmlWriter.writeEmptyElement(container.getName());
                     xmlWriter.writeAttribute("path", element.getPath());
-                    xmlWriter.writeAttribute("type", entry.getType().getValue());
+                    xmlWriter
+                            .writeAttribute("type", entry.getType().getValue());
                 }
 
                 // xmlWriter.writeEndElement();

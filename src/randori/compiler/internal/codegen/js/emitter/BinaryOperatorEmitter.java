@@ -27,10 +27,10 @@ import org.apache.flex.compiler.tree.ASTNodeID;
 import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
 import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
-import org.apache.flex.compiler.utils.ASNodeUtils;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
+import randori.compiler.internal.utils.ASNodeUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
 
 /**

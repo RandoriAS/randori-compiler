@@ -19,8 +19,6 @@
 
 package randori.compiler.driver;
 
-import org.apache.flex.compiler.driver.IBackend;
-
 /**
  * The {@link IRandoriBackend} API allows clients of the compiler such as the
  * {@link IRandoriApplication} access to factory methods to create emitters,

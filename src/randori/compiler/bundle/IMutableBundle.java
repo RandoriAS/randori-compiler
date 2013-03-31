@@ -8,5 +8,6 @@ import org.apache.flex.compiler.problems.ICompilerProblem;
 public interface IMutableBundle extends IBundle
 {
     void addLibrary(IBundleLibrary library);
+
     void addProblem(ICompilerProblem problem);
 }

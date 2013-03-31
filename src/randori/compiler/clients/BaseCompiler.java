@@ -24,7 +24,6 @@ import org.apache.flex.compiler.config.Configuration;
 import org.apache.flex.compiler.config.ConfigurationBuffer;
 import org.apache.flex.compiler.config.Configurator;
 import org.apache.flex.compiler.config.ICompilerSettingsConstants;
-import org.apache.flex.compiler.driver.IBackend;
 import org.apache.flex.compiler.exceptions.ConfigurationException;
 import org.apache.flex.compiler.exceptions.ConfigurationException.IOError;
 import org.apache.flex.compiler.exceptions.ConfigurationException.MustSpecifyTarget;
@@ -33,6 +32,8 @@ import org.apache.flex.compiler.internal.projects.ISourceFileHandler;
 import org.apache.flex.compiler.internal.workspaces.Workspace;
 import org.apache.flex.compiler.problems.ConfigurationProblem;
 import org.apache.flex.compiler.problems.ICompilerProblem;
+
+import randori.compiler.driver.IBackend;
 
 /**
  * A base compiler implementation that handles configuration and compiler state.

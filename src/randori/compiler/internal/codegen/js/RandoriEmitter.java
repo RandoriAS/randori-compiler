@@ -26,7 +26,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IPackageDefinition;
-import org.apache.flex.compiler.internal.codegen.js.JSEmitter;
 import org.apache.flex.compiler.internal.tree.as.FunctionNode;
 import org.apache.flex.compiler.internal.tree.as.FunctionObjectNode;
 import org.apache.flex.compiler.problems.ICompilerProblem;

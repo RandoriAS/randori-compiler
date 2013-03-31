@@ -21,15 +21,16 @@ package randori.compiler.internal.utils;
 
 import java.util.List;
 
-import org.apache.flex.compiler.codegen.as.IASEmitter;
 import org.apache.flex.compiler.definitions.IAccessorDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
-import org.apache.flex.compiler.internal.codegen.as.ASEmitter;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.ASTNodeID;
+
+import randori.compiler.codegen.as.IASEmitter;
+import randori.compiler.internal.codegen.as.ASEmitter;
 
 /**
  * @author Michael Schmalle

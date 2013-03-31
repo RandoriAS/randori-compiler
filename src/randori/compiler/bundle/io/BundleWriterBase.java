@@ -31,7 +31,7 @@ import randori.compiler.bundle.IBundleLibrary;
 public abstract class BundleWriterBase implements IBundleWriter
 {
     protected static final String MANIFEST_XML = "manifest.xml";
-    
+
     protected BundleWriterBase()
     {
     }

@@ -35,6 +35,7 @@ import org.apache.flex.swc.SWC;
 import org.apache.flex.utils.DAByteArrayOutputStream;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import randori.compiler.bundle.Bundle;
@@ -49,6 +50,7 @@ import randori.compiler.bundle.io.BundleWriter;
 import randori.compiler.common.VersionInfo;
 import randori.compiler.internal.constants.TestConstants;
 
+@Ignore
 public class BundleWriterTest
 {
     private static final String J_QUERY = "JQuery";

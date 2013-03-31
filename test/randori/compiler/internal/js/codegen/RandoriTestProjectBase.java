@@ -26,8 +26,6 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.flex.compiler.driver.IBackend;
-import org.apache.flex.compiler.internal.test.ASTestBase;
 import org.apache.flex.compiler.internal.units.SourceCompilationUnitFactory;
 import org.apache.flex.compiler.tree.as.IASNode;
 import org.apache.flex.compiler.tree.as.IClassNode;
@@ -45,6 +43,8 @@ import org.apache.flex.compiler.units.ICompilationUnit;
 import org.apache.flex.utils.FilenameNormalization;
 import org.junit.Assert;
 
+import randori.compiler.driver.IBackend;
+import randori.compiler.internal.ASTestBase;
 import randori.compiler.internal.constants.TestConstants;
 import randori.compiler.internal.driver.RandoriBackend;
 

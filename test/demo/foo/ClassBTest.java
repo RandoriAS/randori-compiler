@@ -19,13 +19,13 @@
 
 package demo.foo;
 
-import org.apache.flex.compiler.internal.codegen.as.ASEmitter;
 import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.apache.flex.compiler.tree.as.IGetterNode;
 import org.apache.flex.compiler.tree.as.ISetterNode;
 import org.junit.Assert;
 import org.junit.Test;
 
+import randori.compiler.internal.codegen.as.ASEmitter;
 import randori.compiler.internal.js.codegen.ResourceTestBase;
 
 public class ClassBTest extends ResourceTestBase

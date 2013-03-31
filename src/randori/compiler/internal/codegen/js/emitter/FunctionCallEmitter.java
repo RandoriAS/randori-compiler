@@ -169,7 +169,8 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
             if (attribute != null && attribute.getValue().equals("true"))
             {
                 getEmitter().getProblems().add(
-                        new CannotCallPrivateConstructorProblem(node, newDefinition.getBaseName()));
+                        new CannotCallPrivateConstructorProblem(node,
+                                newDefinition.getBaseName()));
             }
         }
 

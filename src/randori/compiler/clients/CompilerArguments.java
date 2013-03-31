@@ -31,7 +31,7 @@ public class CompilerArguments
     private List<String> libraries = new ArrayList<String>();
 
     private List<String> sources = new ArrayList<String>();
-    
+
     private List<String> includes = new ArrayList<String>();
 
     private String appName;
@@ -64,7 +64,7 @@ public class CompilerArguments
             return;
         includes.add(path);
     }
-    
+
     public String getAppName()
     {
         return appName;
@@ -143,34 +143,34 @@ public class CompilerArguments
         {
             result.add("-library-path=" + arg);
         }
-        
+
         for (String arg : sources)
         {
             result.add("-sp=" + arg);
         }
-        
+
         for (String arg : includes)
         {
             result.add("-include-sources=" + arg);
         }
 
-//        result.add("-app-name=" + getAppName());
-//        result.add("-js-base-path=" + getJsBasePath());
-//        result.add("-js-library-path=" + getJsLibraryPath());
-//        result.add("-js-classes-as-files=" + (isJsOutputAsFiles() ? "true" : "false"));
+        //        result.add("-app-name=" + getAppName());
+        //        result.add("-js-base-path=" + getJsBasePath());
+        //        result.add("-js-library-path=" + getJsLibraryPath());
+        //        result.add("-js-classes-as-files=" + (isJsOutputAsFiles() ? "true" : "false"));
         result.add("-output=" + getOutput());
 
         return result.toArray(new String[] {});
     }
 
-//    public void configure(Project project, RandoriProjectModel model)
-//    {
-//        setAppName(project.getName());
-//        setJsBasePath(model.getBasePath());
-//        setJsLibraryPath(model.getLibraryPath());
-//        setJsOutputAsFiles(model.isClassesAsFile());
-//        setOutput(project.getBasePath());
-//    }
+    //    public void configure(Project project, RandoriProjectModel model)
+    //    {
+    //        setAppName(project.getName());
+    //        setJsBasePath(model.getBasePath());
+    //        setJsLibraryPath(model.getLibraryPath());
+    //        setJsOutputAsFiles(model.isClassesAsFile());
+    //        setOutput(project.getBasePath());
+    //    }
 
     public static class CompilerArgument
     {
@@ -209,6 +209,5 @@ public class CompilerArguments
             return new CompilerArgument(name, value);
         }
     }
-
 
 }

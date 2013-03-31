@@ -65,7 +65,8 @@ public class TargetsMediatorTest extends RandoriTestProjectBase
 
     protected String getBasePath()
     {
-        return TestConstants.RandoriASFramework + "\\randori-demos-bundle\\HMSS\\src";
+        return TestConstants.RandoriASFramework
+                + "\\randori-demos-bundle\\HMSS\\src";
     }
 
     @Override

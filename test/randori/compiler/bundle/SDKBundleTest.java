@@ -10,6 +10,7 @@ import org.apache.flex.swc.SWC;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import randori.compiler.bundle.IBundleContainer.Type;
@@ -20,6 +21,7 @@ import randori.compiler.common.VersionInfo;
 import randori.compiler.internal.constants.TestConstants;
 import randori.compiler.internal.driver.RandoriBackend;
 
+@Ignore
 /**
  * A functional test of compiling the SDK bundle and reading it, while testing
  * it's state along the way.

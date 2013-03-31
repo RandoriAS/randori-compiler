@@ -21,11 +21,11 @@ package randori.compiler.internal.codegen.js.emitter;
 
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.projects.ICompilerProject;
-import org.apache.flex.compiler.visitor.as.IASBlockWalker;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISessionModel;
 import randori.compiler.internal.utils.MetaDataUtils;
+import randori.compiler.visitor.as.IASBlockWalker;
 
 /**
  * Base emitter for sub composites of the {@link IRandoriEmitter}.
@@ -63,21 +63,21 @@ public abstract class BaseSubEmitter
         return emitter.getModel();
     }
 
-//    protected void write(ASEmitterTokens value)
-//    {
-//        emitter.write(value);
-//    }
-    
+    //    protected void write(ASEmitterTokens value)
+    //    {
+    //        emitter.write(value);
+    //    }
+
     protected void write(String value)
     {
         emitter.write(value);
     }
-    
-//    protected void writeToken(ASEmitterTokens value)
-//    {
-//        emitter.writeToken(value);
-//    }
-    
+
+    //    protected void writeToken(ASEmitterTokens value)
+    //    {
+    //        emitter.writeToken(value);
+    //    }
+
     protected void writeToken(String value)
     {
         emitter.writeToken(value);

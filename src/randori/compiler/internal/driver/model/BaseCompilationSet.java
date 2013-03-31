@@ -33,7 +33,6 @@ import java.util.Map.Entry;
 import org.apache.flex.compiler.clients.problems.ProblemQuery;
 import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
-import org.apache.flex.compiler.internal.codegen.as.ASFilterWriter;
 import org.apache.flex.compiler.internal.projects.FlexProject;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.tree.as.IASNode;
@@ -43,15 +42,16 @@ import org.apache.flex.compiler.tree.as.IPackageNode;
 import org.apache.flex.compiler.tree.as.ITypeNode;
 import org.apache.flex.compiler.units.ICompilationUnit;
 import org.apache.flex.compiler.units.ICompilationUnit.UnitType;
-import org.apache.flex.compiler.visitor.as.IASBlockWalker;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.common.VersionInfo;
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.driver.IRandoriTarget;
+import randori.compiler.internal.codegen.as.ASFilterWriter;
 import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
+import randori.compiler.visitor.as.IASBlockWalker;
 
 /**
  * The bas class for project set's containing compilation units to produce

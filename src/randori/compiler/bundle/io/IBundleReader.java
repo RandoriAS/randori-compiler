@@ -32,12 +32,14 @@ public interface IBundleReader
 {
     /**
      * Get the file of the {@link IBundle} file.
+     * 
      * @return {@link IBundle} file object
      */
     File getFile();
-    
+
     /**
      * Get the IBundle model object.
+     * 
      * @return {@code IBundle} object
      */
     IBundle getBundle();

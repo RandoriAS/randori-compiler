@@ -21,7 +21,6 @@ package randori.compiler.driver;
 
 import java.util.Collection;
 
-import org.apache.flex.compiler.driver.IBackend;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.projects.IASProject;
 import org.apache.flex.compiler.targets.ITarget;

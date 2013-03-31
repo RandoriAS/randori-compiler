@@ -32,7 +32,7 @@ public class BundleEntry implements IBundleEntry
     private File file;
 
     private final String path;
-    
+
     /**
      * Creates an entry from the {@link IBundleReader}.
      * 
@@ -42,7 +42,7 @@ public class BundleEntry implements IBundleEntry
     {
         this.path = path;
     }
-    
+
     public BundleEntry(File file, String path)
     {
         this.file = file;

@@ -26,12 +26,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.flex.compiler.codegen.as.IASWriter;
 import org.apache.flex.compiler.internal.projects.FlexProject;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.tree.as.ITypeNode;
 import org.apache.flex.compiler.units.ICompilationUnit;
 
+import randori.compiler.codegen.as.IASWriter;
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.internal.utils.FileUtils;

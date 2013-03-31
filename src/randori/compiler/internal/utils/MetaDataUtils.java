@@ -34,9 +34,9 @@ import org.apache.flex.compiler.tree.as.IClassNode;
 import org.apache.flex.compiler.tree.as.IDefinitionNode;
 import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.apache.flex.compiler.tree.metadata.IMetaTagNode;
-import org.apache.flex.compiler.utils.NativeUtils.NativeType;
 
 import randori.compiler.internal.utils.MetaDataUtils.MetaData.Mode;
+import randori.compiler.internal.utils.NativeUtils.NativeType;
 
 /**
  * Possible metadata;

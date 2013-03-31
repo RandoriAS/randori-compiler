@@ -173,7 +173,8 @@ public class StAXManifestReader
         catch (XMLStreamException e)
         {
             File bundleFile = bundle.getBundleFile();
-            final String file = (bundleFile != null) ? FilenameNormalization.normalize(bundleFile.getAbsolutePath()) : "";
+            final String file = (bundleFile != null) ? FilenameNormalization
+                    .normalize(bundleFile.getAbsolutePath()) : "";
             bundle.addProblem(new FileInLibraryIOProblem(SWCReader.CATALOG_XML,
                     file, e.getLocalizedMessage()));
         }
