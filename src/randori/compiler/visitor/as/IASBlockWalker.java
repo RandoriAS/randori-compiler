@@ -19,18 +19,34 @@
 
 package randori.compiler.visitor.as;
 
+import org.apache.flex.compiler.projects.ICompilerProject;
+import org.apache.flex.compiler.tree.as.IASNode;
+
 import randori.compiler.codegen.as.IASEmitter;
-import randori.compiler.visitor.IBlockWalker;
 
 /**
  * @author Michael Schmalle
  */
-public interface IASBlockWalker extends IASBlockVisitor, IBlockWalker
+public interface IASBlockWalker extends IASNodeVisitor
 {
+    /**
+     * Returns the current {@link ICompilerProject} for the traverse state.
+     */
+    ICompilerProject getProject();
 
     /**
      * The current code emitter.
      */
     IASEmitter getEmitter();
+
+    /**
+     * Traverses an {@link IASNode} based on the semantics of the known node.
+     * <p>
+     * Typically uses the {@link IASNodeStrategy#handle(IASNode)} to delegate
+     * how the node will be traversed.
+     * 
+     * @param node The {@link IASNode} to traverse using the current strategy
+     */
+    void walk(IASNode node);
 
 }

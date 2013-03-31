@@ -80,17 +80,17 @@ import org.apache.flex.compiler.units.ICompilationUnit;
 
 import randori.compiler.codegen.as.IASEmitter;
 import randori.compiler.internal.utils.DefinitionUtils;
-import randori.compiler.visitor.IASNodeStrategy;
-import randori.compiler.visitor.as.IASBlockVisitor;
 import randori.compiler.visitor.as.IASBlockWalker;
+import randori.compiler.visitor.as.IASNodeStrategy;
+import randori.compiler.visitor.as.IASNodeVisitor;
 
 /**
- * A base implementation of the {@link IASBlockVisitor} that will walk the
+ * A base implementation of the {@link IASNodeVisitor} that will walk the
  * {@link ICompilationUnit}s AST {@link IASNode} hierarchy.
  * 
  * @author Michael Schmalle
  */
-public class ASBlockWalker implements IASBlockVisitor, IASBlockWalker
+public class ASBlockWalker implements IASNodeVisitor, IASBlockWalker
 {
     boolean isDebug;
 

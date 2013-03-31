@@ -24,8 +24,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import randori.compiler.bundle.BundleVersion;
-
 /**
  * @author Michael Schmalle
  */

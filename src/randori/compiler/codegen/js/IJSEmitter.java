@@ -22,7 +22,7 @@ package randori.compiler.codegen.js;
 import java.io.Writer;
 
 import randori.compiler.codegen.as.IASEmitter;
-import randori.compiler.visitor.IASNodeStrategy;
+import randori.compiler.visitor.as.IASNodeStrategy;
 
 /**
  * The {@link IJSEmitter} interface allows abstraction between the

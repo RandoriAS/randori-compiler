@@ -69,8 +69,8 @@ import org.apache.flex.compiler.tree.as.IWithNode;
 import org.apache.flex.compiler.tree.metadata.IMetaTagNode;
 import org.apache.flex.compiler.tree.metadata.IMetaTagsNode;
 
-import randori.compiler.visitor.IASNodeStrategy;
-import randori.compiler.visitor.as.IASBlockVisitor;
+import randori.compiler.visitor.as.IASNodeStrategy;
+import randori.compiler.visitor.as.IASNodeVisitor;
 
 /**
  * The {@link ASNodeSwitch} class is an {@link IASNodeStrategy} implementation
@@ -83,16 +83,16 @@ import randori.compiler.visitor.as.IASBlockVisitor;
  */
 public class ASNodeSwitch implements IASNodeStrategy
 {
-    private IASBlockVisitor visitor;
+    private IASNodeVisitor visitor;
 
     /**
      * Creates a new node switch using the {@link #visitor} to handle the
      * {@link IASNode} in the current traverse.
      * 
-     * @param visitor The {@link IASBlockVisitor} strategy that will visit an
+     * @param visitor The {@link IASNodeVisitor} strategy that will visit an
      * {@link IASNode} based on it's type.
      */
-    public ASNodeSwitch(IASBlockVisitor visitor)
+    public ASNodeSwitch(IASNodeVisitor visitor)
     {
         this.visitor = visitor;
     }

@@ -28,7 +28,6 @@ import java.util.Set;
 import org.apache.flex.compiler.exceptions.BuildCanceledException;
 import org.apache.flex.compiler.internal.projects.CompilerProject;
 import org.apache.flex.compiler.internal.projects.FlexProject;
-import org.apache.flex.compiler.internal.targets.Target;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.targets.ITargetProgressMonitor;
 import org.apache.flex.compiler.targets.ITargetReport;

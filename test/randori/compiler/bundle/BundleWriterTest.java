@@ -38,14 +38,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import randori.compiler.bundle.Bundle;
-import randori.compiler.bundle.BundleLibrary;
-import randori.compiler.bundle.IBundle;
-import randori.compiler.bundle.IBundleContainer;
 import randori.compiler.bundle.IBundleContainer.Type;
-import randori.compiler.bundle.IBundleCategory;
-import randori.compiler.bundle.IBundleLibrary;
-import randori.compiler.bundle.IBundleVersion;
 import randori.compiler.bundle.io.BundleWriter;
 import randori.compiler.common.VersionInfo;
 import randori.compiler.internal.constants.TestConstants;

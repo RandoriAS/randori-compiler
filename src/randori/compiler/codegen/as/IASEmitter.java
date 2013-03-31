@@ -64,8 +64,8 @@ import org.apache.flex.compiler.tree.as.IWithNode;
 import org.apache.flex.compiler.tree.metadata.IMetaTagNode;
 
 import randori.compiler.codegen.IEmitter;
-import randori.compiler.visitor.IASNodeStrategy;
-import randori.compiler.visitor.IBlockWalker;
+import randori.compiler.visitor.as.IASBlockWalker;
+import randori.compiler.visitor.as.IASNodeStrategy;
 
 /**
  * The {@link IASEmitter} interface allows abstraction between the
@@ -75,9 +75,9 @@ import randori.compiler.visitor.IBlockWalker;
  */
 public interface IASEmitter extends IEmitter
 {
-    IBlockWalker getWalker();
+    IASBlockWalker getWalker();
 
-    void setWalker(IBlockWalker asBlockWalker);
+    void setWalker(IASBlockWalker asBlockWalker);
 
     //IDocEmitter getDocEmitter();
 

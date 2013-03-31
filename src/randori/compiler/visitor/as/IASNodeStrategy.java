@@ -17,7 +17,7 @@
  * @author Michael Schmalle <mschmalle@teotigraphix.com>
  */
 
-package randori.compiler.visitor;
+package randori.compiler.visitor.as;
 
 import org.apache.flex.compiler.tree.as.IASNode;
 

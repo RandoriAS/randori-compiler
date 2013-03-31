@@ -68,10 +68,9 @@ import org.apache.flex.compiler.tree.metadata.IMetaTagsNode;
 import org.apache.flex.compiler.units.ICompilationUnit;
 
 import randori.compiler.internal.codegen.as.ASBlockWalker;
-import randori.compiler.visitor.IASNodeStrategy;
 
 /**
- * The {@link IASBlockVisitor} interface allows an {@link IASNodeStrategy} to
+ * The {@link IASNodeVisitor} interface allows an {@link IASNodeStrategy} to
  * delegate within it's {@link IASNodeStrategy#handle(IASNode)} method to this
  * API's visitor method.
  * <p>
@@ -81,7 +80,7 @@ import randori.compiler.visitor.IASNodeStrategy;
  * 
  * @see ASBlockWalker
  */
-public interface IASBlockVisitor
+public interface IASNodeVisitor
 {
     //--------------------------------------------------------------------------
     // Top level nodes

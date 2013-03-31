@@ -22,7 +22,7 @@ package randori.compiler.internal.visitor.as;
 import org.apache.flex.compiler.tree.as.IASNode;
 import org.apache.flex.compiler.tree.as.IBlockNode;
 
-import randori.compiler.visitor.IASNodeStrategy;
+import randori.compiler.visitor.as.IASNodeStrategy;
 
 /**
  * The {@link BeforeAfterStrategy} implements a before and after {@link IASNode}

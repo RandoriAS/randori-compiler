@@ -21,8 +21,8 @@ package randori.compiler.internal.config;
 
 import org.apache.flex.compiler.config.Configuration;
 import org.apache.flex.compiler.config.Configurator;
-import org.apache.flex.compiler.targets.ITargetSettings;
 import org.apache.flex.compiler.targets.ITarget.TargetType;
+import org.apache.flex.compiler.targets.ITargetSettings;
 
 import randori.compiler.config.IRandoriTargetSettings;
 

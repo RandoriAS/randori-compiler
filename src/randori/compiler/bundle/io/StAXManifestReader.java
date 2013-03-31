@@ -33,7 +33,12 @@ import org.apache.flex.compiler.problems.FileInLibraryIOProblem;
 import org.apache.flex.swc.io.SWCReader;
 import org.apache.flex.utils.FilenameNormalization;
 
-import randori.compiler.bundle.*;
+import randori.compiler.bundle.BundleContainer;
+import randori.compiler.bundle.BundleLibrary;
+import randori.compiler.bundle.BundleVersion;
+import randori.compiler.bundle.IBundleCategory;
+import randori.compiler.bundle.IBundleContainer;
+import randori.compiler.bundle.IMutableBundle;
 
 /**
  * @author Michael Schmalle

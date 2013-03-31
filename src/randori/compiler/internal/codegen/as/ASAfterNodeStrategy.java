@@ -27,7 +27,7 @@ import org.apache.flex.compiler.tree.as.IContainerNode.ContainerType;
 import randori.compiler.codegen.IEmitter;
 import randori.compiler.codegen.as.IASEmitter;
 import randori.compiler.codegen.js.IJSEmitter;
-import randori.compiler.visitor.IASNodeStrategy;
+import randori.compiler.visitor.as.IASNodeStrategy;
 
 /**
  * A concrete implementation of the {@link IASNodeStrategy} that allows

@@ -92,7 +92,6 @@ import org.apache.flex.compiler.tree.metadata.IMetaTagNode;
 import randori.compiler.codegen.IEmitter;
 import randori.compiler.codegen.as.IASEmitter;
 import randori.compiler.internal.utils.ASNodeUtils;
-import randori.compiler.visitor.IBlockWalker;
 import randori.compiler.visitor.as.IASBlockWalker;
 
 /**
@@ -149,13 +148,13 @@ public class ASEmitter implements IASEmitter, IEmitter
     private IASBlockWalker walker;
 
     @Override
-    public IBlockWalker getWalker()
+    public IASBlockWalker getWalker()
     {
-        return (IBlockWalker) walker;
+        return (IASBlockWalker) walker;
     }
 
     @Override
-    public void setWalker(IBlockWalker value)
+    public void setWalker(IASBlockWalker value)
     {
         walker = (IASBlockWalker) value;
     }

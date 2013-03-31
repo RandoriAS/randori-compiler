@@ -28,8 +28,8 @@ import javax.xml.stream.XMLStreamException;
 import org.apache.flex.swc.catalog.XMLFormatter;
 
 import randori.compiler.bundle.IBundle;
-import randori.compiler.bundle.IBundleContainer;
 import randori.compiler.bundle.IBundleCategory;
+import randori.compiler.bundle.IBundleContainer;
 import randori.compiler.bundle.IBundleEntry;
 import randori.compiler.bundle.IBundleLibrary;
 import randori.compiler.bundle.IBundleVersion;

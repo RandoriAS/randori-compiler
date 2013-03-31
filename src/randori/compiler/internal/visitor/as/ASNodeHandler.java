@@ -21,7 +21,7 @@ package randori.compiler.internal.visitor.as;
 
 import org.apache.flex.compiler.tree.as.IASNode;
 
-import randori.compiler.visitor.IASNodeStrategy;
+import randori.compiler.visitor.as.IASNodeStrategy;
 
 /**
  * A concrete implementation of the {@link IASNodeStrategy} that allows a
