@@ -19,12 +19,6 @@
 
 package randori.compiler.codegen.js;
 
-import java.util.Collection;
-
-import org.apache.flex.compiler.problems.ICompilerProblem;
-import org.apache.flex.compiler.tree.as.IExpressionNode;
-import org.apache.flex.compiler.tree.as.IFunctionNode;
-
 /**
  * The {@link IRandoriEmitter} interface allows abstraction between the base
  * JavaScript and the randori specific source code production.
@@ -36,26 +30,6 @@ public interface IRandoriEmitter extends IJSEmitter
     public static final String ANON_DELEGATE_NAME = "$createAnonDelegate";
 
     public static final String STATIC_DELEGATE_NAME = "$createStaticDelegate";
-
-    // TODO (mschmalle) this should be in IASEmitter
-    Collection<ICompilerProblem> getProblems();
-
-    // TODO (mschmalle) this should be in IASEmitter
-    void emitParamters(IFunctionNode node);
-
-    // TODO (mschmalle) this should be in IASEmitter
-    void emitMethodScope(IFunctionNode node);
-
-    /**
-     * Will swap the current write buffer with a {@link StringBuilder}, walk the
-     * node passed and then return the String produced.
-     * <p>
-     * Important to note that the String is not actually written to the out
-     * buffer.
-     * 
-     * @param node The node to stringify.
-     */
-    String toNodeString(IExpressionNode node);
 
     /**
      * Returns the session model for the current session.

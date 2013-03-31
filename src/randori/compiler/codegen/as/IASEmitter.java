@@ -20,16 +20,19 @@
 package randori.compiler.codegen.as;
 
 import java.io.Writer;
+import java.util.Collection;
 
 import org.apache.flex.compiler.definitions.IPackageDefinition;
 import org.apache.flex.compiler.internal.tree.as.LabeledStatementNode;
 import org.apache.flex.compiler.internal.tree.as.NamespaceAccessExpressionNode;
+import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.tree.as.IASNode;
 import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
 import org.apache.flex.compiler.tree.as.IBlockNode;
 import org.apache.flex.compiler.tree.as.ICatchNode;
 import org.apache.flex.compiler.tree.as.IClassNode;
 import org.apache.flex.compiler.tree.as.IDynamicAccessNode;
+import org.apache.flex.compiler.tree.as.IExpressionNode;
 import org.apache.flex.compiler.tree.as.IForLoopNode;
 import org.apache.flex.compiler.tree.as.IFunctionCallNode;
 import org.apache.flex.compiler.tree.as.IFunctionNode;
@@ -75,13 +78,18 @@ import randori.compiler.visitor.as.IASNodeStrategy;
  */
 public interface IASEmitter extends IEmitter
 {
+    /**
+     * The emitter's parent visitor that is an {@link IASBlockWalker}.
+     */
     IASBlockWalker getWalker();
 
     void setWalker(IASBlockWalker asBlockWalker);
 
-    //IDocEmitter getDocEmitter();
-
-    //void setDocEmitter(IDocEmitter value);
+    /**
+     * The current collection of {@link ICompilerProblem}s for the
+     * {@link IASEmitter}.
+     */
+    Collection<ICompilerProblem> getProblems();
 
     void emitImport(IImportNode node);
 
@@ -121,6 +129,20 @@ public interface IASEmitter extends IEmitter
      * @param node The {@link IVariableNode} class field member.
      */
     void emitField(IVariableNode node);
+
+    /**
+     * Emit a method scope with braces.
+     * 
+     * @param node The {@link IFunctionNode} member.
+     */
+    void emitMethodScope(IFunctionNode node);
+
+    /**
+     * Emit parameters for a function.
+     * 
+     * @param node The {@link IFunctionNode} node.
+     */
+    void emitParamters(IFunctionNode node);
 
     /**
      * Emit a documentation comment for a Class method {@link IFunctionNode}.
@@ -347,4 +369,14 @@ public interface IASEmitter extends IEmitter
 
     void emitMetaTag(IMetaTagNode node);
 
+    /**
+     * Will swap the current write buffer with a {@link StringBuilder}, walk the
+     * node passed and then return the String produced.
+     * <p>
+     * Important to note that the String is not actually written to the out
+     * buffer.
+     * 
+     * @param node The node to stringify.
+     */
+    String toNodeString(IExpressionNode node);
 }

@@ -583,6 +583,16 @@ public class ASEmitter implements IASEmitter, IEmitter
     }
 
     @Override
+    public void emitMethodScope(IFunctionNode node)
+    {
+    }
+
+    @Override
+    public void emitParamters(IFunctionNode node)
+    {
+    }
+
+    @Override
     public void emitGetAccessorDocumentation(IGetterNode node)
     {
     }
@@ -1401,4 +1411,11 @@ public class ASEmitter implements IASEmitter, IEmitter
         setBufferWrite(false);
         return result;
     }
+
+    @Override
+    public String toNodeString(IExpressionNode node)
+    {
+        return stringifyNode(node);
+    }
+
 }
