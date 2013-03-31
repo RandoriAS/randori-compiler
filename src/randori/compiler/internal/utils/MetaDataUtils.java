@@ -374,6 +374,22 @@ public class MetaDataUtils
         return false;
     }
 
+    public static boolean isGlobal(IDefinition definition)
+    {
+        if (definition == null)
+            return false;
+
+        IMetaTag tag = findTag(definition, MetaData.JavaScript);
+        if (tag == null)
+            return false;
+
+        String value = tag.getAttributeValue(ATT_MODE);
+        if (value != null && value.equals(VALUE_GLOBAL))
+            return true;
+
+        return false;
+    }
+
     /**
      * Returns the {@link MetaData} for the {@link IDefinition} type.
      * 

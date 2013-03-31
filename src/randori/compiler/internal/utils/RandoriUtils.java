@@ -22,12 +22,18 @@ package randori.compiler.internal.utils;
 import java.util.List;
 
 import org.apache.flex.compiler.definitions.IAccessorDefinition;
+import org.apache.flex.compiler.definitions.IConstantDefinition;
+import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
+import org.apache.flex.compiler.internal.definitions.ClassTraitsDefinition;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.ASTNodeID;
+import org.apache.flex.compiler.tree.as.IExpressionNode;
+import org.apache.flex.compiler.tree.as.IIdentifierNode;
+import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
 
 import randori.compiler.codegen.as.IASEmitter;
 import randori.compiler.internal.codegen.as.ASEmitter;
@@ -92,4 +98,105 @@ public class RandoriUtils
         return sb.toString();
     }
 
+    public static boolean isJQueryStaticJ(IExpressionNode left,
+            IExpressionNode right)
+    {
+        if (left instanceof IIdentifierNode && right instanceof IIdentifierNode)
+        {
+            IIdentifierNode ileft = (IIdentifierNode) left;
+            IIdentifierNode iright = (IIdentifierNode) right;
+            if (ileft.getName().equals("JQueryStatic")
+                    && iright.getName().equals("J"))
+                return true;
+        }
+        return false;
+    }
+
+    public static boolean isConstantMemberAccess(IExpressionNode left,
+            IExpressionNode right, ICompilerProject project)
+    {
+        if (left instanceof IIdentifierNode && right instanceof IIdentifierNode)
+        {
+            IIdentifierNode ileft = (IIdentifierNode) left;
+            IIdentifierNode iright = (IIdentifierNode) right;
+            IDefinition dleft = ileft.resolveType(project);
+            if (dleft instanceof ClassTraitsDefinition)
+            {
+                IDefinition dright = iright.resolve(project);
+                if (dright instanceof IConstantDefinition)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isTransparentAccessorAccess(IExpressionNode left,
+            IExpressionNode right)
+    {
+        // for now, the transparent access can be;
+        // - a static accessor 'Window.console.log()'
+
+        // is the left member access and right and identifier, '{[Window].[console]}.[log]()'
+        if (left instanceof IMemberAccessExpressionNode)
+        {
+            IMemberAccessExpressionNode mnode = (IMemberAccessExpressionNode) left;
+
+            if (mnode.getLeftOperandNode() instanceof IIdentifierNode)
+            {
+                IIdentifierNode ileft = (IIdentifierNode) mnode
+                        .getLeftOperandNode();
+                if (ileft.getName().equals("Window"))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isTransparentMemberAccess(IExpressionNode left,
+            IExpressionNode right)
+    {
+        // for now, the transparent access can be;
+        // - a static method 'Window.alert()'
+
+        // is the left identifier and right and identifier, '[Window.].[log]()'
+        if (left instanceof IIdentifierNode && right instanceof IIdentifierNode)
+        {
+            IIdentifierNode ileft = (IIdentifierNode) left;
+            if (ileft.getName().equals("Window"))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isGlobalStatic(IExpressionNode left,
+            IExpressionNode right, ICompilerProject project)
+    {
+        if (left instanceof IIdentifierNode && right instanceof IIdentifierNode)
+        {
+            IIdentifierNode ileft = (IIdentifierNode) left;
+            IDefinition dleft = ileft.resolveType(project);
+            if (dleft instanceof ClassTraitsDefinition)
+            {
+                if (MetaDataUtils.isGlobal(dleft))
+                    return true;
+            }
+        }
+        else if (left instanceof IMemberAccessExpressionNode)
+        {
+            // possible qualified name to static global class
+            // [foo.bar.Baz].myFunction()
+            IMemberAccessExpressionNode ileft = (IMemberAccessExpressionNode) left;
+            IDefinition dleft = ileft.resolveType(project);
+            if (dleft instanceof ClassTraitsDefinition)
+            {
+                if (MetaDataUtils.isGlobal(dleft))
+                    return true;
+            }
+        }
+        return false;
+    }
 }

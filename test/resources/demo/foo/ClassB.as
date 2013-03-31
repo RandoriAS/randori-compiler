@@ -2,7 +2,9 @@ package demo.foo
 {
 
 import demo.foo.support.MenuItem2;
+import demo.foo.support.PolyFill;
 
+import randori.behaviors.SimpleList;
 import randori.jquery.Event;
 import randori.jquery.JQuery;
 import randori.jquery.JQueryStatic;
@@ -10,7 +12,6 @@ import randori.webkit.fileapi.FileReader;
 import randori.webkit.html.HTMLBRElement;
 import randori.webkit.page.Location;
 import randori.webkit.page.Window;
-import randori.behaviors.SimpleList;
 
 public class ClassB extends ClassA
 {
@@ -312,6 +313,16 @@ public class ClassB extends ClassA
         var o2:Object = {name:"Roland"};
         var ar:Array = [o1,o2];
         names.data = ar;
+    }
+    
+    public function global_static():void
+    {
+        PolyFill.fillConsoleForIE();
+    }
+    
+    public function global_static_qualified():void
+    {
+        demo.foo.support.PolyFill.fillConsoleForIE();
     }
 }
 }

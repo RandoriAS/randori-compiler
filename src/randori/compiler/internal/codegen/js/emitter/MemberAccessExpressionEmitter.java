@@ -22,16 +22,15 @@ package randori.compiler.internal.codegen.js.emitter;
 import org.apache.flex.compiler.definitions.IAccessorDefinition;
 import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
-import org.apache.flex.compiler.internal.definitions.ClassTraitsDefinition;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
 import org.apache.flex.compiler.tree.as.IIdentifierNode;
-import org.apache.flex.compiler.tree.as.ILanguageIdentifierNode;
-import org.apache.flex.compiler.tree.as.ILanguageIdentifierNode.LanguageIdentifierKind;
 import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
+import randori.compiler.internal.utils.DefinitionUtils;
+import randori.compiler.internal.utils.RandoriUtils;
 
 /**
  * Handles the production of the {@link IMemberAccessExpressionNode}.
@@ -58,16 +57,21 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
         IExpressionNode right = node.getRightOperandNode();
         IDefinition rightDef = right.resolve(project);
 
+        boolean isTransparent = RandoriUtils.isTransparentMemberAccess(left,
+                right);
+        boolean isGlobalStatic = RandoriUtils.isGlobalStatic(left, right,
+                project);
         // the left is 'Window', the right is the static method
-        getModel().setSkipOperator(isTransparentMemberAccess(left, right));
+        getModel().setSkipOperator(isTransparent || isGlobalStatic);
 
         // JQueryStatic
-        if (isJQueryStaticJ(left, right))
+        if (RandoriUtils.isJQueryStaticJ(left, right))
         {
             write("jQuery");
             return;
         }
-        if (isTransparentAccessorAccess(left, right))
+        
+        if (RandoriUtils.isTransparentAccessorAccess(left, right))
         {
             // '[Window.console].[log]()'
             // just write the lefts's right operand
@@ -80,7 +84,7 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
             return;
         }
 
-        if (isConstantMemberAccess(left, right))
+        if (RandoriUtils.isConstantMemberAccess(left, right, project))
         {
             // if Foo.BAR, we skip below and just write the scalar value
             IConstantDefinition cdef = (IConstantDefinition) right
@@ -107,7 +111,7 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
         if (left.getParent() instanceof IMemberAccessExpressionNode)
         {
             // we are handling 'this' so don't write the '.'
-            if (!isThisIdentifier(left))
+            if (!DefinitionUtils.isThisIdentifier(left))
             {
                 // if there is a transparent access, skip the '.'
                 if (!getModel().skipOperator())
@@ -137,87 +141,6 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
         {
             writeIfNotNative("()", rightDef);
         }
-    }
-
-    private boolean isJQueryStaticJ(IExpressionNode left, IExpressionNode right)
-    {
-        if (left instanceof IIdentifierNode && right instanceof IIdentifierNode)
-        {
-            IIdentifierNode ileft = (IIdentifierNode) left;
-            IIdentifierNode iright = (IIdentifierNode) right;
-            if (ileft.getName().equals("JQueryStatic")
-                    && iright.getName().equals("J"))
-                return true;
-        }
-        return false;
-    }
-
-    private boolean isThisIdentifier(IExpressionNode node)
-    {
-        return node instanceof ILanguageIdentifierNode
-                && ((ILanguageIdentifierNode) node).getKind() == LanguageIdentifierKind.THIS;
-    }
-
-    private final boolean isTransparentMemberAccess(IExpressionNode left,
-            IExpressionNode right)
-    {
-        // for now, the transparent access can be;
-        // - a static method 'Window.alert()'
-
-        // is the left identifier and right and identifier, '[Window.].[log]()'
-        if (left instanceof IIdentifierNode && right instanceof IIdentifierNode)
-        {
-            IIdentifierNode ileft = (IIdentifierNode) left;
-            if (ileft.getName().equals("Window"))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private final boolean isTransparentAccessorAccess(IExpressionNode left,
-            IExpressionNode right)
-    {
-        // for now, the transparent access can be;
-        // - a static accessor 'Window.console.log()'
-
-        // is the left member access and right and identifier, '{[Window].[console]}.[log]()'
-        if (left instanceof IMemberAccessExpressionNode)
-        {
-            IMemberAccessExpressionNode mnode = (IMemberAccessExpressionNode) left;
-
-            if (mnode.getLeftOperandNode() instanceof IIdentifierNode)
-            {
-                IIdentifierNode ileft = (IIdentifierNode) mnode
-                        .getLeftOperandNode();
-                if (ileft.getName().equals("Window"))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private final boolean isConstantMemberAccess(IExpressionNode left,
-            IExpressionNode right)
-    {
-        if (left instanceof IIdentifierNode && right instanceof IIdentifierNode)
-        {
-            IIdentifierNode ileft = (IIdentifierNode) left;
-            IIdentifierNode iright = (IIdentifierNode) right;
-            IDefinition dleft = ileft.resolveType(getEmitter().getWalker()
-                    .getProject());
-            if (dleft instanceof ClassTraitsDefinition)
-            {
-                IDefinition dright = iright.resolve(getEmitter().getWalker()
-                        .getProject());
-                if (dright instanceof IConstantDefinition)
-                    return true;
-            }
-        }
-        return false;
     }
 
 }

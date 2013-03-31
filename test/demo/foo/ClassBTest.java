@@ -422,6 +422,22 @@ public class ClassBTest extends ResourceTestBase
     }
 
     @Test
+    public void global_static()
+    {
+        IFunctionNode node = findFunction("global_static", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.global_static = function() {\n\tfillConsoleForIE();\n}");
+    }
+
+    @Test
+    public void global_static_qualified()
+    {
+        IFunctionNode node = findFunction("global_static_qualified", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.global_static_qualified = function() {\n\tfillConsoleForIE();\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
