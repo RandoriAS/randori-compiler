@@ -35,29 +35,32 @@ public class TestModuleTest extends ResourceTestBase
     {
         IFunctionNode node = findFunction("configure", classNode);
         visitor.visitFunction(node);
-        assertOut("demo.inject.TestModule.prototype.configure = function(binder) "
-                + "{\n\tguice.GuiceModule.prototype.configure.call(this,binder);\n\t"
-                + "binder.bind(demo.inject.InjectTest).to(demo.inject.EmptyInherit);\n}");
+        assertOut("demo.inject.TestModule.prototype.configure = function(binder) {"
+                + "\n\tguice.GuiceModule.prototype.configure.call(this,binder);"
+                + "\n\tbinder.bind(demo.inject.InjectTest).to(demo.inject.EmptyInherit);"
+                + "\n\tbinder.bind(XMLHttpRequest).to(demo.foo.ClassA);\n}");
     }
 
     @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
-        assertOut("if (typeof demo == \"undefined\")\n\tvar demo = {};\nif (typeof demo.inject == "
-                + "\"undefined\")\n\tdemo.inject = {};\n\ndemo.inject.TestModule = function() "
-                + "{\n\tguice.GuiceModule.call(this);\n\t\n};\n\ndemo.inject.TestModule.prototype."
-                + "configure = function(binder) {\n\tguice.GuiceModule.prototype.configure.call"
-                + "(this,binder);\n\tbinder.bind(demo.inject.InjectTest).to(demo.inject.EmptyInherit);"
-                + "\n};\n\n$inherit(demo.inject.TestModule, guice.GuiceModule);\n\ndemo.inject."
-                + "TestModule.className = \"demo.inject.TestModule\";\n\ndemo.inject.TestModule."
-                + "getClassDependencies = function(t) {\n\tvar p;\n\tp = [];\n\tp.push('demo.inject."
-                + "EmptyInherit');\n\tp.push('demo.inject.InjectTest');\n\treturn p;\n};\n\ndemo."
-                + "inject.TestModule.injectionPoints = function(t) {\n\tvar p;\n\tswitch (t) "
-                + "{\n\t\tcase 1:\n\t\t\tp = guice.GuiceModule.injectionPoints(t);\n\t\t\tbreak;"
-                + "\n\t\tcase 2:\n\t\t\tp = guice.GuiceModule.injectionPoints(t);\n\t\t\tbreak;"
-                + "\n\t\tcase 3:\n\t\t\tp = guice.GuiceModule.injectionPoints(t);\n\t\t\tbreak;"
-                + "\n\t\tdefault:\n\t\t\tp = [];\n\t\t\tbreak;\n\t}\n\treturn p;\n};\n\n");
+        assertOut("if (typeof demo == \"undefined\")\n\tvar demo = {};\nif (typeof demo.inject"
+                + " == \"undefined\")\n\tdemo.inject = {};\n\ndemo.inject.TestModule = function()"
+                + " {\n\tguice.GuiceModule.call(this);\n\t\n};\n\ndemo.inject.TestModule."
+                + "prototype.configure = function(binder) {\n\tguice.GuiceModule.prototype."
+                + "configure.call(this,binder);\n\tbinder.bind(demo.inject.InjectTest).to("
+                + "demo.inject.EmptyInherit);\n\tbinder.bind(XMLHttpRequest).to(demo.foo."
+                + "ClassA);\n};\n\n$inherit(demo.inject.TestModule, guice.GuiceModule);\n\n"
+                + "demo.inject.TestModule.className = \"demo.inject.TestModule\";\n\ndemo."
+                + "inject.TestModule.getClassDependencies = function(t) {\n\tvar p;\n\tp = [];"
+                + "\n\tp.push('demo.foo.ClassA');\n\tp.push('demo.inject.EmptyInherit');\n\t"
+                + "p.push('demo.inject.InjectTest');\n\treturn p;\n};\n\ndemo.inject.TestModule."
+                + "injectionPoints = function(t) {\n\tvar p;\n\tswitch (t) {\n\t\tcase 1:\n\t\t\tp"
+                + " = guice.GuiceModule.injectionPoints(t);\n\t\t\tbreak;\n\t\tcase 2:\n\t\t\tp "
+                + "= guice.GuiceModule.injectionPoints(t);\n\t\t\tbreak;\n\t\tcase 3:\n\t\t\tp = "
+                + "guice.GuiceModule.injectionPoints(t);\n\t\t\tbreak;\n\t\tdefault:\n\t\t\tp = "
+                + "[];\n\t\t\tbreak;\n\t}\n\treturn p;\n};\n\n");
     }
 
     @Override

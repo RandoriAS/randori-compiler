@@ -29,6 +29,7 @@ import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.internal.definitions.AppliedVectorDefinition;
+import org.apache.flex.compiler.internal.definitions.ClassTraitsDefinition;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.as.IClassNode;
 import org.apache.flex.compiler.tree.as.IDefinitionNode;
@@ -297,6 +298,20 @@ public class MetaDataUtils
         return name;
     }
 
+    public static String getClassExportName(ClassTraitsDefinition definition)
+    {
+        String name = definition.getQualifiedName();
+        IMetaTag tag = findTag(definition, MetaData.JavaScript);
+        if (tag == null)
+            return name;
+
+        String exportName = tag.getAttributeValue(ATT_NAME);
+        if (exportName != null && !exportName.equals(""))
+            return exportName;
+
+        return name;
+    }
+
     public static String getExportName(ITypeDefinition definition)
     {
         if (definition instanceof AppliedVectorDefinition)
@@ -439,6 +454,11 @@ public class MetaDataUtils
     }
 
     public static boolean hasJavaScriptTag(IClassDefinition definition)
+    {
+        return findTag(definition, MetaData.JavaScript) != null;
+    }
+
+    public static boolean hasJavaScriptTag(IDefinition definition)
     {
         return findTag(definition, MetaData.JavaScript) != null;
     }

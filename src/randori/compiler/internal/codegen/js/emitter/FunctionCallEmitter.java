@@ -378,7 +378,8 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         ITypeDefinition type = node.resolveType(getProject());
         if (type instanceof ClassTraitsDefinition)
         {
-            write(type.getQualifiedName());
+            String name = MetaDataUtils.getClassExportName((ClassTraitsDefinition) type);
+            write(name);
             getModel().addDependency(type);
         }
         else if (type instanceof IClassDefinition
