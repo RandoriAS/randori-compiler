@@ -18,6 +18,10 @@ local.properties
 .loadpath
 generated/
 in/
+deployed/
+
+project.properties
+
 # External tool builders
 .externalToolBuilders/
 
