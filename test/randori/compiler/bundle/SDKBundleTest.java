@@ -90,7 +90,7 @@ public class SDKBundleTest
 
         arguments.addSourcepath(htmlCoreLibSrc);
 
-        arguments.addIncludedSource(jQuerySrc);
+        arguments.addIncludedSources(jQuerySrc);
 
         COMPC compc = new COMPC();
         compc.mainNoExit(arguments.toArguments());
@@ -105,7 +105,7 @@ public class SDKBundleTest
 
         arguments.addSourcepath(htmlCoreLibSrc);
 
-        arguments.addIncludedSource(htmlCoreLibSrc);
+        arguments.addIncludedSources(htmlCoreLibSrc);
 
         COMPC compc = new COMPC();
         compc.mainNoExit(arguments.toArguments());
@@ -123,7 +123,7 @@ public class SDKBundleTest
         arguments.addSourcepath(randoriGuiceSrc);
         arguments.addSourcepath(randoriSrc);
 
-        arguments.addIncludedSource(randoriSrc);
+        arguments.addIncludedSources(randoriSrc);
 
         COMPC compc = new COMPC();
         compc.mainNoExit(arguments.toArguments());
@@ -140,7 +140,7 @@ public class SDKBundleTest
 
         arguments.addSourcepath(randoriGuiceSrc);
 
-        arguments.addIncludedSource(randoriGuiceSrc);
+        arguments.addIncludedSources(randoriGuiceSrc);
 
         COMPC compc = new COMPC();
         compc.mainNoExit(arguments.toArguments());

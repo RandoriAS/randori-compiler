@@ -89,7 +89,6 @@ public class RandoriBackend extends ASBackend implements IRandoriBackend
     public IRandoriEmitter createEmitter(FilterWriter out)
     {
         IRandoriEmitter emitter = new RandoriEmitter(out);
-        //emitter.setDocEmitter(createDocEmitter(emitter));
         return emitter;
     }
 

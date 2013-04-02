@@ -116,10 +116,4 @@ public class ASBackend implements IBackend
         return new ASWriter(project, problems, compilationUnit, enableDebug);
     }
 
-    //    @Override
-    //    public IDocEmitter createDocEmitter(IASEmitter emitter)
-    //    {
-    //        return null;
-    //    }
-
 }

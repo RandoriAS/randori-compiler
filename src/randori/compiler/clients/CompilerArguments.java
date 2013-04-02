@@ -58,7 +58,7 @@ public class CompilerArguments
         sources.add(path);
     }
 
-    public void addIncludedSource(String path)
+    public void addIncludedSources(String path)
     {
         if (includes.contains(path))
             return;
@@ -146,7 +146,7 @@ public class CompilerArguments
 
         for (String arg : sources)
         {
-            result.add("-sp=" + arg);
+            result.add("-source-path=" + arg);
         }
 
         for (String arg : includes)
@@ -157,7 +157,7 @@ public class CompilerArguments
         //        result.add("-app-name=" + getAppName());
         //        result.add("-js-base-path=" + getJsBasePath());
         //        result.add("-js-library-path=" + getJsLibraryPath());
-        //        result.add("-js-classes-as-files=" + (isJsOutputAsFiles() ? "true" : "false"));
+        result.add("-js-classes-as-files=" + (isJsOutputAsFiles() ? "true" : "false"));
         result.add("-output=" + getOutput());
 
         return result.toArray(new String[] {});
