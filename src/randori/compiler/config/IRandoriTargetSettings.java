@@ -19,6 +19,9 @@
 
 package randori.compiler.config;
 
+import java.io.File;
+import java.util.Collection;
+
 import org.apache.flex.compiler.targets.ITargetSettings;
 
 import randori.compiler.clients.Randori;
@@ -68,4 +71,6 @@ public interface IRandoriTargetSettings extends ITargetSettings
      * <code>false</code>).
      */
     boolean getJsClassesAsFiles();
+    
+    Collection<File> getIncludeSources();
 }

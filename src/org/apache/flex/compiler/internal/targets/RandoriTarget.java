@@ -19,6 +19,8 @@
 
 package org.apache.flex.compiler.internal.targets;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -77,8 +79,29 @@ public class RandoriTarget extends Target implements IRandoriTarget
     protected RootedCompilationUnits computeRootedCompilationUnits()
             throws InterruptedException
     {
+        Collection<ICompilationUnit> units = null;
+        
+        // where we decide what units are going to get compiled
+        Collection<File> sources = targetSettings.getIncludeSources();
+        if (sources.size() > 0)
+        {
+            Collection<ICompilationUnit> roots = new ArrayList<ICompilationUnit>();
+            for (File file : sources)
+            {
+                Collection<ICompilationUnit> units2 = project.getWorkspace()
+                        .getCompilationUnits(file.getAbsolutePath(), project);
+                for (ICompilationUnit runit : units2)
+                {
+                    roots.add(runit);
+                }
+            }
+            units = project.getReachableCompilationUnitsInSWFOrder(roots);
+        }
+        else
+        {
+            units = project.getCompilationUnits();
+        }
 
-        Collection<ICompilationUnit> units = project.getCompilationUnits();
         HashSet<ICompilationUnit> set = new HashSet<ICompilationUnit>();
         for (ICompilationUnit unit : units)
         {

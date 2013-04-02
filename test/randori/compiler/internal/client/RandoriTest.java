@@ -19,15 +19,17 @@
 
 package randori.compiler.internal.client;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.flex.compiler.problems.ICompilerProblem;
-import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,9 +57,9 @@ public class RandoriTest
 
     String ClassOneA = basepath + "\\test\\ClassOneA.as";
 
-    String SubClassOneA = basepath + "\\test\\SubClassOneA.as";
+    String SubClassOneA = basepath + "\\test\\one\\a\\SubClassOneA.as";
 
-    String ClassTwoA = basepath + "\\test\\ClassTwoA.as";
+    String ClassTwoA = basepath + "\\test\\two\\ClassTwoA.as";
 
     File builtinSWC = new File(TestConstants.RandoriASFramework
             + "\\randori-compiler\\temp\\builtin.swc");
@@ -83,13 +85,14 @@ public class RandoriTest
     }
 
     @After
-    public void tearDown()
+    public void tearDown() throws IOException
     {
         backend = null;
         randori = null;
         arguments = null;
 
-        assertTrue(outDir.delete());
+        FileUtils.deleteDirectory(outDir);
+        assertFalse(outDir.exists());
     }
 
     @Test
@@ -100,12 +103,8 @@ public class RandoriTest
 
         final int code = randori.mainNoExit(arguments.toArguments(), problems);
 
-        assertEquals(0, code);
-        assertEquals(0, problems.size());
-
-        String[] extensions = new String[] { "js" };
-        Collection<File> files = FileUtils.listFiles(outDir, extensions, true);
-        assertEquals(4, files.size());
+        assertFinish(code);
+        assertOutFileLength(4);
     }
 
     @Test
@@ -119,11 +118,46 @@ public class RandoriTest
 
         final int code = randori.mainNoExit(arguments.toArguments(), problems);
 
-        assertEquals(0, code);
-        assertEquals(0, problems.size());
+        assertFinish(code);
+        assertOutFileLength(1);
+    }
 
+    @Test
+    public void test_compile_SubClassOneA()
+    {
+        arguments.addSourcepath(new File(basepath).getAbsolutePath());
+
+        arguments.addIncludedSources(SubClassOneA);
+
+        final int code = randori.mainNoExit(arguments.toArguments(), problems);
+
+        assertFinish(code);
+        assertOutFileLength(2);
+    }
+
+    @Test
+    public void test_compile_ClassTwoA()
+    {
+        arguments.addSourcepath(new File(basepath).getAbsolutePath());
+
+        arguments.addIncludedSources(ClassTwoA);
+
+        final int code = randori.mainNoExit(arguments.toArguments(), problems);
+
+        assertFinish(code);
+        assertOutFileLength(3);
+    }
+
+    private void assertOutFileLength(int numFiles)
+    {
         String[] extensions = new String[] { "js" };
         Collection<File> files = FileUtils.listFiles(outDir, extensions, true);
-        assertEquals(1, files.size());
+        assertEquals(numFiles, files.size());
+    }
+
+    private void assertFinish(int code)
+    {
+        assertEquals(0, code);
+        assertEquals(0, problems.size());
     }
 }
