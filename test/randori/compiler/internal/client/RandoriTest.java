@@ -20,11 +20,15 @@
 package randori.compiler.internal.client;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.flex.compiler.problems.ICompilerProblem;
+import static org.junit.Assert.*;
+
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,11 +52,11 @@ public class RandoriTest
             + "\\randori-compiler\\test\\src1";
 
     String RootClass = basepath + "\\test\\RootClass.as";
-    
+
     String ClassOneA = basepath + "\\test\\ClassOneA.as";
-    
+
     String SubClassOneA = basepath + "\\test\\SubClassOneA.as";
-    
+
     String ClassTwoA = basepath + "\\test\\ClassTwoA.as";
 
     File builtinSWC = new File(TestConstants.RandoriASFramework
@@ -61,12 +65,21 @@ public class RandoriTest
     File outDir = new File(TestConstants.RandoriASFramework
             + "\\randori-compiler\\temp\\out");
 
+    private CompilerArguments arguments;
+
     @Before
     public void setUp()
     {
         backend = new RandoriBackend();
         //backend.parseOnly(true);
         randori = new Randori(backend);
+
+        problems = new HashSet<ICompilerProblem>();
+        arguments = new CompilerArguments();
+
+        arguments.addLibraryPath(builtinSWC.getAbsolutePath());
+        arguments.setJsOutputAsFiles(true);
+        arguments.setOutput(outDir.getAbsolutePath());
     }
 
     @After
@@ -74,22 +87,43 @@ public class RandoriTest
     {
         backend = null;
         randori = null;
+        arguments = null;
+
+        assertTrue(outDir.delete());
     }
 
     @Test
-    public void test_init()
+    public void test_compile_from_sourcepath()
     {
-        CompilerArguments arguments = new CompilerArguments();
-
-        arguments.setOutput(outDir.getAbsolutePath());
-        arguments.setJsOutputAsFiles(true);
-        arguments.addLibraryPath(builtinSWC.getAbsolutePath());
+        // add all base sources
         arguments.addSourcepath(new File(basepath).getAbsolutePath());
 
-        // need to only parse not generate
         final int code = randori.mainNoExit(arguments.toArguments(), problems);
 
-        Assert.assertEquals(0, code);
+        assertEquals(0, code);
+        assertEquals(0, problems.size());
 
+        String[] extensions = new String[] { "js" };
+        Collection<File> files = FileUtils.listFiles(outDir, extensions, true);
+        assertEquals(4, files.size());
+    }
+
+    @Test
+    public void test_compile_RootClass()
+    {
+        // add all base sources
+        arguments.addSourcepath(new File(basepath).getAbsolutePath());
+        // once the compiler senses an include source, it will only parse
+        // it and it's dependencies
+        arguments.addIncludedSources(RootClass);
+
+        final int code = randori.mainNoExit(arguments.toArguments(), problems);
+
+        assertEquals(0, code);
+        assertEquals(0, problems.size());
+
+        String[] extensions = new String[] { "js" };
+        Collection<File> files = FileUtils.listFiles(outDir, extensions, true);
+        assertEquals(1, files.size());
     }
 }
