@@ -28,13 +28,13 @@ public class VersionInfo
 
     public static final String RANDORI_MINOR_VERSION = "2";
 
-    public static final String RANDORI_NANO_VERSION = "1";
+    public static final String RANDORI_NANO_VERSION = "3";
 
     // XXX TEMP
     public static final String RANDORI_BUILD = "1";
     public static final String RANDORI_BUILD_VERSION = "1";
 
-    public static final String RANDORI_COMPILER_VERSION = "0.2.1";
+    public static final String RANDORI_COMPILER_VERSION = "0.2.3";
 
     public static final String RANDORI_COMPILER_NAME = "randori";
 
