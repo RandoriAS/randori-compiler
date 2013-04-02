@@ -117,7 +117,7 @@ public class RandoriConfiguration extends Configuration
     // 'js-classes-as-files'
     //
 
-    private boolean jsClassesAsFiles = false;
+    private boolean jsClassesAsFiles = true;
 
     public boolean getJsClassesAsFiles()
     {

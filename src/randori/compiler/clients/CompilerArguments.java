@@ -34,15 +34,15 @@ public class CompilerArguments
 
     private List<String> includes = new ArrayList<String>();
 
-    private String appName;
+    private String appName = "";
 
     private String output;
 
-    private String jsLibraryPath;
+    private String jsLibraryPath = "";
 
-    private String jsBasePath;
+    private String jsBasePath = "";
 
-    private boolean jsOutputAsFiles = false;
+    private boolean jsOutputAsFiles = true;
 
     public void addLibraryPath(String path)
     {
@@ -154,10 +154,21 @@ public class CompilerArguments
             result.add("-include-sources=" + arg);
         }
 
-        //        result.add("-app-name=" + getAppName());
-        //        result.add("-js-base-path=" + getJsBasePath());
-        //        result.add("-js-library-path=" + getJsLibraryPath());
-        result.add("-js-classes-as-files=" + (isJsOutputAsFiles() ? "true" : "false"));
+        // XXX TEMP
+        String name = getAppName();
+        if (!name.equals(""))
+            result.add("-app-name=" + name);
+
+        String base = getJsBasePath();
+        if (!base.equals(""))
+            result.add("-js-base-path=" + base);
+
+        String library = getJsLibraryPath();
+        if (!library.equals(""))
+            result.add("-js-library-path=" + library);
+
+        result.add("-js-classes-as-files="
+                + (isJsOutputAsFiles() ? "true" : "false"));
         result.add("-output=" + getOutput());
 
         return result.toArray(new String[] {});

@@ -19,24 +19,24 @@
 
 package randori.compiler.internal.client;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author Michael Schmalle
  */
-public class RandoriTest extends RandoriCompilerTestBase
+public class RandoriCompilerArgsTest extends RandoriCompilerTestBase
 {
-
     @Before
     public void setUp()
     {
         super.setUp();
-
-        getArgs().setJsOutputAsFiles(true);
     }
 
     @After
@@ -46,42 +46,53 @@ public class RandoriTest extends RandoriCompilerTestBase
     }
 
     @Test
-    public void test_compile_from_sourcepath()
+    public void test_js_base_path()
+    {
+        File generated = new File(outDir, "generated");
+        getArgs().addSourcepath(basepathDir.getAbsolutePath());
+        getArgs().setJsBasePath(generated.getName());
+
+        compile();
+        assertOutFileLength(4);
+
+        Assert.assertTrue(generated.isDirectory());
+        Assert.assertTrue(new File(generated, JS_PATH_ROOT_CLASS_AS).isFile());
+        Assert.assertTrue(new File(generated, JS_PATH_CLASS_ONE_A).isFile());
+        Assert.assertTrue(new File(generated, JS_PATH_SUB_CLASS_ONE_A).isFile());
+        Assert.assertTrue(new File(generated, JS_PATH_CLASS_TWO_A).isFile());
+    }
+
+    @Test
+    public void test_js_output_as_files_True()
     {
         getArgs().addSourcepath(basepathDir.getAbsolutePath());
+        getArgs().setJsOutputAsFiles(true);
 
         compile();
         assertOutFileLength(4);
     }
 
     @Test
-    public void test_compile_RootClass()
+    public void test_js_output_as_files_False()
     {
+        // TODO (mschmalle) setJsOutputAsFiles() has project as root folder, what is correct?
         getArgs().addSourcepath(basepathDir.getAbsolutePath());
-        getArgs().addIncludedSources(RootClassFile.getAbsolutePath());
+        getArgs().setAppName("FooBar");
+        getArgs().setJsOutputAsFiles(false);
 
         compile();
         assertOutFileLength(1);
     }
 
+    @Ignore
     @Test
-    public void test_compile_SubClassOneA()
+    public void test_js_output_as_files_False_NoAppNameProblem()
     {
+        // TODO (mschmalle) Implement test_js_output_as_files_False_NoAppNameProblem()
         getArgs().addSourcepath(basepathDir.getAbsolutePath());
-        getArgs().addIncludedSources(SubClassOneAFile.getAbsolutePath());
+        getArgs().setJsOutputAsFiles(false);
 
         compile();
-        assertOutFileLength(2);
+        assertOutFileLength(1);
     }
-
-    @Test
-    public void test_compile_ClassTwoA()
-    {
-        getArgs().addSourcepath(basepathDir.getAbsolutePath());
-        getArgs().addIncludedSources(ClassTwoAFile.getAbsolutePath());
-
-        compile();
-        assertOutFileLength(3);
-    }
-
 }

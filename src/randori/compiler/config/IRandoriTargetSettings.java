@@ -65,6 +65,8 @@ public interface IRandoriTargetSettings extends ITargetSettings
      * <code>js-base-path</code>.
      * <p>
      * The output rendered here is based on the {@link #getJsBasePath()} path.
+     * <p>
+     * The default is <code>true</code>.
      * 
      * @return Whether to output class structure as directories based on their
      * package name(<code>true</code>) or as a monolithic file(
