@@ -49,21 +49,21 @@ public class RandoriCompilerTestBase
     protected static final String JS_PATH_SUB_CLASS_ONE_A = "test\\one\\a\\SubClassOneA.js";
     protected static final String JS_PATH_CLASS_ONE_A = "test\\one\\ClassOneA.js";
     protected static final String JS_PATH_ROOT_CLASS_AS = "test\\RootClass.js";
-    
+
     protected static final String PATH_CLASS_TWO_A = "test\\two\\ClassTwoA.as";
     protected static final String PATH_SUB_CLASS_ONE_A = "test\\one\\a\\SubClassOneA.as";
     protected static final String PATH_CLASS_ONE_A = "test\\one\\ClassOneA.as";
     protected static final String PATH_ROOT_CLASS_AS = "test\\RootClass.as";
 
-    File outDir = new File(
+    protected File outDir = new File(
             FilenameNormalization.normalize(TestConstants.RandoriASFramework
                     + "\\randori-compiler\\temp\\out"));
 
-    File builtinSWC = new File(
+    protected File builtinSWC = new File(
             FilenameNormalization.normalize(TestConstants.RandoriASFramework
                     + "\\randori-compiler\\temp\\builtin.swc"));
 
-    File basepathDir = new File(
+    protected File basepathDir = new File(
             FilenameNormalization.normalize(TestConstants.RandoriASFramework
                     + "\\randori-compiler\\test\\src1"));
 
@@ -71,13 +71,14 @@ public class RandoriCompilerTestBase
     // 
     //----------------------------------
 
-    File RootClassFile = new File(basepathDir, PATH_ROOT_CLASS_AS);
+    protected File RootClassFile = new File(basepathDir, PATH_ROOT_CLASS_AS);
 
-    File ClassOneAFile = new File(basepathDir, PATH_CLASS_ONE_A);
+    protected File ClassOneAFile = new File(basepathDir, PATH_CLASS_ONE_A);
 
-    File SubClassOneAFile = new File(basepathDir, PATH_SUB_CLASS_ONE_A);
+    protected File SubClassOneAFile = new File(basepathDir,
+            PATH_SUB_CLASS_ONE_A);
 
-    File ClassTwoAFile = new File(basepathDir, PATH_CLASS_TWO_A);
+    protected File ClassTwoAFile = new File(basepathDir, PATH_CLASS_TWO_A);
 
     //----------------------------------
     // 
@@ -107,11 +108,20 @@ public class RandoriCompilerTestBase
         backend = new RandoriBackend();
         randori = new Randori(backend);
 
-        problems = new HashSet<ICompilerProblem>();
-        arguments = new CompilerArguments();
+        setUpExtras();
+        initializeArgs();
+    }
 
+    protected void initializeArgs()
+    {
         getArgs().addLibraryPath(builtinSWC.getAbsolutePath());
         getArgs().setOutput(outDir.getAbsolutePath());
+    }
+
+    protected void setUpExtras()
+    {
+        problems = new HashSet<ICompilerProblem>();
+        arguments = new CompilerArguments();
     }
 
     @After

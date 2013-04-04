@@ -19,13 +19,25 @@
 
 package randori.compiler.projects;
 
+import org.apache.flex.compiler.clients.problems.ProblemQuery;
+import org.apache.flex.compiler.projects.IASProject;
+
+import randori.compiler.config.IRandoriTargetSettings;
+
 /**
  * The {@link IRandoriApplicationProject} contains methods to parse and build a
  * randori application project.
  * 
  * @author Michael Schmalle
  */
-public interface IRandoriApplicationProject
+public interface IRandoriApplicationProject extends IASProject
 {
+    ProblemQuery getProblemQuery();
+
+    IRandoriTargetSettings getTargetSettings();
+
+    boolean configure(String[] args);
+
+    boolean compile(boolean doBuild);
 
 }
