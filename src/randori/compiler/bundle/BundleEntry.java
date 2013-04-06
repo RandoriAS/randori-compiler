@@ -20,7 +20,11 @@
 package randori.compiler.bundle;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.ZipFile;
 
+import randori.compiler.bundle.io.BundleReader;
 import randori.compiler.bundle.io.IBundleReader;
 
 /**
@@ -33,13 +37,16 @@ public class BundleEntry implements IBundleEntry
 
     private final String path;
 
+    private String bundlePath;
+
     /**
      * Creates an entry from the {@link IBundleReader}.
      * 
      * @param path The path of the entry in the {@link IBundle}.
      */
-    public BundleEntry(String path)
+    public BundleEntry(String bundlePath, String path)
     {
+        this.bundlePath = bundlePath;
         this.path = path;
     }
 
@@ -61,4 +68,11 @@ public class BundleEntry implements IBundleEntry
         return path;
     }
 
+    @Override
+    public InputStream createInputStream() throws IOException
+    {
+        ZipFile bundleFile = new ZipFile(bundlePath);
+        InputStream inputStream = BundleReader.getInputStream(bundleFile, path);
+        return inputStream;
+    }
 }

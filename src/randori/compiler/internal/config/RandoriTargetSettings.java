@@ -48,6 +48,12 @@ public class RandoriTargetSettings extends TargetSettings implements
     }
 
     @Override
+    public String getSDKPath()
+    {
+        return configuration.getSDKPath();
+    }
+    
+    @Override
     public String getAppName()
     {
         return configuration.getAppName();

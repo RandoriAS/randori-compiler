@@ -57,6 +57,25 @@ public class RandoriConfiguration extends Configuration
     }
 
     //
+    // 'sdk-path'
+    //
+
+    private String sdkPath = "";
+
+    public String getSDKPath()
+    {
+        return sdkPath;
+    }
+
+    @Config(allowMultiple = false)
+    @Mapping("sdk-path")
+    public void setSDKPath(ConfigurationValue cv, String value)
+            throws ConfigurationException
+    {
+        sdkPath = value;
+    }
+
+    //
     // 'app-name'
     //
 
@@ -67,7 +86,7 @@ public class RandoriConfiguration extends Configuration
         return appName;
     }
 
-    @Config
+    @Config(allowMultiple = false)
     @Mapping("app-name")
     public void setAppName(ConfigurationValue cv, String value)
             throws ConfigurationException
@@ -86,7 +105,7 @@ public class RandoriConfiguration extends Configuration
         return jsBasePath;
     }
 
-    @Config
+    @Config(allowMultiple = false)
     @Mapping("js-base-path")
     public void setJsBasePath(ConfigurationValue cv, String value)
             throws ConfigurationException
@@ -105,7 +124,7 @@ public class RandoriConfiguration extends Configuration
         return jsLibraryPath;
     }
 
-    @Config
+    @Config(allowMultiple = false)
     @Mapping("js-library-path")
     public void setJsLibraryPath(ConfigurationValue cv, String value)
             throws ConfigurationException
@@ -124,7 +143,7 @@ public class RandoriConfiguration extends Configuration
         return jsClassesAsFiles;
     }
 
-    @Config
+    @Config(allowMultiple = false)
     @Mapping("js-classes-as-files")
     public void setJsClassesAsFiles(ConfigurationValue cv, boolean value)
             throws ConfigurationException

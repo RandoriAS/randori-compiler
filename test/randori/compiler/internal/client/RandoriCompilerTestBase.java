@@ -25,9 +25,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.flex.compiler.problems.ICompilerProblem;
@@ -55,6 +56,8 @@ public class RandoriCompilerTestBase
     protected static final String PATH_CLASS_ONE_A = "test\\one\\ClassOneA.as";
     protected static final String PATH_ROOT_CLASS_AS = "test\\RootClass.as";
 
+    protected File tempDir = new File(FilenameNormalization.normalize("temp"));
+
     protected File outDir = new File(
             FilenameNormalization.normalize(TestConstants.RandoriASFramework
                     + "\\randori-compiler\\temp\\out"));
@@ -66,6 +69,12 @@ public class RandoriCompilerTestBase
     protected File basepathDir = new File(
             FilenameNormalization.normalize(TestConstants.RandoriASFramework
                     + "\\randori-compiler\\test\\src1"));
+
+    protected File sdkDir = new File(
+            FilenameNormalization.normalize(TestConstants.RandoriASFramework
+                    + "\\randori-sdk"));
+
+    protected File sdkRBL = new File(tempDir, "randori-sdk-0.2.1.rbl");
 
     //----------------------------------
     // 
@@ -88,11 +97,11 @@ public class RandoriCompilerTestBase
 
     private Randori randori;
 
-    private Set<ICompilerProblem> problems;
+    private List<ICompilerProblem> problems;
 
     private CompilerArguments arguments;
 
-    protected Set<ICompilerProblem> getProblems()
+    protected List<ICompilerProblem> getProblems()
     {
         return problems;
     }
@@ -120,7 +129,7 @@ public class RandoriCompilerTestBase
 
     protected void setUpExtras()
     {
-        problems = new HashSet<ICompilerProblem>();
+        problems = new ArrayList<ICompilerProblem>();
         arguments = new CompilerArguments();
     }
 
@@ -138,7 +147,7 @@ public class RandoriCompilerTestBase
     protected void compile()
     {
         final int code = randori.mainNoExit(getArgs().toArguments(),
-                getProblems());
+                new HashSet<ICompilerProblem>(getProblems()));
         assertFinish(code);
     }
 

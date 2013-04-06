@@ -82,11 +82,10 @@ public class BundleCategory implements IBundleCategory
     }
 
     @Override
-    public IBundleEntry addFile(String relativePath)
+    public IBundleEntry addFile(String bundlePath, String relativePath)
     {
-        //String path = BundleUtils.toPath(this, relativePath);
         String path = relativePath;
-        BundleEntry entry = new BundleEntry(path);
+        BundleEntry entry = new BundleEntry(bundlePath, relativePath);
         entries.put(path, entry);
         return entry;
     }

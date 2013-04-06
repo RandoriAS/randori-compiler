@@ -34,6 +34,8 @@ public class CompilerArguments
 
     private List<String> includes = new ArrayList<String>();
 
+    private String sdkPath = "";
+
     private String appName = "";
 
     private String output;
@@ -63,6 +65,16 @@ public class CompilerArguments
         if (includes.contains(path))
             return;
         includes.add(path);
+    }
+
+    public String getSDKPath()
+    {
+        return sdkPath;
+    }
+
+    public void setSDKPath(String value)
+    {
+        sdkPath = value;
     }
 
     public String getAppName()
@@ -155,6 +167,10 @@ public class CompilerArguments
         }
 
         // XXX TEMP
+        String sdk = getSDKPath();
+        if (!sdk.equals(""))
+            result.add("-sdk-path=" + sdk);
+
         String name = getAppName();
         if (!name.equals(""))
             result.add("-app-name=" + name);

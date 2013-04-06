@@ -20,6 +20,8 @@
 package randori.compiler.bundle;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author Michael Schmalle
@@ -36,4 +38,6 @@ public interface IBundleEntry
      * Returns the relative path of the entry within the {@link IBundle}.
      */
     String getPath();
+
+    InputStream createInputStream() throws IOException;
 }

@@ -19,6 +19,7 @@
 
 package randori.compiler.internal.projects;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,10 +29,14 @@ import org.apache.flex.compiler.asdoc.IASDocBundleDelegate;
 import org.apache.flex.compiler.exceptions.ConfigurationException;
 import org.apache.flex.compiler.internal.projects.CompilerProject;
 import org.apache.flex.compiler.internal.workspaces.Workspace;
+import org.apache.flex.compiler.problems.ConfigurationProblem;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.problems.InternalCompilerProblem;
 import org.apache.flex.compiler.problems.UnableToBuildSWFProblem;
+import org.apache.flex.utils.FilenameNormalization;
 
+import randori.compiler.bundle.IBundle;
+import randori.compiler.bundle.io.BundleUtils;
 import randori.compiler.driver.IRandoriApplication;
 import randori.compiler.driver.IRandoriTarget;
 import randori.compiler.internal.driver.RandoriBackend;
@@ -48,7 +53,8 @@ public class RandoriApplicationProject extends RandoriProject implements
 
     public RandoriApplicationProject(Workspace workspace)
     {
-        super(workspace, IASDocBundleDelegate.NIL_DELEGATE, new RandoriBackend());
+        super(workspace, IASDocBundleDelegate.NIL_DELEGATE,
+                new RandoriBackend());
     }
 
     protected boolean startCompile(boolean doBuild)
@@ -143,6 +149,56 @@ public class RandoriApplicationProject extends RandoriProject implements
     @Override
     protected boolean export()
     {
-        return false;
+        // XXX If the SDK Path is specified, not need to pass SWCS?
+        String path = getTargetSettings().getSDKPath();
+        // normailze with "" will return the execution root
+        File file = new File(FilenameNormalization.normalize(path));
+        if (!new File(path).exists())
+        {
+            // if the compiler is trying to export with compile()
+            // this is a failed compile, return false
+            final ICompilerProblem problem = new ConfigurationProblem(null, -1,
+                    -1, -1, -1, "sdk-path " + file.getAbsolutePath()
+                            + " is not a directory or valid bundle");
+            getProblemQuery().add(problem);
+            return false;
+        }
+
+        IBundle bundle = BundleUtils.getBundle(file);
+        File libraryDir = setupLibraryDirectory();
+        if (!file.isDirectory())
+            file = null;
+
+        try
+        {
+            BundleUtils.copyJSFilesFromBundle(libraryDir, file, bundle);
+        }
+        catch (IOException e)
+        {
+            // TODO final ICompilerProblem problem;
+            //getProblemQuery().add(problem);
+            return false;
+        }
+
+        return true;
     }
+
+    private File setupLibraryDirectory()
+    {
+        File outputDir = new File(getTargetSettings().getOutput()
+                .getAbsolutePath());
+        if (!outputDir.exists())
+            outputDir.mkdirs();
+
+        File libraryDir = new File(outputDir, getTargetSettings()
+                .getJsLibraryPath());
+        if (!libraryDir.exists())
+        {
+            //logger.debug("The library path '" + libPath + "' doesn't exist, creating it now.");
+            libraryDir.mkdirs();
+        }
+
+        return libraryDir;
+    }
+
 }

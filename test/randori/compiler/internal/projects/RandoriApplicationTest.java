@@ -19,7 +19,9 @@
 
 package randori.compiler.internal.projects;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.flex.compiler.clients.problems.ProblemPrinter;
@@ -42,6 +44,11 @@ public class RandoriApplicationTest extends RandoriCompilerTestBase
     private Workspace workspace;
 
     private IRandoriApplicationProject project;
+
+    protected List<ICompilerProblem> getProblems()
+    {
+        return project.getProblemQuery().getProblems();
+    }
 
     @Before
     public void setUp()
@@ -74,6 +81,55 @@ public class RandoriApplicationTest extends RandoriCompilerTestBase
         assertOutFileLength(4);
 
         FileUtils.deleteDirectory(outDir);
+    }
+
+    @Test
+    public void test_export_with_sdk_problem() throws IOException
+    {
+        getArgs().addSourcepath(basepathDir.getAbsolutePath());
+
+        project.configure(getArgs().toArguments());
+        boolean success = project.compile(true, true);
+        Assert.assertFalse(success);
+
+        Assert.assertEquals(1, getProblems().size());
+    }
+
+    @Test
+    public void test_basic_compile_with_export_from_directory()
+            throws IOException
+    {
+        // with passing export= true, the compiler will copy
+        // the libs from the sdk to the js-library-path
+        getArgs().addSourcepath(basepathDir.getAbsolutePath());
+        getArgs().setJsLibraryPath("libs");
+        getArgs().setSDKPath(sdkDir.getAbsolutePath());
+
+        project.configure(getArgs().toArguments());
+        boolean success = project.compile(true, true);
+        Assert.assertTrue(success);
+
+        Assert.assertTrue(new File(outDir, "libs").isDirectory());
+        Assert.assertTrue(new File(outDir, "libs/Randori.js").exists());
+        Assert.assertTrue(new File(outDir, "libs/RandoriGuice.js").exists());
+    }
+
+    @Test
+    public void test_basic_compile_with_export_from_rbl() throws IOException
+    {
+        // with passing export= true, the compiler will copy
+        // the libs from the sdk to the js-library-path
+        getArgs().addSourcepath(basepathDir.getAbsolutePath());
+        getArgs().setJsLibraryPath("libs");
+        getArgs().setSDKPath(sdkRBL.getAbsolutePath());
+
+        project.configure(getArgs().toArguments());
+        boolean success = project.compile(true, true);
+        Assert.assertTrue(success);
+
+        Assert.assertTrue(new File(outDir, "libs").isDirectory());
+        Assert.assertTrue(new File(outDir, "libs/Randori.js").exists());
+        Assert.assertTrue(new File(outDir, "libs/RandoriGuice.js").exists());
     }
 
     private void printProblems(Iterable<ICompilerProblem> problems)

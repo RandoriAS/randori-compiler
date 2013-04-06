@@ -101,7 +101,7 @@ public interface IBundleCategory
      */
     IBundleEntry addFile(File file, String relativePath);
 
-    IBundleEntry addFile(String relativePath);
+    IBundleEntry addFile(String bundlePath, String relativePath);
 
     /**
      * Returns a collection of all entries found on the {@link IBundleCategory}.

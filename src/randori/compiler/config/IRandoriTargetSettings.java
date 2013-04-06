@@ -36,6 +36,11 @@ import randori.compiler.driver.IRandoriApplication;
 public interface IRandoriTargetSettings extends ITargetSettings
 {
     /**
+     * Returns the path to an existing Randori SDK bundle extracted or zip.
+     */
+    String getSDKPath();
+    
+    /**
      * Returns the application name for the compile session.
      */
     String getAppName();

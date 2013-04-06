@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipFile;
 
-import org.apache.flex.swc.io.SWCReader;
-
 import randori.compiler.bundle.IBundle;
 import randori.compiler.bundle.IBundleFileEntry;
 
@@ -73,7 +71,7 @@ public class BundleFileEntry implements IBundleFileEntry
     public InputStream createInputStream() throws IOException
     {
         ZipFile file = new ZipFile(containingBundlePath);
-        InputStream inputStream = SWCReader.getInputStream(file, path);
+        InputStream inputStream = BundleReader.getInputStream(file, path);
         return inputStream;
     }
 

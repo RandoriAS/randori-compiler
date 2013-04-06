@@ -30,7 +30,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.flex.compiler.problems.FileInLibraryIOProblem;
-import org.apache.flex.swc.io.SWCReader;
 import org.apache.flex.utils.FilenameNormalization;
 
 import randori.compiler.bundle.BundleContainer;
@@ -48,6 +47,7 @@ public class StAXManifestReader
     private static final Object TAG_LIBRARY = "library";
 
     private final XMLStreamReader reader;
+
     private final IMutableBundle bundle;
 
     private BundleLibrary library;
@@ -57,10 +57,10 @@ public class StAXManifestReader
     public StAXManifestReader(final InputStream in, final IMutableBundle bundle)
             throws XMLStreamException
     {
-        if (bundle == null)
-            throw new NullPointerException("Bundle model can't be null");
         if (in == null)
             throw new NullPointerException("InputStream can't be null.");
+        if (bundle == null)
+            throw new NullPointerException("Bundle model can't be null");
 
         this.bundle = bundle;
 
@@ -98,6 +98,11 @@ public class StAXManifestReader
 
     public void parse()
     {
+        String bundlePath = null;
+        if (bundle.getBundleFile() != null)
+            bundlePath = FilenameNormalization.normalize(bundle.getBundleFile()
+                    .getAbsolutePath());
+
         try
         {
             while (reader.hasNext())
@@ -141,7 +146,8 @@ public class StAXManifestReader
                             .addCategory(IBundleCategory.Type
                                     .toType(categoryType));
 
-                    category.addFile(reader.getAttributeValue(null, "path"));
+                    category.addFile(bundlePath,
+                            reader.getAttributeValue(null, "path"));
                 }
                 else if (tagName.equals("versions"))
                 {
@@ -173,15 +179,14 @@ public class StAXManifestReader
 
                 }
             }
-
         }
         catch (XMLStreamException e)
         {
             File bundleFile = bundle.getBundleFile();
             final String file = (bundleFile != null) ? FilenameNormalization
                     .normalize(bundleFile.getAbsolutePath()) : "";
-            bundle.addProblem(new FileInLibraryIOProblem(SWCReader.CATALOG_XML,
-                    file, e.getLocalizedMessage()));
+            bundle.addProblem(new FileInLibraryIOProblem(
+                    BundleReader.MANIFEST_XML, file, e.getLocalizedMessage()));
         }
     }
 }
