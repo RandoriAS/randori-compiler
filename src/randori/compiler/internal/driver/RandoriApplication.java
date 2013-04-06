@@ -20,10 +20,12 @@
 package randori.compiler.internal.driver;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.flex.compiler.clients.problems.ProblemQuery;
 import org.apache.flex.compiler.internal.projects.FlexProject;
+import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.units.ICompilationUnit;
 import org.apache.flex.compiler.units.ICompilationUnit.UnitType;
 
@@ -97,6 +99,13 @@ public class RandoriApplication implements IRandoriApplication
 
         application.generate(backend, problems.getProblems(),
                 settings.getOutput());
+    }
+
+    @Override
+    public void export(Collection<ICompilerProblem> problems)
+    {
+        // TODO Auto-generated method stub
+        
     }
 
 }

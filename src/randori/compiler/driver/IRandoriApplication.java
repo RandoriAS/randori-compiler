@@ -19,7 +19,10 @@
 
 package randori.compiler.driver;
 
+import java.util.Collection;
+
 import org.apache.flex.compiler.clients.problems.ProblemQuery;
+import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.units.ICompilationUnit;
 
 import randori.compiler.clients.Randori;
@@ -45,5 +48,6 @@ public interface IRandoriApplication
      * units was successful.
      */
     boolean compile(IRandoriBackend backend, ProblemQuery problems);
-
+    
+    void export(Collection<ICompilerProblem> problems);
 }

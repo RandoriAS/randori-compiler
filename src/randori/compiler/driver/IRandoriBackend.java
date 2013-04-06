@@ -19,6 +19,10 @@
 
 package randori.compiler.driver;
 
+import org.apache.flex.compiler.projects.IASProject;
+import org.apache.flex.compiler.targets.ITargetProgressMonitor;
+import org.apache.flex.compiler.targets.ITargetSettings;
+
 /**
  * The {@link IRandoriBackend} API allows clients of the compiler such as the
  * {@link IRandoriApplication} access to factory methods to create emitters,
@@ -28,5 +32,6 @@ package randori.compiler.driver;
  */
 public interface IRandoriBackend extends IBackend
 {
-
+    IRandoriTarget createTarget(IASProject project, ITargetSettings settings,
+            ITargetProgressMonitor monitor);
 }

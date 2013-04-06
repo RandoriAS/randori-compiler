@@ -25,159 +25,30 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.flex.compiler.asdoc.IASDocBundleDelegate;
-import org.apache.flex.compiler.clients.problems.ProblemQuery;
-import org.apache.flex.compiler.config.Configuration;
-import org.apache.flex.compiler.config.ConfigurationBuffer;
-import org.apache.flex.compiler.config.Configurator;
-import org.apache.flex.compiler.config.ICompilerSettingsConstants;
 import org.apache.flex.compiler.exceptions.ConfigurationException;
-import org.apache.flex.compiler.exceptions.ConfigurationException.IOError;
-import org.apache.flex.compiler.exceptions.ConfigurationException.MustSpecifyTarget;
-import org.apache.flex.compiler.internal.projects.ASProject;
 import org.apache.flex.compiler.internal.projects.CompilerProject;
-import org.apache.flex.compiler.internal.projects.FlexProject;
 import org.apache.flex.compiler.internal.workspaces.Workspace;
-import org.apache.flex.compiler.problems.ConfigurationProblem;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.problems.InternalCompilerProblem;
 import org.apache.flex.compiler.problems.UnableToBuildSWFProblem;
-import org.apache.flex.compiler.targets.ITargetProgressMonitor;
-import org.apache.flex.compiler.targets.ITargetSettings;
 
-import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriApplication;
-import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.driver.IRandoriTarget;
-import randori.compiler.internal.config.RandoriConfiguration;
 import randori.compiler.internal.driver.RandoriBackend;
 import randori.compiler.projects.IRandoriApplicationProject;
 
 /**
- * XXX When I have time, I want to research subclassing {@link ASProject}. Other
- * than SWC stuff in FlexProject, we do not need it and it adds a HUGE overhead.
- * 
  * @author Michael Schmalle
  */
-public class RandoriApplicationProject extends FlexProject implements
+public class RandoriApplicationProject extends RandoriProject implements
         IRandoriApplicationProject
 {
 
-    private IRandoriBackend backend;
-
-    /**
-     * target settings
-     */
-    private IRandoriTargetSettings targetSettings;
-
-    private Configurator projectConfigurator;
-
-    private Configuration configuration;
-
-    public RandoriConfiguration getConfiguration()
-    {
-        return (RandoriConfiguration) configuration;
-    }
-
-    private ConfigurationBuffer configBuffer;
-
-    private ProblemQuery problems;
-
-    public ProblemQuery getProblemQuery()
-    {
-        return problems;
-    }
-
     private IRandoriTarget target;
-
-    public IRandoriTargetSettings getTargetSettings()
-    {
-        if (targetSettings == null)
-            targetSettings = (IRandoriTargetSettings) projectConfigurator
-                    .getTargetSettings(null);
-
-        return targetSettings;
-    }
-
-    public void setTargetSettings(IRandoriTargetSettings value)
-    {
-        targetSettings = value;
-    }
-
-    public RandoriApplicationProject(Workspace workspace,
-            IRandoriBackend backend, IASDocBundleDelegate asDocBundleDelegate)
-    {
-        super(workspace, asDocBundleDelegate);
-        this.backend = backend;
-
-        getSourceCompilationUnitFactory().addHandler(
-                backend.getSourceFileHandlerInstance());
-    }
 
     public RandoriApplicationProject(Workspace workspace)
     {
-        // XXX TEMP until I figure out what to do with the backend
-        this(workspace, new RandoriBackend(), IASDocBundleDelegate.NIL_DELEGATE);
-    }
-
-    public boolean configure(final String[] args)
-    {
-        projectConfigurator = createConfigurator();
-
-        try
-        {
-            projectConfigurator.setConfiguration(args,
-                    ICompilerSettingsConstants.FILE_SPECS_VAR);
-            projectConfigurator.applyToProject(this);
-
-            problems = new ProblemQuery(
-                    projectConfigurator.getCompilerProblemSettings());
-
-            // Get the configuration and configBuffer which are now initialized.
-            configuration = projectConfigurator.getConfiguration();
-            configBuffer = projectConfigurator.getConfigurationBuffer();
-            problems.addAll(projectConfigurator.getConfigurationProblems());
-
-            // Print version if "-version" is present.
-            if (configBuffer.getVar("version") != null) //$NON-NLS-1$
-            {
-                return false;
-            }
-
-            if (problems.hasErrors())
-                return false;
-
-            validateTargetFile();
-            return true;
-        }
-        catch (ConfigurationException e)
-        {
-            final ICompilerProblem problem = new ConfigurationProblem(e);
-            problems.add(problem);
-            return false;
-        }
-        catch (Exception e)
-        {
-            final ICompilerProblem problem = new ConfigurationProblem(null, -1,
-                    -1, -1, -1, e.getMessage());
-            problems.add(problem);
-            return false;
-        }
-        finally
-        {
-            // If we couldn't create a configuration, then create a default one
-            // so we can exit without throwing an exception.
-            if (configuration == null)
-            {
-                configuration = new Configuration();
-                configBuffer = new ConfigurationBuffer(Configuration.class,
-                        Configuration.getAliases());
-            }
-        }
-    }
-
-    public boolean compile(boolean doBuild)
-    {
-        return startCompile(doBuild);
+        super(workspace, IASDocBundleDelegate.NIL_DELEGATE, new RandoriBackend());
     }
 
     protected boolean startCompile(boolean doBuild)
@@ -186,7 +57,7 @@ public class RandoriApplicationProject extends FlexProject implements
 
         try
         {
-            target = createApplicationTarget(getTargetSettings(), null);
+            target = createTarget(getTargetSettings(), null);
 
             IRandoriApplication application = build();
 
@@ -195,15 +66,15 @@ public class RandoriApplicationProject extends FlexProject implements
                 Collection<ICompilerProblem> errors = new ArrayList<ICompilerProblem>();
                 Collection<ICompilerProblem> warnings = new ArrayList<ICompilerProblem>();
 
-                if (!configuration.getCreateTargetWithErrors())
+                if (!getConfiguration().getCreateTargetWithErrors())
                 {
-                    problems.getErrorsAndWarnings(errors, warnings);
+                    getProblemQuery().getErrorsAndWarnings(errors, warnings);
                     if (errors.size() > 0)
                         return false;
                 }
 
                 // for now we let warnings pass
-                problems.getErrorsAndWarnings(errors, warnings);
+                getProblemQuery().getErrorsAndWarnings(errors, warnings);
                 if (errors.size() > 0)
                     return false;
 
@@ -220,7 +91,7 @@ public class RandoriApplicationProject extends FlexProject implements
         catch (Exception e)
         {
             final ICompilerProblem problem = new InternalCompilerProblem(e);
-            problems.add(problem);
+            getProblemQuery().add(problem);
         }
 
         return compilationSuccess;
@@ -228,22 +99,23 @@ public class RandoriApplicationProject extends FlexProject implements
 
     private boolean buildTarget(IRandoriApplication application)
     {
-        return application.compile((IRandoriBackend) backend, problems);
+        return application.compile(getBackend(), getProblemQuery());
     }
 
     private IRandoriApplication build() throws InterruptedException,
             IOException, ConfigurationException
     {
-        final List<ICompilerProblem> problemsBuildingSWF = new ArrayList<ICompilerProblem>();
+        final List<ICompilerProblem> buildProblems = new ArrayList<ICompilerProblem>();
 
-        final IRandoriApplication app = buildApplication(this,
-                problemsBuildingSWF);
-        problems.addAll(problemsBuildingSWF);
+        final IRandoriApplication app = buildApplication(this, buildProblems);
+
+        getProblemQuery().addAll(buildProblems);
+
         if (app == null)
         {
             ICompilerProblem problem = new UnableToBuildSWFProblem(
-                    configuration.getOutput());
-            problems.add(problem);
+                    getConfiguration().getOutput());
+            getProblemQuery().add(problem);
         }
 
         return app;
@@ -263,41 +135,14 @@ public class RandoriApplicationProject extends FlexProject implements
         return target.build(problems);
     }
 
-    /**
-     * Validate target file.
-     * 
-     * @throws MustSpecifyTarget
-     * @throws IOError
-     */
-    protected void validateTargetFile() throws ConfigurationException
+    @Override
+    protected void validateConfiguration() throws ConfigurationException
     {
-        //        final String targetFile = config.getTargetFile();
-        //        if (targetFile == null)
-        //            throw new ConfigurationException.MustSpecifyTarget(null, null, -1);
-        //
-        //        final File file = new File(targetFile);
-        //        if (!file.exists())
-        //            throw new ConfigurationException.IOError(targetFile);
     }
 
-    /**
-     * Create a new Configurator. This method may be overridden to allow
-     * Configurator subclasses to be created that have custom configurations.
-     * 
-     * @return a new instance or subclass of {@link Configurator}.
-     */
-    protected Configurator createConfigurator()
+    @Override
+    protected boolean export()
     {
-        return backend.createConfigurator();
-    }
-
-    public IRandoriTarget createApplicationTarget(
-            ITargetSettings targetSettings,
-            ITargetProgressMonitor progressMonitor) throws InterruptedException
-    {
-        this.targetSettings = (IRandoriTargetSettings) targetSettings;
-
-        return (IRandoriTarget) backend
-                .createTarget(this, targetSettings, null);
+        return false;
     }
 }

@@ -20,27 +20,61 @@
 package randori.compiler.internal.projects;
 
 import org.apache.flex.compiler.asdoc.IASDocBundleDelegate;
-import org.apache.flex.compiler.internal.projects.FlexProject;
+import org.apache.flex.compiler.exceptions.ConfigurationException;
 import org.apache.flex.compiler.internal.workspaces.Workspace;
 
+import randori.compiler.internal.driver.RandoriBackend;
 import randori.compiler.projects.IRandoriBundleProject;
 
 /**
  * @author Michael Schmalle
  */
-public class RandoriBundleProject extends FlexProject implements
+public class RandoriBundleProject extends RandoriProject implements
         IRandoriBundleProject
 {
 
-    public RandoriBundleProject(Workspace workspace,
-            IASDocBundleDelegate asDocBundleDelegate)
-    {
-        super(workspace, asDocBundleDelegate);
-    }
-
     public RandoriBundleProject(Workspace workspace)
     {
-        super(workspace);
+        super(workspace, IASDocBundleDelegate.NIL_DELEGATE,
+                new RandoriBackend());
     }
 
+    @Override
+    public boolean configure(String[] args)
+    {
+        return super.configure(args);
+    }
+
+    @Override
+    public boolean compile(boolean doBuild)
+    {
+        return compile(doBuild, false);
+    }
+
+    @Override
+    public boolean compile(boolean doBuild, boolean doExport)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    protected void validateConfiguration() throws ConfigurationException
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    protected boolean startCompile(boolean doBuild)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    protected boolean export()
+    {
+        return false;
+    }
 }

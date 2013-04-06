@@ -25,7 +25,7 @@ package randori.compiler.projects;
  * 
  * @author Michael Schmalle
  */
-public interface IRandoriBundleProject
+public interface IRandoriBundleProject extends IRandoriProject
 {
-
+    
 }
