@@ -162,7 +162,7 @@ public class BundleUtils
             File sdkRoot, IBundleContainer container)
     {
         IBundleCategory category = container
-                .getCategory(IBundleCategory.Type.MONO);
+                .getCategory(IBundleCategory.Type.MONOLITHIC);
         if (category != null)
         {
             copyJSFilesFromCategory(destinationDir, sdkRoot, category);

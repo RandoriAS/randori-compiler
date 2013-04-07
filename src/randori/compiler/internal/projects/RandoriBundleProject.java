@@ -111,7 +111,7 @@ public class RandoriBundleProject extends RandoriProject implements
         bundle.addLibrary(library);
 
         // TODO this has to be done based off of compiler args -js-classes-as-files
-        library.addContainer(Type.JS).addCategory(IBundleCategory.Type.MONO);
+        library.addContainer(Type.JS).addCategory(IBundleCategory.Type.MONOLITHIC);
 
         for (IBundleConfigurationEntry entry : getBundleConfiguration()
                 .getEntries())
@@ -192,7 +192,7 @@ public class RandoriBundleProject extends RandoriProject implements
 
         IBundleCategory category = library.getContainer(
                 IBundleContainer.Type.JS)
-                .getCategory(IBundleCategory.Type.MONO);
+                .getCategory(IBundleCategory.Type.MONOLITHIC);
 
         category.addFile(new File(tempDir, name + ".js"), name + ".js");
     }

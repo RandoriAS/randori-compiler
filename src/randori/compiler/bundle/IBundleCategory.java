@@ -45,17 +45,17 @@ public interface IBundleCategory
         /**
          * A source code minimized category.
          */
-        CLASSES_MINIFIED("classes_mini"),
+        CLASSES_MINIFIED("classes_minified"),
 
         /**
          * A monolithic non minimized source code category.
          */
-        MONO("mono"),
+        MONOLITHIC("monolithic"),
 
         /**
          * A monolithic minimized source code category.
          */
-        MONO_MINIFIED("mono_mini");
+        MONOLITHIC_MINIFIED("monolithic_minified");
 
         private String value;
 

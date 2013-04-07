@@ -104,7 +104,7 @@ public class BundleWriterTest
 
         IBundleContainer container = randoriLibrary.addContainer(Type.JS);
         IBundleCategory entry = container
-                .addCategory(IBundleCategory.Type.MONO);
+                .addCategory(IBundleCategory.Type.MONOLITHIC);
         // for now this takes care of wrapping it in a source entry
         entry.addFile(new File(tempDir, "\\Randori.js"), "Randori.js");
 
@@ -114,7 +114,7 @@ public class BundleWriterTest
                 "\\randori-guice-framework.swc")));
 
         container = randoriGuiceLibrary.addContainer(Type.JS);
-        entry = container.addCategory(IBundleCategory.Type.MONO);
+        entry = container.addCategory(IBundleCategory.Type.MONOLITHIC);
 
         // for now this takes care of wrapping it in a source entry
         entry.addFile(new File(tempDir, "\\RandoriGuice.js"), "RandoriGuice.js");

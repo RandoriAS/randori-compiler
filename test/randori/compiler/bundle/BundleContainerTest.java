@@ -71,7 +71,7 @@ public class BundleContainerTest
                 .addCategory(IBundleCategory.Type.CLASSES);
         IBundleCategory classesMin = container
                 .addCategory(IBundleCategory.Type.CLASSES_MINIFIED);
-        IBundleCategory mono = container.addCategory(IBundleCategory.Type.MONO);
+        IBundleCategory mono = container.addCategory(IBundleCategory.Type.MONOLITHIC);
         assertNotNull(classes);
         assertNotNull(classesMin);
         assertNotNull(mono);
@@ -83,14 +83,14 @@ public class BundleContainerTest
         assertNotNull(container.addCategory(IBundleCategory.Type.CLASSES));
         assertNotNull(container
                 .addCategory(IBundleCategory.Type.CLASSES_MINIFIED));
-        assertNotNull(container.addCategory(IBundleCategory.Type.MONO));
+        assertNotNull(container.addCategory(IBundleCategory.Type.MONOLITHIC));
 
         IBundleCategory[] categories = container.getCategories().toArray(
                 new IBundleCategory[0]);
         assertEquals(3, categories.length);
         assertEquals("classes", categories[0].getName());
-        assertEquals("classes_mini", categories[1].getName());
-        assertEquals("mono", categories[2].getName());
+        assertEquals("classes_minified", categories[1].getName());
+        assertEquals("monolithic", categories[2].getName());
     }
 
     @Test

@@ -10,6 +10,7 @@ import org.apache.flex.swc.SWC;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import randori.compiler.bundle.IBundleContainer.Type;
@@ -24,6 +25,7 @@ import randori.compiler.internal.driver.RandoriBackend;
  * A functional test of compiling the SDK bundle and reading it, while testing
  * it's state along the way.
  */
+@Ignore // this was a scratch pad, needs to be refactored or deleted
 public class SDKBundleTest
 {
     File tempDirectory = new File(TestConstants.RandoriASFramework
@@ -232,7 +234,7 @@ public class SDKBundleTest
 
         IBundleContainer container = randoriLibrary.addContainer(Type.JS);
         IBundleCategory entry = container
-                .addCategory(IBundleCategory.Type.MONO);
+                .addCategory(IBundleCategory.Type.MONOLITHIC);
 
         entry.addFile(randoriFrameworkJS, "Randori.js");
         entry.addFile(randoriGuiceFrameworkJS, "RandoriGuice.js");
