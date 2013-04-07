@@ -17,17 +17,25 @@
  * @author Michael Schmalle <mschmalle@teotigraphix.com>
  */
 
-package randori.compiler.projects;
+package randori.compiler.bundle;
 
-import randori.compiler.bundle.IBundleConfiguration;
+import java.util.Collection;
 
 /**
- * The {@link IRandoriBundleProject} contains methods to build a randori bundle
- * project.
- * 
  * @author Michael Schmalle
  */
-public interface IRandoriBundleProject extends IRandoriProject
+public interface IBundleConfiguration
 {
-    boolean configure(IBundleConfiguration configuration);
+    String getOutput();
+    
+    String getBundelName();
+
+    Collection<String> getLibraryPaths();
+
+    Collection<IBundleConfigurationEntry> getEntries();
+
+    void addLibraryPath(String string);
+
+    IBundleConfigurationEntry getEntry(String name);
+
 }
