@@ -58,6 +58,7 @@ public class RandoriApplicationTest extends RandoriCompilerTestBase
 
         setUpExtras();
         initializeArgs();
+        getArgs().setJsOutputAsFiles(false);
     }
 
     @After
@@ -70,7 +71,9 @@ public class RandoriApplicationTest extends RandoriCompilerTestBase
     public void test_basic_compile() throws IOException
     {
         getArgs().addSourcepath(basepathDir.getAbsolutePath());
-
+        getArgs().setJsOutputAsFiles(true);
+        getArgs().setAppName("Foo");
+        
         project.configure(getArgs().toArguments());
         boolean success = project.compile(true);
         if (!success)
@@ -104,14 +107,15 @@ public class RandoriApplicationTest extends RandoriCompilerTestBase
         getArgs().addSourcepath(basepathDir.getAbsolutePath());
         getArgs().setJsLibraryPath("libs");
         getArgs().setSDKPath(sdkDir.getAbsolutePath());
-
+        getArgs().setAppName("Foo");
+        
         project.configure(getArgs().toArguments());
         boolean success = project.compile(true, true);
         Assert.assertTrue(success);
 
         Assert.assertTrue(new File(outDir, "libs").isDirectory());
-        Assert.assertTrue(new File(outDir, "libs/Randori.js").exists());
-        Assert.assertTrue(new File(outDir, "libs/RandoriGuice.js").exists());
+        Assert.assertTrue(new File(outDir, "libs/randori-framework.js").exists());
+        Assert.assertTrue(new File(outDir, "libs/randori-guice-framework.js").exists());
     }
 
     @Test
@@ -122,14 +126,15 @@ public class RandoriApplicationTest extends RandoriCompilerTestBase
         getArgs().addSourcepath(basepathDir.getAbsolutePath());
         getArgs().setJsLibraryPath("libs");
         getArgs().setSDKPath(sdkRBL.getAbsolutePath());
+        getArgs().setAppName("Foo");
 
         project.configure(getArgs().toArguments());
         boolean success = project.compile(true, true);
         Assert.assertTrue(success);
 
         Assert.assertTrue(new File(outDir, "libs").isDirectory());
-        Assert.assertTrue(new File(outDir, "libs/Randori.js").exists());
-        Assert.assertTrue(new File(outDir, "libs/RandoriGuice.js").exists());
+        Assert.assertTrue(new File(outDir, "libs/randori-framework.js").exists());
+        Assert.assertTrue(new File(outDir, "libs/randori-guice-framework.js").exists());
     }
 
     private void printProblems(Iterable<ICompilerProblem> problems)

@@ -85,7 +85,7 @@ public class RandoriBundleProjectTest
         String path = TestConstants.RandoriASFramework
                 + "\\randori-compiler\\temp\\bundle\\randori-sdk-0.2.3.rbl";
 
-        configuration = new BundleConfiguration("randori-sdk", path);
+        configuration = new BundleConfiguration("randori-framework", path);
 
         // dependent compiled libraries
         configuration.addLibraryPath(builtinSWC.getAbsolutePath());

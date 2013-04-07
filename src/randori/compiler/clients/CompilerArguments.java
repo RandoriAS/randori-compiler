@@ -22,6 +22,8 @@ package randori.compiler.clients;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.flex.utils.StringUtils;
+
 /**
  * @author Michael Schmalle
  */
@@ -241,4 +243,9 @@ public class CompilerArguments
         }
     }
 
+    @Override
+    public String toString()
+    {
+        return StringUtils.join(toArguments(), " ");
+    }
 }

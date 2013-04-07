@@ -74,7 +74,7 @@ public class RandoriCompilerTestBase
             FilenameNormalization.normalize(TestConstants.RandoriASFramework
                     + "\\randori-sdk"));
 
-    protected File sdkRBL = new File(tempDir, "randori-sdk-0.2.1.rbl");
+    protected File sdkRBL = new File(tempDir, "randori-sdk-0.2.3.rbl");
 
     //----------------------------------
     // 
@@ -125,7 +125,7 @@ public class RandoriCompilerTestBase
     {
         getArgs().addLibraryPath(builtinSWC.getAbsolutePath());
         getArgs().setOutput(outDir.getAbsolutePath());
-        getArgs().setJsOutputAsFiles(false);
+        getArgs().setJsOutputAsFiles(true);
     }
 
     protected void setUpExtras()

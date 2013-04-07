@@ -60,12 +60,26 @@ public class ApplicationModel extends BaseCompilationSet
     {
         if (node == null)
             return false;
-        
+
+        // no -include-sources everything gets included (-source-path)
         Collection<File> sources = settings.getIncludeSources();
         if (sources == null || sources.size() == 0)
             return true;
-        
-        // TODO revisit this
+
+        // if incremental files have been passed, filter on them
+        Collection<String> incrementals = settings.getIncrementalFiles();
+        if (incrementals != null && incrementals.size() > 0)
+        {
+            String path = FilenameNormalization.normalize(node.getSourcePath());
+            for (String filePath : incrementals)
+            {
+                if (FilenameUtils.equalsNormalized(path, filePath))
+                    return true;
+            }
+            return false;
+        }
+
+        // filter out using the expanded -include-sources directory or files
         String path = FilenameNormalization.normalize(node.getSourcePath());
         for (File file : sources)
         {
@@ -107,7 +121,9 @@ public class ApplicationModel extends BaseCompilationSet
             {
                 // TODO Create a Problem that app-name is not configured, this should actually
                 // be done in the configure() method of the compiler
+                throw new RuntimeException("no -app-name specified during monolithic generation");
             }
+            
             writeFull(basePath, appName + ".js");
         }
     }

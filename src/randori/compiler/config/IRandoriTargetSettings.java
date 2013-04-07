@@ -80,4 +80,10 @@ public interface IRandoriTargetSettings extends ITargetSettings
     boolean getJsClassesAsFiles();
     
     Collection<File> getIncludeSources();
+
+    Collection<String> getRawIncludeSources();
+    
+    Collection<String> getIncrementalFiles();
+
+    void addIncrementalFile(String absoluteFilename);
 }

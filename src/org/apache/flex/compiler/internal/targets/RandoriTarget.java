@@ -51,6 +51,13 @@ public class RandoriTarget extends Target implements IRandoriTarget
 
     private RootedCompilationUnits rootedCompilationUnits;
 
+    private boolean collectIncrementalUnits = false;
+
+    IRandoriTargetSettings getTargetSettgins()
+    {
+        return (IRandoriTargetSettings) targetSettings;
+    }
+
     protected IRandoriTargetSettings getSettings()
     {
         return (IRandoriTargetSettings) getTargetSettings();
@@ -80,11 +87,12 @@ public class RandoriTarget extends Target implements IRandoriTarget
             throws InterruptedException
     {
         Collection<ICompilationUnit> units = null;
-        
+
         // where we decide what units are going to get compiled
         Collection<File> sources = targetSettings.getIncludeSources();
         if (sources.size() > 0)
         {
+            collectIncrementalUnits = true;
             Collection<ICompilationUnit> roots = new ArrayList<ICompilationUnit>();
             for (File file : sources)
             {
@@ -152,6 +160,18 @@ public class RandoriTarget extends Target implements IRandoriTarget
             List<ICompilationUnit> reachableCompilationUnits = project
                     .getReachableCompilationUnitsInSWFOrder(rootedCompilationUnits
                             .getUnits());
+
+            // collect explicit and dependent classes
+            if (collectIncrementalUnits)
+            {
+                // XXX prototype
+                for (ICompilationUnit unit : reachableCompilationUnits)
+                {
+                    getTargetSettgins().addIncrementalFile(
+                            unit.getAbsoluteFilename());
+                }
+                collectIncrementalUnits = false;
+            }
 
             IRandoriApplication application = initializeApplication(reachableCompilationUnits);
             return application;

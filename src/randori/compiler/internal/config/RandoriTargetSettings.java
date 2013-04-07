@@ -19,7 +19,15 @@
 
 package randori.compiler.internal.config;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.flex.compiler.config.Configuration;
+import org.apache.flex.compiler.config.Configurator;
 import org.apache.flex.compiler.internal.config.TargetSettings;
 
 import randori.compiler.config.IRandoriTargetSettings;
@@ -40,6 +48,10 @@ public class RandoriTargetSettings extends TargetSettings implements
 
     private RandoriConfiguration configuration;
 
+    private Collection<File> includeSources;
+
+    private Collection<String> incrementalFiles = new ArrayList<String>();
+
     public RandoriTargetSettings(Configuration configuration)
     {
         super(configuration);
@@ -52,7 +64,7 @@ public class RandoriTargetSettings extends TargetSettings implements
     {
         return configuration.getSDKPath();
     }
-    
+
     @Override
     public String getAppName()
     {
@@ -75,6 +87,54 @@ public class RandoriTargetSettings extends TargetSettings implements
     public boolean getJsClassesAsFiles()
     {
         return configuration.getJsClassesAsFiles();
+    }
+
+    @Override
+    public Collection<String> getRawIncludeSources()
+    {
+        return configuration.getIncludeSources();
+    }
+
+    @Override
+    public Collection<String> getIncrementalFiles()
+    {
+        return incrementalFiles;
+    }
+
+    @Override
+    public void addIncrementalFile(String absoluteFilename)
+    {
+        if (incrementalFiles.contains(absoluteFilename))
+            return;
+        incrementalFiles.add(absoluteFilename);
+    }
+
+    @Override
+    public Collection<File> getIncludeSources()
+    {
+        if (includeSources == null)
+        {
+            includeSources = new HashSet<File>();
+
+            List<File> files = Configurator.toFileList(configuration
+                    .getIncludeSources());
+            for (File file : files)
+            {
+                if (file.isFile())
+                {
+                    includeSources.add(file);
+                    continue;
+                }
+                else if (file.isDirectory())
+                {
+                    for (File fileInFolder : FileUtils.listFiles(file,
+                            new String[] { "as" }, true))
+                        includeSources.add(fileInFolder);
+                }
+            }
+        }
+
+        return includeSources;
     }
 
 }
