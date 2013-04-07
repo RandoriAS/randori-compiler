@@ -32,9 +32,6 @@ import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.XMLStreamException;
-
 import org.apache.commons.io.IOUtils;
 
 import randori.compiler.bundle.IBundle;
@@ -72,8 +69,6 @@ public class BundleWriter extends BundleWriterBase
     @Override
     void prepare(IBundle bundle) throws IOException
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -125,28 +120,5 @@ public class BundleWriter extends BundleWriterBase
     {
         zipOutputStream.flush();
         zipOutputStream.close();
-    }
-
-    /**
-     * Serialize the {@link IBundle} model's manifest.xml to a writer.
-     * 
-     * @param bundle The {@link IBundle} model.
-     */
-    protected final void writeManifestXML(IBundle bundle, Writer writer)
-    {
-        try
-        {
-            final StAXManifestWriter xmlWriter = new StAXManifestWriter(bundle,
-                    writer);
-            xmlWriter.write();
-        }
-        catch (XMLStreamException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (FactoryConfigurationError e)
-        {
-            throw new RuntimeException(e);
-        }
     }
 }

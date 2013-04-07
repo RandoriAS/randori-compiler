@@ -33,10 +33,14 @@ public interface IBundleConfigurationEntry
 
     Collection<String> getSourcePaths();
 
+    Collection<String> getIncludeSources();
+
     File getJavaScript();
 
     String getJavaScriptName();
 
     void addSourcePath(String path);
+
+    void addIncludeSources(String path);
 
 }

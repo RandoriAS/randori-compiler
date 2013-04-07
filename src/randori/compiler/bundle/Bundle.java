@@ -36,7 +36,7 @@ import org.apache.flex.swc.ISWC;
 public class Bundle implements IMutableBundle
 {
 
-    private final File file;
+    private File file;
 
     private final BundleVersion version;
 
@@ -59,6 +59,12 @@ public class Bundle implements IMutableBundle
     public File getBundleFile()
     {
         return file;
+    }
+    
+    @Override
+    public void setBundleFile(File value)
+    {
+        file = value;
     }
 
     @Override

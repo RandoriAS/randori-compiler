@@ -20,6 +20,7 @@
 package randori.compiler.bundle;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipFile;
@@ -71,6 +72,11 @@ public class BundleEntry implements IBundleEntry
     @Override
     public InputStream createInputStream() throws IOException
     {
+        if (file != null)
+        {
+            FileInputStream inputSream = new FileInputStream(file);
+            return inputSream;
+        }
         ZipFile bundleFile = new ZipFile(bundlePath);
         InputStream inputStream = BundleReader.getInputStream(bundleFile, path);
         return inputStream;

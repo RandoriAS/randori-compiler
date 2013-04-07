@@ -33,8 +33,6 @@ import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriApplication;
 import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.internal.driver.model.ApplicationModel;
-import randori.compiler.internal.driver.model.RandoriGuiceModel;
-import randori.compiler.internal.driver.model.RandoriModel;
 
 /**
  * @author Michael Schmalle
@@ -43,10 +41,6 @@ public class RandoriApplication implements IRandoriApplication
 {
     @SuppressWarnings("unused")
     private final FlexProject project;
-
-    private RandoriGuiceModel guice;
-
-    private RandoriModel randori;
 
     private ApplicationModel application;
 
@@ -70,9 +64,6 @@ public class RandoriApplication implements IRandoriApplication
 
         this.compilationUnits = units;
 
-        // XXX need to check whether the lib paths contain Randori.swc or RandoriGuice.swc
-        guice = new RandoriGuiceModel(project, settings);
-        randori = new RandoriModel(project, settings);
         application = new ApplicationModel(project, settings);
     }
 
@@ -86,17 +77,11 @@ public class RandoriApplication implements IRandoriApplication
 
     protected void filter(ProblemQuery problems)
     {
-        guice.filter(compilationUnits);
-        randori.filter(compilationUnits);
         application.filter(compilationUnits);
     }
 
     protected void generate(IRandoriBackend backend, ProblemQuery problems)
     {
-        guice.generate(backend, problems.getProblems(), settings.getOutput());
-
-        randori.generate(backend, problems.getProblems(), settings.getOutput());
-
         application.generate(backend, problems.getProblems(),
                 settings.getOutput());
     }
@@ -104,8 +89,6 @@ public class RandoriApplication implements IRandoriApplication
     @Override
     public void export(Collection<ICompilerProblem> problems)
     {
-        // TODO Auto-generated method stub
-        
     }
 
 }

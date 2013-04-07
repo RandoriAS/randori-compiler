@@ -1,5 +1,7 @@
 package randori.compiler.bundle;
 
+import java.io.File;
+
 import org.apache.flex.compiler.problems.ICompilerProblem;
 
 /**
@@ -9,6 +11,8 @@ import org.apache.flex.compiler.problems.ICompilerProblem;
  */
 public interface IMutableBundle extends IBundle
 {
+    void setBundleFile(File file);
+
     /**
      * Adds a {@link IBundleLibrary} to the {@link IMutableBundle}.
      * 
@@ -23,4 +27,5 @@ public interface IMutableBundle extends IBundle
      * @param problem The {@link IBundle} problem encountered.
      */
     void addProblem(ICompilerProblem problem);
+
 }

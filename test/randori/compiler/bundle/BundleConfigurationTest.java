@@ -104,16 +104,4 @@ public class BundleConfigurationTest
         // foo entry inherits the librarys
         Assert.assertEquals(3, foo.getLibraryPaths().size());
     }
-
-    private void foo()
-    {
-        BundleConfiguration config = new BundleConfiguration("randori-sdk", "");
-        // dependent compiled libraries
-        config.addLibraryPath("builtin.swc");
-        config.addLibraryPath("JQuery.swc");
-        config.addLibraryPath("HTMLCoreLib.swc");
-
-        IBundleConfigurationEntry randori = config.addEntry("Randori");
-        randori.addSourcePath("randori-framework/src");
-    }
 }

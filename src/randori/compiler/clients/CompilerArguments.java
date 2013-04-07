@@ -44,7 +44,7 @@ public class CompilerArguments
 
     private String jsBasePath = "";
 
-    private boolean jsOutputAsFiles = true;
+    private Boolean jsOutputAsFiles = null;
 
     public void addLibraryPath(String path)
     {
@@ -117,12 +117,12 @@ public class CompilerArguments
         this.jsBasePath = jsBasePath;
     }
 
-    public boolean isJsOutputAsFiles()
+    public Boolean isJsOutputAsFiles()
     {
         return jsOutputAsFiles;
     }
 
-    public void setJsOutputAsFiles(boolean jsOutputAsFiles)
+    public void setJsOutputAsFiles(Boolean jsOutputAsFiles)
     {
         this.jsOutputAsFiles = jsOutputAsFiles;
     }
@@ -183,8 +183,12 @@ public class CompilerArguments
         if (!library.equals(""))
             result.add("-js-library-path=" + library);
 
-        result.add("-js-classes-as-files="
-                + (isJsOutputAsFiles() ? "true" : "false"));
+        if (isJsOutputAsFiles() != null)
+        {
+            result.add("-js-classes-as-files="
+                    + (isJsOutputAsFiles() ? "true" : "false"));
+        }
+
         result.add("-output=" + getOutput());
 
         return result.toArray(new String[] {});

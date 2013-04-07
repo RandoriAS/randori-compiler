@@ -103,6 +103,8 @@ public class BundleConfiguration implements IBundleConfiguration
         private String name;
 
         private List<String> sourcePaths = new ArrayList<String>();
+        
+        private List<String> includeSources = new ArrayList<String>();
 
         private File javaScript;
 
@@ -136,6 +138,12 @@ public class BundleConfiguration implements IBundleConfiguration
             return sourcePaths;
         }
 
+        @Override
+        public Collection<String> getIncludeSources()
+        {
+            return includeSources;
+        }
+        
         public BundleConfigurationEntry(IBundleConfiguration configuration,
                 String name)
         {
@@ -151,5 +159,12 @@ public class BundleConfiguration implements IBundleConfiguration
             sourcePaths.add(path);
         }
 
+        @Override
+        public void addIncludeSources(String path)
+        {
+            if (includeSources.contains(path))
+                return;
+            includeSources.add(path);
+        }
     }
 }

@@ -19,7 +19,12 @@
 
 package randori.compiler.bundle.io;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.Writer;
+
+import javax.xml.stream.FactoryConfigurationError;
+import javax.xml.stream.XMLStreamException;
 
 import randori.compiler.bundle.IBundle;
 import randori.compiler.bundle.IBundleFileEntry;
@@ -97,4 +102,30 @@ public abstract class BundleWriterBase implements IBundleWriter
      */
     abstract void finish(IBundle bundle) throws IOException;
 
+    /**
+     * Serialize the SWC model's catalog.xml to a writer.
+     * 
+     * @param swc model
+     */
+    protected final void writeManifestXML(IBundle bundle, Writer writer)
+    {
+        try
+        {
+            final StAXManifestWriter xmlWriter = new StAXManifestWriter(bundle,
+                    writer);
+            xmlWriter.write();
+        }
+        catch (XMLStreamException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (FactoryConfigurationError e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    void writeFile(File file, String path) throws IOException
+    {
+    }
 }

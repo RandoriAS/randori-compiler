@@ -24,12 +24,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.flex.compiler.internal.projects.FlexProject;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.tree.as.ITypeNode;
 import org.apache.flex.compiler.units.ICompilationUnit;
+import org.apache.flex.utils.FilenameNormalization;
 
 import randori.compiler.codegen.as.IASWriter;
 import randori.compiler.config.IRandoriTargetSettings;
@@ -47,10 +50,6 @@ import randori.compiler.internal.utils.FileUtils;
  */
 public class ApplicationModel extends BaseCompilationSet
 {
-    private static final String RANDORI = "randori";
-
-    private static final String GUICE = "guice";
-
     public ApplicationModel(FlexProject project, IRandoriTargetSettings settings)
     {
         super(project, settings);
@@ -59,8 +58,21 @@ public class ApplicationModel extends BaseCompilationSet
     @Override
     protected boolean accept(ITypeNode node)
     {
-        return node != null && !node.getQualifiedName().startsWith(GUICE)
-                && !node.getQualifiedName().startsWith(RANDORI);
+        if (node == null)
+            return false;
+        
+        Collection<File> sources = settings.getIncludeSources();
+        if (sources == null || sources.size() == 0)
+            return true;
+        
+        // TODO revisit this
+        String path = FilenameNormalization.normalize(node.getSourcePath());
+        for (File file : sources)
+        {
+            if (FilenameUtils.equalsNormalized(path, file.getAbsolutePath()))
+                return true;
+        }
+        return false;
     }
 
     @Override
