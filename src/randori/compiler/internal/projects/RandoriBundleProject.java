@@ -32,6 +32,8 @@ import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.swc.SWC;
 import org.apache.flex.utils.FilenameNormalization;
 
+import com.google.common.io.Files;
+
 import randori.compiler.bundle.Bundle;
 import randori.compiler.bundle.BundleLibrary;
 import randori.compiler.bundle.IBundle;
@@ -64,6 +66,8 @@ public class RandoriBundleProject extends RandoriProject implements
     private File outputRBL;
 
     private File outputDir;
+    
+    private File tempDir;
 
     private IBundleConfiguration getBundleConfiguration()
     {
@@ -93,6 +97,9 @@ public class RandoriBundleProject extends RandoriProject implements
     {
         outputRBL = new File(getBundleConfiguration().getOutput());
         outputDir = outputRBL.getParentFile();
+        
+        tempDir = Files.createTempDir(); 
+        tempDir.mkdirs();
 
         bundle = new Bundle(outputRBL);
 
@@ -102,7 +109,7 @@ public class RandoriBundleProject extends RandoriProject implements
                 .getBundelName());
         // add the libraries to the bundle
         bundle.addLibrary(library);
-        
+
         // TODO this has to be done based off of compiler args -js-classes-as-files
         library.addContainer(Type.JS).addCategory(IBundleCategory.Type.MONO);
 
@@ -113,15 +120,14 @@ public class RandoriBundleProject extends RandoriProject implements
             compileRandori(library, entry);
 
             // run the compc
-            compileSWC(library, entry);
+            compileSWC(library, entry); 
         }
 
         // write the bundle to disk
         BundleDirectoryWriter writer;
         try
         {
-            writer = new BundleDirectoryWriter(bundle.getBundleFile()
-                    .getAbsolutePath());
+            writer = new BundleDirectoryWriter(outputDir.getAbsolutePath());
             writer.write(bundle);
         }
         catch (FileNotFoundException e)
@@ -161,6 +167,12 @@ public class RandoriBundleProject extends RandoriProject implements
         return true;
     }
 
+    @Override
+    protected void finish()
+    {
+        tempDir.deleteOnExit();
+    }
+    
     private void compileRandori(IBundleLibrary library,
             IBundleConfigurationEntry entry)
     {
@@ -171,7 +183,7 @@ public class RandoriBundleProject extends RandoriProject implements
 
         RandoriBackend backend = new RandoriBackend();
         Randori randori = new Randori(backend);
-        
+
         @SuppressWarnings("unused")
         final int code = randori.mainNoExit(arguments.toArguments(), problems);
         getProblemQuery().addAll(problems);
@@ -182,13 +194,13 @@ public class RandoriBundleProject extends RandoriProject implements
                 IBundleContainer.Type.JS)
                 .getCategory(IBundleCategory.Type.MONO);
 
-        category.addFile(new File(outputDir, name + ".js"), name + ".js");
+        category.addFile(new File(tempDir, name + ".js"), name + ".js");
     }
 
     private void configureRandoriCompiler(IBundleLibrary library,
             IBundleConfigurationEntry entry, CompilerArguments arguments)
     {
-        arguments.setOutput(outputDir.getAbsolutePath());
+        arguments.setOutput(tempDir.getAbsolutePath());
         arguments.setJsOutputAsFiles(false);
         arguments.setAppName(entry.getName());
 
@@ -211,8 +223,7 @@ public class RandoriBundleProject extends RandoriProject implements
     private void configureCOMPCCompiler(IBundleLibrary library,
             IBundleConfigurationEntry entry, CompilerArguments arguments)
     {
-
-        arguments.setOutput(outputDir + "/" + entry.getName() + ".swc");
+        arguments.setOutput(tempDir + "/" + entry.getName() + ".swc");
 
         // XXX Implement external-library-path
 
@@ -241,12 +252,12 @@ public class RandoriBundleProject extends RandoriProject implements
         configureCOMPCCompiler(library, entry, arguments);
 
         COMPC compc = new COMPC();
-        
+
         @SuppressWarnings("unused")
         int code = compc.mainNoExit(arguments.toArguments());
         getProblemQuery().addAll(compc.getProblems().getProblems());
 
-        library.addSWC(new SWC(outputRBL));
+        library.addSWC(new SWC(new File(tempDir, entry.getName() + ".swc")));
     }
 
     private void setVersionInfo(IBundle bundle)

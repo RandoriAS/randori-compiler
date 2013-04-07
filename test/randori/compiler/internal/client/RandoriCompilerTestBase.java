@@ -125,6 +125,7 @@ public class RandoriCompilerTestBase
     {
         getArgs().addLibraryPath(builtinSWC.getAbsolutePath());
         getArgs().setOutput(outDir.getAbsolutePath());
+        getArgs().setJsOutputAsFiles(false);
     }
 
     protected void setUpExtras()

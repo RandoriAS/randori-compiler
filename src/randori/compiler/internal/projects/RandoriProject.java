@@ -100,11 +100,14 @@ public abstract class RandoriProject extends FlexProject implements
             IASDocBundleDelegate asDocBundleDelegate, IRandoriBackend backend)
     {
         super(workspace, asDocBundleDelegate);
-        
+
         this.backend = backend;
-        
+
         getSourceCompilationUnitFactory().addHandler(
                 getBackend().getSourceFileHandlerInstance());
+
+        // TEMP
+        problems = new ProblemQuery();
     }
 
     @Override
@@ -183,6 +186,8 @@ public abstract class RandoriProject extends FlexProject implements
 
         success = export();
 
+        finish();
+
         return success;
     }
 
@@ -217,5 +222,9 @@ public abstract class RandoriProject extends FlexProject implements
     }
 
     protected abstract boolean export();
+
+    protected void finish()
+    {
+    }
 
 }
