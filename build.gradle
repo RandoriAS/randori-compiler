@@ -46,7 +46,7 @@ sourceSets {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.8.6'
+    gradleVersion = '1.5'
 }
 
 
@@ -112,13 +112,18 @@ idea {
 
         // It's nice to be able to see build directory to check artifacts
         excludeDirs = excludeDirs.findAll { it != buildDir }
+
+        // No reason to see .idea dir
         excludeDirs += file('.idea')
+
+        // No reason to see gradle wrapper files
+        excludeDirs += file('gradle')
     }
 
     project {
+
         jdkName = '1.5'
         languageLevel = '1.5'
-
 
     }
 
