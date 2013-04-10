@@ -1,5 +1,7 @@
-package
+package randori.annotations
 {
+
+import randori.annotations.AnnotationTargets;
 
 public final class AnnotationUsage extends Annotation
 {

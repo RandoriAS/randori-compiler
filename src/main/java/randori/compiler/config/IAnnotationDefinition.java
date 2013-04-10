@@ -22,6 +22,7 @@ package randori.compiler.config;
 import java.util.Collection;
 
 import org.apache.flex.compiler.definitions.IClassDefinition;
+import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 
 /**
@@ -29,38 +30,29 @@ import org.apache.flex.compiler.definitions.IDefinition;
  */
 public interface IAnnotationDefinition
 {
-    public enum AnnotationTargets
-    {
-        Class("class"),
+    public static final String TARGET_ALL = "All";
 
-        Constructor("constructor"),
+    public static final String TARGET_CLASS = "Class";
 
-        Property("property"),
+    public static final String TARGET_INTERFACE = "Interface";
 
-        Field("field"),
+    public static final String TARGET_CONSTRUCTOR = "Constructor";
 
-        All("all");
+    public static final String TARGET_FIELD = "Field";
 
-        private final String value;
+    public static final String TARGET_PROPERTY = "Property";
 
-        AnnotationTargets(String value)
-        {
-            this.value = value;
-        }
-
-        public String getValue()
-        {
-            return value;
-        }
-    }
-
+    public static final String TARGET_METHOD = "Method";
+    
     IClassDefinition getDefinition();
 
     String getBaseName();
 
     String getQualifiedName();
 
-    Collection<AnnotationTargets> getValidOn();
-
+    Collection<IConstantDefinition> getValidOn();
+    
+    boolean isValidOn(String type);
+    
     boolean isValidOn(IDefinition definition);
 }

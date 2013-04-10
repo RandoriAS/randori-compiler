@@ -27,7 +27,7 @@ import java.util.Map;
 import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.internal.definitions.ClassDefinition;
 import org.apache.flex.compiler.problems.ICompilerProblem;
-import org.apache.flex.compiler.projects.ICompilerProject;
+import org.apache.flex.compiler.projects.IASProject;
 
 import randori.compiler.config.IAnnotationDefinition;
 import randori.compiler.config.IAnnotationManager;
@@ -39,7 +39,7 @@ public class AnnotationManager implements IAnnotationManager
 {
     private static ClassDefinition annotationDefinition;
 
-    private final ICompilerProject project;
+    private final IASProject project;
 
     Map<String, IAnnotationDefinition> map = new HashMap<String, IAnnotationDefinition>();
 
@@ -51,7 +51,7 @@ public class AnnotationManager implements IAnnotationManager
         return problems;
     }
 
-    public AnnotationManager(ICompilerProject project)
+    public AnnotationManager(IASProject project)
     {
         this.project = project;
 
@@ -64,8 +64,19 @@ public class AnnotationManager implements IAnnotationManager
     {
         if (map.containsKey(definition.getQualifiedName()))
             return null;
+        
         AnnotationDefinition annotation = new AnnotationDefinition(definition);
+        List<ICompilerProblem> annotationProblems = new ArrayList<ICompilerProblem>();
+        annotation.reslove(project, annotationProblems);
+        
+        if (annotationProblems.size() > 0)
+        {
+            problems.addAll(annotationProblems);
+            return null;
+        }
+       
         map.put(definition.getQualifiedName(), annotation);
+        
         return annotation;
     }
 

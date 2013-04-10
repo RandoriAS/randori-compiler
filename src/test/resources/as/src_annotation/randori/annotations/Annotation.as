@@ -1,4 +1,4 @@
-package
+package randori.annotations
 {
 
 public class Annotation

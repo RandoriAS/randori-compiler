@@ -22,14 +22,19 @@ package randori.compiler.internal.config;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.flex.compiler.clients.problems.ProblemPrinter;
 import org.apache.flex.compiler.clients.problems.WorkspaceProblemFormatter;
+import org.apache.flex.compiler.definitions.IClassDefinition;
+import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.internal.workspaces.Workspace;
 import org.apache.flex.compiler.problems.ICompilerProblem;
+import org.apache.flex.compiler.tree.as.IFileNode;
+import org.apache.flex.compiler.units.ICompilationUnit;
 import org.apache.flex.utils.FilenameNormalization;
 import org.junit.After;
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,6 +52,11 @@ public class AnnotationTest extends RandoriCompilerTestBase
     private Workspace workspace;
 
     private RandoriApplicationProject project;
+
+    protected File srcAnnotation = new File(
+            FilenameNormalization.normalize(TestConstants.RandoriASFramework
+                    + "\\randori-compiler\\src\\test\\resources"
+                    + "\\as\\src_annotation"));
 
     @Override
     protected List<ICompilerProblem> getProblems()
@@ -69,6 +79,17 @@ public class AnnotationTest extends RandoriCompilerTestBase
         setUpExtras();
         initializeArgs();
         getArgs().setJsOutputAsFiles(false);
+
+        compile();
+    }
+
+    @Override
+    protected void compile()
+    {
+        getArgs().addSourcepath(srcAnnotation.getAbsolutePath());
+        project.configure(getArgs().toArguments());
+        boolean success = project.compile(false);
+        assertSuccess(success);
     }
 
     @Override
@@ -78,40 +99,63 @@ public class AnnotationTest extends RandoriCompilerTestBase
         super.tearDown();
     }
 
-    protected File srcAnnotation = new File(
-            FilenameNormalization.normalize(TestConstants.RandoriASFramework
-                    + "\\randori-compiler\\src\\test\\resources"
-                    + "\\as\\src_annotation"));
-
     @Test
     public void test_AnnotationUsage()
     {
-        getArgs().addSourcepath(srcAnnotation.getAbsolutePath());
-        project.configure(getArgs().toArguments());
-        boolean success = project.compile(false);
-        assertSuccess(success);
-
         IAnnotationDefinition definition = getTargetSettings()
-                .getAnnotationManager().getDefinition("AnnotationUsage");
-        Assert.assertEquals("AnnotationUsage", definition.getBaseName());
-        Assert.assertEquals("AnnotationUsage", definition.getQualifiedName());
+                .getAnnotationManager().getDefinition(
+                        "randori.annotations.AnnotationUsage");
+        assertEquals("AnnotationUsage", definition.getBaseName());
+        assertEquals("randori.annotations.AnnotationUsage",
+                definition.getQualifiedName());
     }
 
     @Test
     public void test_JavaScript()
     {
-        getArgs().addSourcepath(srcAnnotation.getAbsolutePath());
-
-        project.configure(getArgs().toArguments());
-        boolean success = project.compile(false);
-        assertSuccess(success);
-
         IAnnotationDefinition definition = getTargetSettings()
-                .getAnnotationManager().getDefinition("JavaScript");
+                .getAnnotationManager().getDefinition(
+                        "randori.annotations.JavaScript");
 
-        Assert.assertNotNull(definition);
-        Assert.assertEquals("JavaScript", definition.getBaseName());
-        Assert.assertEquals("JavaScript", definition.getQualifiedName());
+        assertNotNull(definition);
+        assertEquals("JavaScript", definition.getBaseName());
+        assertEquals("randori.annotations.JavaScript",
+                definition.getQualifiedName());
+    }
+
+    @Test
+    public void test_JavaScript_validOn()
+    {
+        IAnnotationDefinition definition = getTargetSettings()
+                .getAnnotationManager().getDefinition(
+                        "randori.annotations.JavaScript");
+
+        assertEquals(1, definition.getValidOn().size());
+        assertTrue(definition.isValidOn(IAnnotationDefinition.TARGET_CLASS));
+        assertFalse(definition.isValidOn(IAnnotationDefinition.TARGET_ALL));
+        assertFalse(definition
+                .isValidOn(IAnnotationDefinition.TARGET_CONSTRUCTOR));
+        assertFalse(definition.isValidOn(IAnnotationDefinition.TARGET_FIELD));
+        assertFalse(definition
+                .isValidOn(IAnnotationDefinition.TARGET_INTERFACE));
+        assertFalse(definition.isValidOn(IAnnotationDefinition.TARGET_METHOD));
+        assertFalse(definition.isValidOn(IAnnotationDefinition.TARGET_PROPERTY));
+    }
+
+    @Test
+    public void test_JavaScriptAnnotated()
+    {
+        IAnnotationDefinition definition = getTargetSettings()
+                .getAnnotationManager().getDefinition(
+                        "randori.annotations.JavaScript");
+        Set<ICompilationUnit> set = project.getScope()
+                .getCompilationUnitsByDefinitionName("JavaScriptAnnotated");
+        ICompilationUnit[] units = set.toArray(new ICompilationUnit[] {});
+
+        IClassDefinition cdef = getClassDefinition(units[0]);
+
+        assertTrue(definition.isValidOn(cdef));
+        assertTrue(definition.isValidOn("Class"));
     }
 
     protected void assertSuccess(boolean success)
@@ -120,7 +164,7 @@ public class AnnotationTest extends RandoriCompilerTestBase
         {
             printProblems(project.getProblemQuery().getFilteredProblems());
         }
-        Assert.assertTrue(success);
+        assertTrue(success);
     }
 
     private void printProblems(Iterable<ICompilerProblem> problems)
@@ -129,6 +173,23 @@ public class AnnotationTest extends RandoriCompilerTestBase
                 workspace);
         final ProblemPrinter printer = new ProblemPrinter(formatter);
         printer.printProblems(problems);
+    }
+
+    private IClassDefinition getClassDefinition(ICompilationUnit unit)
+    {
+        IFileNode fileNode = null;
+        try
+        {
+            fileNode = (IFileNode) unit.getSyntaxTreeRequest().get().getAST();
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
+        IDefinition[] definitions = fileNode.getTopLevelDefinitions(false,
+                false);
+        return (IClassDefinition) definitions[0];
     }
 
 }

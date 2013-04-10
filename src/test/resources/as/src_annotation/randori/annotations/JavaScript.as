@@ -1,4 +1,4 @@
-package
+package randori.annotations
 {
 
 [AnnotationUsage(validOn="AnnotationTargets.Class")]
