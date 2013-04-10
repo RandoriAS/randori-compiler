@@ -58,7 +58,9 @@ public class RandoriCompilerTestBase
 
     protected static final String PATH_JAVASCRIPT_AS = "test\\JavaScript.as";
 
-    protected File tempDir = new File(FilenameNormalization.normalize("temp"));
+    protected File tempDir = new File(
+            FilenameNormalization.normalize(TestConstants.RandoriASFramework
+                    + "\\randori-compiler\\temp"));
 
     protected File outDir = new File(
             FilenameNormalization.normalize(TestConstants.RandoriASFramework

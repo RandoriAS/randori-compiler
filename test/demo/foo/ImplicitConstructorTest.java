@@ -2,6 +2,7 @@ package demo.foo;
 
 import org.junit.Test;
 
+import randori.compiler.internal.constants.TestConstants;
 import randori.compiler.internal.js.codegen.ResourceTestBase;
 
 public class ImplicitConstructorTest extends ResourceTestBase
@@ -22,6 +23,13 @@ public class ImplicitConstructorTest extends ResourceTestBase
                 + "= randori.behaviors.AbstractMediator.injectionPoints(t);\n\t\t\tbreak;\n\t\t"
                 + "case 3:\n\t\t\tp = randori.behaviors.AbstractMediator.injectionPoints(t);\n\t\t\t"
                 + "break;\n\t\tdefault:\n\t\t\tp = [];\n\t\t\tbreak;\n\t}\n\treturn p;\n};\n\n");
+    }
+
+    @Override
+    protected String getBasePath()
+    {
+        return TestConstants.RandoriASFramework
+                + "/randori-compiler/test/resources";
     }
 
     @Override

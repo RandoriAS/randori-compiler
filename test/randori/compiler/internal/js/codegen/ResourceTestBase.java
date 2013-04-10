@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.apache.flex.utils.FilenameNormalization;
 
+import randori.compiler.internal.constants.TestConstants;
+
 /**
  * @author Michael Schmalle
  */
@@ -33,8 +35,10 @@ public abstract class ResourceTestBase extends RandoriTestProjectBase
     protected void addSourcePaths(List<File> sourcePaths)
     {
         super.addSourcePaths(sourcePaths);
-        sourcePaths.add(new File(FilenameNormalization
-                .normalize("test/resources")));
+        sourcePaths
+                .add(new File(FilenameNormalization
+                        .normalize(TestConstants.RandoriASFramework
+                                + "/randori-compiler/test/resources")));
     }
 
     @Override

@@ -21,6 +21,7 @@ package demo.inject;
 
 import org.junit.Test;
 
+import randori.compiler.internal.constants.TestConstants;
 import randori.compiler.internal.js.codegen.ResourceTestBase;
 
 /**
@@ -46,6 +47,13 @@ public class EmptyInheritTest extends ResourceTestBase
                 + "\tbreak;\n\t\tcase 3:\n\t\t\tp = randori.behaviors.AbstractBehavior."
                 + "injectionPoints(t);\n\t\t\tbreak;\n\t\tdefault:\n\t\t\tp = [];\n\t\t"
                 + "\tbreak;\n\t}\n\treturn p;\n};\n\n");
+    }
+
+    @Override
+    protected String getBasePath()
+    {
+        return TestConstants.RandoriASFramework
+                + "/randori-compiler/test/resources";
     }
 
     @Override

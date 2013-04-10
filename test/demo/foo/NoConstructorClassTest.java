@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNull;
 import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.junit.Test;
 
+import randori.compiler.internal.constants.TestConstants;
 import randori.compiler.internal.js.codegen.ResourceTestBase;
 
 /**
@@ -49,6 +50,13 @@ public class NoConstructorClassTest extends ResourceTestBase
                 + "NoConstructorClass.getClassDependencies = function(t) {\n\tvar p;\n\treturn "
                 + "[];\n};\n\ndemo.foo.NoConstructorClass.injectionPoints = function(t) "
                 + "{\n\treturn [];\n};\n");
+    }
+
+    @Override
+    protected String getBasePath()
+    {
+        return TestConstants.RandoriASFramework
+                + "/randori-compiler/test/resources";
     }
 
     @Override

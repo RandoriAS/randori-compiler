@@ -21,6 +21,7 @@ package demo.foo;
 
 import org.junit.Test;
 
+import randori.compiler.internal.constants.TestConstants;
 import randori.compiler.internal.js.codegen.ResourceTestBase;
 
 /**
@@ -34,6 +35,13 @@ public class ClassCTest extends ResourceTestBase
     {
         visitor.visitFile(fileNode);
         //assertOut("");
+    }
+
+    @Override
+    protected String getBasePath()
+    {
+        return TestConstants.RandoriASFramework
+                + "/randori-compiler/test/resources";
     }
 
     @Override

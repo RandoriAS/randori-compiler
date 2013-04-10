@@ -128,7 +128,7 @@ public class RandoriApplicationTest extends RandoriCompilerTestBase
         getArgs().setSDKPath(sdkRBL.getAbsolutePath());
         getArgs().setAppName("Foo");
 
-        project.configure(getArgs().toArguments());
+        boolean configure = project.configure(getArgs().toArguments());
         boolean success = project.compile(true, true);
         Assert.assertTrue(success);
 

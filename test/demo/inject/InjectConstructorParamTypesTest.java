@@ -21,6 +21,7 @@ package demo.inject;
 
 import org.junit.Test;
 
+import randori.compiler.internal.constants.TestConstants;
 import randori.compiler.internal.js.codegen.ResourceTestBase;
 
 /**
@@ -42,6 +43,13 @@ public class InjectConstructorParamTypesTest extends ResourceTestBase
                 + "push({n:'p1', t:'Array'});\n\t\t\tp.push({n:'p2', t:'uint'});\n\t\t\tp.push("
                 + "{n:'p3', t:'Object'});\n\t\t\tbreak;\n\t\tdefault:\n\t\t\tp = [];\n\t\t\tbreak;"
                 + "\n\t}\n\treturn p;\n};\n\n");
+    }
+
+    @Override
+    protected String getBasePath()
+    {
+        return TestConstants.RandoriASFramework
+                + "/randori-compiler/test/resources";
     }
 
     @Override

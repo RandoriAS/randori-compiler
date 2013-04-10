@@ -20,6 +20,15 @@ generated/
 in/
 deployed/
 
+## Trying to figure this out
+build/classes
+build/dependency-cache
+build/docs
+build/libs
+build/poms
+
+.gradle/
+
 project.properties
 
 # External tool builders

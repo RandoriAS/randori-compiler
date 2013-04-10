@@ -22,6 +22,7 @@ package demo.inject;
 import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.junit.Test;
 
+import randori.compiler.internal.constants.TestConstants;
 import randori.compiler.internal.js.codegen.ResourceTestBase;
 
 /**
@@ -61,6 +62,13 @@ public class TestModuleTest extends ResourceTestBase
                 + "= guice.GuiceModule.injectionPoints(t);\n\t\t\tbreak;\n\t\tcase 3:\n\t\t\tp = "
                 + "guice.GuiceModule.injectionPoints(t);\n\t\t\tbreak;\n\t\tdefault:\n\t\t\tp = "
                 + "[];\n\t\t\tbreak;\n\t}\n\treturn p;\n};\n\n");
+    }
+
+    @Override
+    protected String getBasePath()
+    {
+        return TestConstants.RandoriASFramework
+                + "/randori-compiler/test/resources";
     }
 
     @Override

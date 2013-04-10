@@ -21,6 +21,7 @@ package demo.foo.support;
 
 import org.junit.Test;
 
+import randori.compiler.internal.constants.TestConstants;
 import randori.compiler.internal.js.codegen.ResourceTestBase;
 
 public class PolyFillTest extends ResourceTestBase
@@ -30,6 +31,13 @@ public class PolyFillTest extends ResourceTestBase
     {
         visitor.visitFile(fileNode);
         assertOut("\n\nfillConsoleForIE = function() {\nvar console;\n};\n\n");
+    }
+
+    @Override
+    protected String getBasePath()
+    {
+        return TestConstants.RandoriASFramework
+                + "/randori-compiler/test/resources";
     }
 
     @Override

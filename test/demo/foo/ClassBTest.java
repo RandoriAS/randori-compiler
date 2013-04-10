@@ -26,6 +26,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import randori.compiler.internal.codegen.as.ASEmitter;
+import randori.compiler.internal.constants.TestConstants;
 import randori.compiler.internal.js.codegen.ResourceTestBase;
 
 public class ClassBTest extends ResourceTestBase
@@ -442,6 +443,13 @@ public class ClassBTest extends ResourceTestBase
     {
         visitor.visitFile(fileNode);
         //assertOut("");
+    }
+
+    @Override
+    protected String getBasePath()
+    {
+        return TestConstants.RandoriASFramework
+                + "/randori-compiler/test/resources";
     }
 
     @Override
