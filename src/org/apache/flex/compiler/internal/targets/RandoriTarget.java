@@ -113,7 +113,8 @@ public class RandoriTarget extends Target implements IRandoriTarget
         HashSet<ICompilationUnit> set = new HashSet<ICompilationUnit>();
         for (ICompilationUnit unit : units)
         {
-            set.add(unit);
+            if (unit.getCompilationUnitType() == ICompilationUnit.UnitType.AS_UNIT)
+                set.add(unit);
         }
 
         return new Target.RootedCompilationUnits(set,

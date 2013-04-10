@@ -56,6 +56,8 @@ public class RandoriCompilerTestBase
     protected static final String PATH_CLASS_ONE_A = "test\\one\\ClassOneA.as";
     protected static final String PATH_ROOT_CLASS_AS = "test\\RootClass.as";
 
+    protected static final String PATH_JAVASCRIPT_AS = "test\\JavaScript.as";
+
     protected File tempDir = new File(FilenameNormalization.normalize("temp"));
 
     protected File outDir = new File(
@@ -81,6 +83,8 @@ public class RandoriCompilerTestBase
     //----------------------------------
 
     protected File RootClassFile = new File(basepathDir, PATH_ROOT_CLASS_AS);
+
+    protected File JavaScriptFile = new File(basepathDir, PATH_JAVASCRIPT_AS);
 
     protected File ClassOneAFile = new File(basepathDir, PATH_CLASS_ONE_A);
 
@@ -172,4 +176,5 @@ public class RandoriCompilerTestBase
         assertEquals("Prolems ", 0, getProblems().size());
         assertEquals("Error code ", 0, code);
     }
+
 }

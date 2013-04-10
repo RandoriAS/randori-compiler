@@ -20,10 +20,13 @@
 package randori.compiler.internal.js.codegen;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.flex.compiler.internal.units.SourceCompilationUnitFactory;
+import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.tree.as.IASNode;
 import org.apache.flex.compiler.tree.as.IClassNode;
 import org.apache.flex.compiler.tree.as.IDefinitionNode;
@@ -57,6 +60,13 @@ public abstract class RandoriTestProjectBase extends TestBase
     protected IClassNode classNode;
 
     protected IInterfaceNode interfaceNode;
+
+    private Collection<ICompilerProblem> problems;
+
+    protected Collection<ICompilerProblem> getFileProblems()
+    {
+        return problems;
+    }
 
     @Override
     public void setUp()
@@ -111,11 +121,19 @@ public abstract class RandoriTestProjectBase extends TestBase
         if (cu == null)
             return null;
 
+        problems = new ArrayList<ICompilerProblem>();
+
         // Build the AST.
         IFileNode fileNode = null;
         try
         {
             fileNode = (IFileNode) cu.getSyntaxTreeRequest().get().getAST();
+            Collections.addAll(problems, cu.getSyntaxTreeRequest().get()
+                    .getProblems());
+            Collections.addAll(problems, cu.getFileScopeRequest().get()
+                    .getProblems());
+            Collections.addAll(problems, cu.getOutgoingDependenciesRequest()
+                    .get().getProblems());
         }
         catch (InterruptedException e)
         {
@@ -131,14 +149,14 @@ public abstract class RandoriTestProjectBase extends TestBase
         super.addLibraries(libraries);
         @SuppressWarnings("unused")
         String base = TestConstants.RandoriASFramework;
-        //        libraries.add(new File(FilenameNormalization.normalize(base
-        //                + "HTMLCoreLib\\bin\\HTMLCoreLib.swc")));
-        //        libraries.add(new File(FilenameNormalization.normalize(base
-        //                + "JQuery\\bin\\JQuery.swc")));
-        //        libraries.add(new File(FilenameNormalization.normalize(base
-        //                + "Randori\\bin\\Randori.swc")));
-        //        libraries.add(new File(FilenameNormalization.normalize(base
-        //                + "RandoriGuice\\bin\\RandoriGuice.swc")));
+        libraries.add(new File(FilenameNormalization.normalize(base
+                + "\\randori-libraries\\HTMLCoreLib\\bin\\HTMLCoreLib.swc")));
+        libraries.add(new File(FilenameNormalization.normalize(base
+                + "\\randori-libraries\\JQuery\\bin\\JQuery.swc")));
+        libraries.add(new File(FilenameNormalization.normalize(base
+                + "\\randori-framework\\bin\\randori-framework.swc")));
+        libraries.add(new File(FilenameNormalization.normalize(base
+                + "\\randori-guice-framework\\bin\\randori-guice-framework.swc")));
     }
 
     @Override
@@ -146,14 +164,14 @@ public abstract class RandoriTestProjectBase extends TestBase
     {
         //super.addSourcePaths(sourcePaths);
         String base = TestConstants.RandoriASFramework;
-        sourcePaths.add(new File(FilenameNormalization.normalize(base
-                + "\\randori-libraries\\HTMLCoreLib\\src")));
-        sourcePaths.add(new File(FilenameNormalization.normalize(base
-                + "\\randori-libraries\\JQuery\\src")));
-        sourcePaths.add(new File(FilenameNormalization.normalize(base
-                + "\\randori-framework\\src")));
-        sourcePaths.add(new File(FilenameNormalization.normalize(base
-                + "\\randori-guice-framework\\src")));
+        //        sourcePaths.add(new File(FilenameNormalization.normalize(base
+        //                + "\\randori-libraries\\HTMLCoreLib\\src")));
+        //        sourcePaths.add(new File(FilenameNormalization.normalize(base
+        //                + "\\randori-libraries\\JQuery\\src")));
+        //        sourcePaths.add(new File(FilenameNormalization.normalize(base
+        //                + "\\randori-framework\\src")));
+        //        sourcePaths.add(new File(FilenameNormalization.normalize(base
+        //                + "\\randori-guice-framework\\src")));
         sourcePaths.add(new File(FilenameNormalization.normalize(base
                 + "\\randori-demos-bundle\\HMSS\\src")));
     }

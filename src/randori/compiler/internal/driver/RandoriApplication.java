@@ -19,20 +19,24 @@
 
 package randori.compiler.internal.driver;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.flex.compiler.clients.problems.ProblemQuery;
 import org.apache.flex.compiler.internal.projects.FlexProject;
-import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.units.ICompilationUnit;
 import org.apache.flex.compiler.units.ICompilationUnit.UnitType;
 
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriApplication;
 import randori.compiler.driver.IRandoriBackend;
+import randori.compiler.internal.config.annotation.AnnotationManager;
+import randori.compiler.internal.config.annotation.AnnotationValidator;
+import randori.compiler.internal.config.annotation.AnnotationVisitor;
 import randori.compiler.internal.driver.model.ApplicationModel;
+import randori.compiler.internal.visitor.as.ASWalker;
+import randori.compiler.visitor.as.IASVisitor;
 
 /**
  * @author Michael Schmalle
@@ -47,6 +51,10 @@ public class RandoriApplication implements IRandoriApplication
     private List<ICompilationUnit> compilationUnits;
 
     private IRandoriTargetSettings settings;
+
+    private AnnotationManager annotationManager;
+
+    private ProblemQuery problems;
 
     public RandoriApplication(FlexProject project,
             List<ICompilationUnit> compilationUnits,
@@ -65,30 +73,87 @@ public class RandoriApplication implements IRandoriApplication
         this.compilationUnits = units;
 
         application = new ApplicationModel(project, settings);
+
+        annotationManager = new AnnotationManager(project);
+
+        // XXX Is this the correct place
+        settings.setAnnotationManager(annotationManager);
     }
 
     @Override
     public boolean compile(IRandoriBackend backend, ProblemQuery problems)
     {
-        filter(problems);
-        generate(backend, problems);
+        this.problems = problems;
+
+        
+        filter();
+        generate(backend);
         return true;
     }
 
-    protected void filter(ProblemQuery problems)
+    @Override
+    public void analyze(ProblemQuery problems)
+    {
+        this.problems = problems;
+        analyze();
+    }
+    
+    private void analyze()
+    {
+        try
+        {
+            compilationUnits = preprocess(compilationUnits);
+            analyze(compilationUnits);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private List<ICompilationUnit> preprocess(List<ICompilationUnit> units)
+            throws IOException
+    {
+        for (ICompilationUnit unit : units)
+        {
+            preprocess(unit);
+        }
+        return units;
+    }
+
+    private void analyze(List<ICompilationUnit> units) throws IOException
+    {
+        for (ICompilationUnit unit : units)
+        {
+            analyze(unit);
+        }
+    }
+
+    private void preprocess(ICompilationUnit unit) throws IOException
+    {
+        IASVisitor visitor = new AnnotationVisitor(annotationManager);
+        ASWalker walker = new ASWalker(visitor);
+        walker.walkCompilationUnit(unit);
+        problems.addAll(application.getProblems());
+    }
+
+    private void analyze(ICompilationUnit unit) throws IOException
+    {
+        IASVisitor visitor = new AnnotationValidator(annotationManager);
+        ASWalker walker = new ASWalker(visitor);
+        walker.walkCompilationUnit(unit);
+    }
+
+    protected void filter()
     {
         application.filter(compilationUnits);
     }
 
-    protected void generate(IRandoriBackend backend, ProblemQuery problems)
+    protected void generate(IRandoriBackend backend)
     {
-        application.generate(backend, problems.getProblems(),
-                settings.getOutput());
+        application.generate(backend, settings.getOutput());
+        problems.addAll(application.getProblems());
     }
 
-    @Override
-    public void export(Collection<ICompilerProblem> problems)
-    {
-    }
 
 }

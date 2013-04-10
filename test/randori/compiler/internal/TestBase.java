@@ -22,8 +22,12 @@ package randori.compiler.internal;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.flex.compiler.internal.projects.FlexProject;
@@ -34,6 +38,7 @@ import org.apache.flex.compiler.mxml.IMXMLNamespaceMapping;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.as.IASNode;
+import org.apache.flex.compiler.units.ICompilationUnit;
 import org.apache.flex.utils.FilenameNormalization;
 import org.junit.After;
 import org.junit.Before;
@@ -108,6 +113,53 @@ public class TestBase
     protected IBackend createBackend()
     {
         return new ASBackend();
+    }
+
+    protected IASNode compile(String code)
+    {
+        File tempFile = null;
+        try
+        {
+            String tempFileName = getClass().getSimpleName();
+
+            tempFile = File.createTempFile(tempFileName, ".as", tempDir);
+            tempFile.deleteOnExit();
+
+            BufferedWriter out = new BufferedWriter(new FileWriter(tempFile));
+            out.write(code);
+            out.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        addDependencies();
+
+        String normalizedMainFileName = FilenameNormalization
+                .normalize(tempFile.getAbsolutePath());
+
+        Collection<ICompilationUnit> mainFileCompilationUnits = workspace
+                .getCompilationUnits(normalizedMainFileName, project);
+
+        ICompilationUnit cu = null;
+        for (ICompilationUnit cu2 : mainFileCompilationUnits)
+        {
+            if (cu2 != null)
+                cu = cu2;
+        }
+
+        IASNode fileNode = null;
+        try
+        {
+            fileNode = cu.getSyntaxTreeRequest().get().getAST();
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
+        return fileNode;
     }
 
     protected void assertOut(String code)

@@ -123,7 +123,7 @@ public class RandoriApplicationProject extends RandoriProject implements
                     getConfiguration().getOutput());
             getProblemQuery().add(problem);
         }
-
+        
         return app;
     }
 
@@ -138,7 +138,11 @@ public class RandoriApplicationProject extends RandoriProject implements
             return null;
         }
 
-        return target.build(problems);
+        IRandoriApplication application = target.build(problems);
+
+        application.analyze(getProblemQuery());
+
+        return application;
     }
 
     @Override

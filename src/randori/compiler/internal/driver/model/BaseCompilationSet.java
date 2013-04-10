@@ -80,7 +80,12 @@ public abstract class BaseCompilationSet
 
     protected IRandoriBackend backend;
 
-    protected List<ICompilerProblem> problems;
+    private List<ICompilerProblem> problems;
+
+    public List<ICompilerProblem> getProblems()
+    {
+        return problems;
+    }
 
     public BaseCompilationSet(FlexProject project,
             IRandoriTargetSettings settings)
@@ -89,6 +94,8 @@ public abstract class BaseCompilationSet
         this.settings = settings;
 
         builder = new StringBuilder();
+        
+        problems = new ArrayList<ICompilerProblem>();
     }
 
     /**
@@ -156,11 +163,9 @@ public abstract class BaseCompilationSet
      * @param output The base output path specified. (this should be deleted and
      * just use {@link IRandoriTargetSettings#getOutput()}.
      */
-    protected void generate(IRandoriBackend backend,
-            List<ICompilerProblem> problems, File output)
+    protected void generate(IRandoriBackend backend, File output)
     {
         this.backend = backend;
-        this.problems = problems;
         this.outputDirectory = output;
     }
 

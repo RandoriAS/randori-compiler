@@ -35,6 +35,10 @@ import randori.compiler.driver.IRandoriApplication;
  */
 public interface IRandoriTargetSettings extends ITargetSettings
 {
+    IAnnotationManager getAnnotationManager();
+    
+    void setAnnotationManager(IAnnotationManager manager);
+    
     /**
      * Returns the path to an existing Randori SDK bundle extracted or zip.
      */

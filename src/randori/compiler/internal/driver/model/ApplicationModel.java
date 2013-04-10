@@ -25,11 +25,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.flex.compiler.internal.projects.FlexProject;
-import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.tree.as.ITypeNode;
 import org.apache.flex.compiler.units.ICompilationUnit;
 import org.apache.flex.utils.FilenameNormalization;
@@ -50,6 +48,7 @@ import randori.compiler.internal.utils.FileUtils;
  */
 public class ApplicationModel extends BaseCompilationSet
 {
+
     public ApplicationModel(FlexProject project, IRandoriTargetSettings settings)
     {
         super(project, settings);
@@ -90,10 +89,9 @@ public class ApplicationModel extends BaseCompilationSet
     }
 
     @Override
-    public void generate(IRandoriBackend backend,
-            List<ICompilerProblem> problems, File output)
+    public void generate(IRandoriBackend backend, File output)
     {
-        super.generate(backend, problems, output);
+        super.generate(backend, output);
 
         // as you can see, we override generate to allow monolithic or individual
         // file export here using the superclasses methods to do the dirty work
@@ -121,9 +119,10 @@ public class ApplicationModel extends BaseCompilationSet
             {
                 // TODO Create a Problem that app-name is not configured, this should actually
                 // be done in the configure() method of the compiler
-                throw new RuntimeException("no -app-name specified during monolithic generation");
+                throw new RuntimeException(
+                        "no -app-name specified during monolithic generation");
             }
-            
+
             writeFull(basePath, appName + ".js");
         }
     }
@@ -157,8 +156,7 @@ public class ApplicationModel extends BaseCompilationSet
 
             System.out.println("Compiling file: " + outputClassFile);
 
-            writer = backend.createWriter(project,
-                    (List<ICompilerProblem>) problems, unit, false);
+            writer = backend.createWriter(project, getProblems(), unit, false);
 
             out = new BufferedOutputStream(
                     new FileOutputStream(outputClassFile));

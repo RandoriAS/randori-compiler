@@ -20,10 +20,8 @@
 package randori.compiler.internal.driver.model;
 
 import java.io.File;
-import java.util.List;
 
 import org.apache.flex.compiler.internal.projects.FlexProject;
-import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.tree.as.ITypeNode;
 
 import randori.compiler.config.IRandoriTargetSettings;
@@ -53,10 +51,9 @@ public class RandoriGuiceModel extends BaseCompilationSet
     }
 
     @Override
-    public void generate(IRandoriBackend backend,
-            List<ICompilerProblem> problems, File output)
+    public void generate(IRandoriBackend backend, File output)
     {
-        super.generate(backend, problems, output);
+        super.generate(backend, output);
 
         if (getCompilationUnits().size() == 0)
             return;
