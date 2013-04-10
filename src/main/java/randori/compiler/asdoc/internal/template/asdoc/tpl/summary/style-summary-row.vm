@@ -1,0 +1,98 @@
+##---------------------------------------
+##  01-12-10
+##
+##  - $rowFlag               boolean
+##  - $ucModifier            String
+##  - $ucTypeSingular        String
+##  - $basePath              String
+##  - $row                   Map
+##    - isInherited          boolean
+##    - name                 String
+##    - definedBy            String
+##    - definedByID          String[<a>]
+##    - type                 String
+##    - format               String
+##    - inherit              String
+##    - theme                String
+##---------------------------------------
+
+#if( !$row.isInherited )
+  <tr class="" bgcolor="#if( ${rowFlag} )#f2f2f2#else#ffffff#end">
+#else
+  <tr class="hideInherited${ucModifier}${ucTypeSingular}" bgcolor="#if( ${rowFlag} )#f2f2f2#else#ffffff#end">
+#end
+  
+  #if( !$row.isInherited )
+	<td class="summaryTablePaddingCol"><a name="style:${row.name}"> </a></td>
+  #else
+	<td class="summaryTablePaddingCol">&nbsp;</td>
+  #end 
+  
+  
+  #if( !$row.isInherited )
+    <td class="summaryTableInheritanceCol">&nbsp;</td>
+  #else
+    <td class="summaryTableInheritanceCol">
+        <img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="${basePath}images/inheritedSummary.gif"/>
+    </td>
+  #end
+  
+  #if( !$row.isInherited )
+    <td class="summaryTableSignatureCol">
+        <div class="summarySignature"><span class="signatureLink">${row.name}</span></div>
+    </td>
+  #else
+    <td class="summaryTableSignatureCol">
+        <div class="summarySignature"><a class="signatureLink" href="${row.definedByID}#style:${row.name}">${row.name}</a></div>
+    </td>
+  #end
+
+  #if( !$row.isInherited )
+
+  <td class="summaryTableDescription">
+    #if($row.type)<span class="label">Type:</span> $row.type#end
+    #if($row.format)<span class="label">Format:</span> $row.format#end
+    #if($row.inherit)<span class="label">CSS Inheritance:</span> $row.inherit#end
+    #if($row.theme)<span class="label">Theme:</span> $row.theme#end
+    <div>
+    #if ( $row.shortDescription )$row.shortDescription#end
+    #if ( $row.longDescription )$row.longDescription#end
+    </div>
+    
+##---------------------------------------
+## @default
+##---------------------------------------
+
+#if( $row.defaultTag )
+<p>The default value is <strong>$row.defaultTag</strong>.</p>
+#end
+    
+   </td>
+
+  #else
+
+  <td class="summaryTableDescription">
+    #if($row.type)<span class="label">Type:</span> $row.type#end
+    #if($row.format)<span class="label">Format:</span> $row.format#end
+    #if($row.inherit)<span class="label">CSS Inheritance:</span> $row.inherit#end
+    #if($row.theme)<span class="label">Theme:</span> $row.theme#end
+    <div>
+    #if ( $row.shortDescription )$row.shortDescription#end
+    #if ( $row.longDescription )$row.longDescription#end
+    </div>
+
+##---------------------------------------
+## @default
+##---------------------------------------
+
+#if( $row.defaultTag )
+<p>The default value is <strong>$row.defaultTag</strong>.</p>
+#end
+
+  </td>
+  
+  #end
+
+  <td class="summaryTableOwnerCol">${row.definedBy}</td>
+
+</tr>

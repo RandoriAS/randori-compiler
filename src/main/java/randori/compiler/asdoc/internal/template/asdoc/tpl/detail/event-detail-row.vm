@@ -1,0 +1,85 @@
+#if ($row.elementKind == "method")
+<a name="${row.name}()"></a>
+#else
+<a name="${row.name}"></a>
+#end
+
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tbody>
+    <tr>
+    	#if ($row.elementKind == "method")
+        <td class="detailHeaderName">${row.nameTitle}()</td>
+        #else
+        <td class="detailHeaderName">${row.nameTitle}</td>
+        #end
+        <td class="detailHeaderType">${lcModifier}</td>
+        <td class="detailHeaderRule">&nbsp;</td>
+    </tr>
+</tbody>
+</table>
+
+
+<div class="detailBody">
+
+##---------------------------------------
+## Content
+## 
+## - $row
+##   - eventID                  ../../mx/events/FlexEvent.html
+##   - eventQualifiedName       mx.events.FlexEvent
+##   - eventLocalName           FlexEvent
+##   - eventFragmentName        BUTTON_DOWN
+##   - eventStringName          buttonDown
+##   - eventTable               <table>...</table>
+##  
+##---------------------------------------
+
+
+#if( ${row.eventID} )	
+
+  <span class="label">Event Object Type: </span><a href="${row.eventID}"><code>${row.eventQualifiedName}</code></a>
+  <br/>
+  <span class="label">Property ${row.eventLocalName}.type  =  </span>
+  <a href="${row.eventID}#${row.eventFragmentName}"><code>${row.eventQualifiedName}.${row.eventFragmentName}</code></a>
+  
+#else
+
+  <span class="label">Event Object Type: </span><code>${row.eventQualifiedName}</code>
+  <br/>
+  <span class="label">Property ${row.eventLocalName}.type  =  </span>
+  <code>${row.eventFragmentName}</code>
+  
+#end
+  
+  <br/>
+  
+  #if($row.shortDescription)$row.shortDescription#end
+  #if($row.longDescription)$row.longDescription#end
+  
+#if( ${row.eventID} )  
+  
+  <p>The <code>${row.eventLocalName}.${row.eventFragmentName}</code> constant defines the value of the
+  <code>type</code> property of the event object for a <code>${row.eventStringName}</code> event.</p>
+
+#end
+
+#if( $row.eventTable )$row.eventTable#end
+
+##---------------------------------------
+## @see
+##---------------------------------------
+  
+#if( $row.seeTags && $row.seeTags.size() > 0)
+  <p><span class="label">See Also</span></p>
+  <div class="seeAlso">
+    #foreach( $tag in $row.seeTags)
+       $tag<br/>
+    #end
+</div>
+#end 
+  
+##---------------------------------------
+## Content
+##---------------------------------------
+
+</div>

@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>${title} : ${windowTitle}</title>
+    <link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="print.css" type="text/css" media="print"/>
+    <script type="text/javascript" src="asdoc.js" language="javascript"></script>
+  </head>
+  <body class="classFrameContent">
+    <h3>
+      <a style="color:black" target="classFrame" href="package-summary.html"  onclick="javascript:loadClassListFrame('all-classes.html');">${title}</a>
+    </h3>
+  <table cellspacing="0" cellpadding="0">
+   	#if ($hasTopLevel)
+  	<tr>
+  		<td><a target="classFrame" onclick="javascript:loadClassListFrame('class-list.html');" href="package-detail.html">TopLevel</a></td>
+  	</tr>
+  	<tr><td>&nbsp;</td></tr>
+    #end
+  	#foreach( $package in $packages )
+      <tr>
+        <td>${package.Anchor}</td>
+      </tr>
+    #end
+  </table>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+#if (!$allInherited)
+<div class="detailSectionHeader">$ucModifier $ucTypeSingular detail</div>
+#end
+
+#foreach ($row in $rows)
+  $row
+#end
