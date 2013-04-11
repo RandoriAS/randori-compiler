@@ -80,7 +80,7 @@ public interface IASWalker
      * 
      * @param definition
      */
-    void walkFunction(IFunctionDefinition definition);
+    void walkMethod(IFunctionDefinition definition);
 
     //--------------------------------------------------------------------------
     // Memebers
@@ -91,7 +91,5 @@ public interface IASWalker
     void walkAccessor(IAccessorDefinition definition);
 
     void walkField(IVariableDefinition definition);
-
-    void walkMethod(IFunctionDefinition definition);
 
 }

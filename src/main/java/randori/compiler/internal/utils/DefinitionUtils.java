@@ -46,6 +46,7 @@ import org.apache.flex.compiler.tree.as.IContainerNode.ContainerType;
 import org.apache.flex.compiler.tree.as.ILanguageIdentifierNode.LanguageIdentifierKind;
 import org.apache.flex.compiler.tree.as.IDefinitionNode;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
+import org.apache.flex.compiler.tree.as.IFileNode;
 import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.apache.flex.compiler.tree.as.ILanguageIdentifierNode;
 import org.apache.flex.compiler.tree.as.IPackageNode;
@@ -431,5 +432,22 @@ public class DefinitionUtils
     {
         return node instanceof ILanguageIdentifierNode
                 && ((ILanguageIdentifierNode) node).getKind() == LanguageIdentifierKind.THIS;
+    }
+
+    public static IClassDefinition getClassDefinition(ICompilationUnit unit)
+    {
+        IFileNode fileNode = null;
+        try
+        {
+            fileNode = (IFileNode) unit.getSyntaxTreeRequest().get().getAST();
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
+        IDefinition[] definitions = fileNode.getTopLevelDefinitions(false,
+                false);
+        return (IClassDefinition) definitions[0];
     }
 }

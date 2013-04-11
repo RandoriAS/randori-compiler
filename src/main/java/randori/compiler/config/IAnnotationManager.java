@@ -22,6 +22,7 @@ package randori.compiler.config;
 import java.util.List;
 
 import org.apache.flex.compiler.definitions.IClassDefinition;
+import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 
 /**
@@ -38,4 +39,6 @@ public interface IAnnotationManager
     IAnnotationDefinition getDefinition(String qualifiedName);
 
     boolean isAnnotation(IClassDefinition definition);
+
+    IAnnotationDefinition getAnnotation(IMetaTag tag);
 }

@@ -102,6 +102,12 @@ public class NullASVisitor implements IASVisitor
     }
 
     @Override
+    public boolean visitMethod(IFunctionDefinition definition)
+    {
+        return true;
+    }
+
+    @Override
     public boolean visitNamespace(INamespaceDefinition definition)
     {
         return true;

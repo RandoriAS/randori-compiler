@@ -58,6 +58,8 @@ public interface IASVisitor
 
     boolean visitVariable(IVariableDefinition definition);
 
+    boolean visitMethod(IFunctionDefinition definition);
+
     boolean visitNamespace(INamespaceDefinition definition);
 
     boolean visitConstant(IConstantDefinition definition);

@@ -163,9 +163,11 @@ public class CompilerArguments
             result.add("-source-path=" + arg);
         }
 
-        for (String arg : includes)
+        if (includes.size() > 0)
         {
-            result.add("-include-sources=" + arg);
+            result.add("-include-sources="
+                    + StringUtils.join(includes.toArray(new String[] {}), ","));
+
         }
 
         // XXX TEMP

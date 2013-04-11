@@ -25,9 +25,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.flex.compiler.definitions.IClassDefinition;
+import org.apache.flex.compiler.definitions.IDefinition;
+import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.internal.definitions.ClassDefinition;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.projects.IASProject;
+import org.apache.flex.compiler.scopes.IDefinitionSet;
 
 import randori.compiler.config.IAnnotationDefinition;
 import randori.compiler.config.IAnnotationManager;
@@ -64,19 +67,19 @@ public class AnnotationManager implements IAnnotationManager
     {
         if (map.containsKey(definition.getQualifiedName()))
             return null;
-        
+
         AnnotationDefinition annotation = new AnnotationDefinition(definition);
         List<ICompilerProblem> annotationProblems = new ArrayList<ICompilerProblem>();
-        annotation.reslove(project, annotationProblems);
-        
+        annotation.resolve(project, annotationProblems);
+
         if (annotationProblems.size() > 0)
         {
             problems.addAll(annotationProblems);
             return null;
         }
-       
+
         map.put(definition.getQualifiedName(), annotation);
-        
+
         return annotation;
     }
 
@@ -100,4 +103,24 @@ public class AnnotationManager implements IAnnotationManager
         problems.add(problem);
     }
 
+    @Override
+    public IAnnotationDefinition getAnnotation(IMetaTag tag)
+    {
+        @SuppressWarnings("unused")
+        IDefinition definition = tag.getDecoratedDefinition();
+
+        IDefinitionSet set = project.getScope().getLocalDefinitionSetByName(
+                tag.getTagName());
+        if (set.getSize() > 1)
+        {
+            // XXX (Annotation) MultipleAnnotationDefinition without import
+        }
+        else
+        {
+            IClassDefinition classDef = (IClassDefinition) set;
+            return getDefinition(classDef.getQualifiedName());
+        }
+
+        return null;
+    }
 }

@@ -46,14 +46,18 @@ public class AnnotationDefinition implements IAnnotationDefinition
 {
     private static final String RANDORI_ANNOTATIONS = "randori.annotations";
 
+    @SuppressWarnings("unused")
     private static final String ANNOTATION_ANNOTATION = "Annotation";
 
     private static final String ANNOTATION_TARGET = "Target";
 
+    @SuppressWarnings("unused")
     private static final String ANNOTATION_RETENTION = "Retention";
 
+    @SuppressWarnings("unused")
     private static final String ENUM_ELEMENT_TYPE = "ElementType";
 
+    @SuppressWarnings("unused")
     private static final String ENUM_RETENTION_POLICY = "RetentionPolicy";
 
     private final IClassDefinition definition;
@@ -65,7 +69,7 @@ public class AnnotationDefinition implements IAnnotationDefinition
         this.definition = definition;
     }
 
-    void reslove(IASProject project, List<ICompilerProblem> problems)
+    void resolve(IASProject project, List<ICompilerProblem> problems)
     {
         // every Annotation has a builtin retention RetentionPolicy
         resolveRetention(project, problems);

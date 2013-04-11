@@ -57,6 +57,34 @@ public class RandoriConfiguration extends Configuration
     }
 
     //
+    // 'annotation'
+    //
+
+    private String annotation = "ignore";
+
+    public String getAnnotation()
+    {
+        return annotation;
+    }
+
+    @Config(allowMultiple = false)
+    @Mapping("annotation")
+    public void setAnnotation(ConfigurationValue cv, String value)
+            throws ConfigurationException
+    {
+        if (value.equals("ignore") || value.equals("warn")
+                || value.equals("error"))
+        {
+            annotation = value;
+        }
+        else
+        {
+            // XXX Impl custom ConfigurationException
+            throw new ConfigurationException(cv.getVar(), "", -1);
+        }
+    }
+
+    //
     // 'sdk-path'
     //
 

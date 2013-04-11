@@ -111,8 +111,7 @@ public class ASWalker implements IASWalker
         {
             @SuppressWarnings("unused")
             IScopedNode node = definition.getNode().getScopedNode();
-            IDefinitionNode child = findTypeNode(definition
-                    .getNode());
+            IDefinitionNode child = findTypeNode(definition.getNode());
             if (child instanceof IClassNode)
             {
                 walkClass((IClassDefinition) child.getDefinition());
@@ -127,7 +126,7 @@ public class ASWalker implements IASWalker
             }
             else if (child instanceof IFunctionNode)
             {
-                walkFunction((IFunctionDefinition) child.getDefinition());
+                walkMethod((IFunctionDefinition) child.getDefinition());
             }
         }
     }
@@ -159,7 +158,7 @@ public class ASWalker implements IASWalker
                 }
                 else if (cdefinition instanceof IFunctionDefinition)
                 {
-                    walkFunction((IFunctionDefinition) cdefinition);
+                    walkMethod((IFunctionDefinition) cdefinition);
                 }
                 else if (cdefinition instanceof INamespaceDefinition)
                 {
@@ -192,10 +191,9 @@ public class ASWalker implements IASWalker
     }
 
     @Override
-    public void walkFunction(IFunctionDefinition definition)
+    public void walkMethod(IFunctionDefinition definition)
     {
-        // TODO Auto-generated method stub
-
+        visitor.visitMethod(definition);
     }
 
     @Override
@@ -214,13 +212,6 @@ public class ASWalker implements IASWalker
 
     @Override
     public void walkConstant(IConstantDefinition definition)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void walkMethod(IFunctionDefinition definition)
     {
         // TODO Auto-generated method stub
 

@@ -36,7 +36,6 @@ import randori.compiler.internal.config.annotation.AnnotationValidator;
 import randori.compiler.internal.config.annotation.AnnotationVisitor;
 import randori.compiler.internal.driver.model.ApplicationModel;
 import randori.compiler.internal.visitor.as.ASWalker;
-import randori.compiler.visitor.as.IASVisitor;
 
 /**
  * @author Michael Schmalle
@@ -55,6 +54,10 @@ public class RandoriApplication implements IRandoriApplication
     private AnnotationManager annotationManager;
 
     private ProblemQuery problems;
+
+    private ASWalker annotationWalker;
+
+    private ASWalker validatorWalker;
 
     public RandoriApplication(FlexProject project,
             List<ICompilationUnit> compilationUnits,
@@ -75,6 +78,10 @@ public class RandoriApplication implements IRandoriApplication
         application = new ApplicationModel(project, settings);
 
         annotationManager = new AnnotationManager(project);
+        annotationWalker = new ASWalker(new AnnotationVisitor(
+                annotationManager));
+        validatorWalker = new ASWalker(new AnnotationValidator(
+                annotationManager));
 
         // XXX Is this the correct place
         settings.setAnnotationManager(annotationManager);
@@ -95,6 +102,8 @@ public class RandoriApplication implements IRandoriApplication
     {
         this.problems = problems;
         analyze();
+        problems.addAll(annotationManager.getProblems());
+        problems.addAll(application.getProblems());
     }
 
     private void analyze()
@@ -130,17 +139,12 @@ public class RandoriApplication implements IRandoriApplication
 
     private void preprocess(ICompilationUnit unit) throws IOException
     {
-        IASVisitor visitor = new AnnotationVisitor(annotationManager);
-        ASWalker walker = new ASWalker(visitor);
-        walker.walkCompilationUnit(unit);
-        problems.addAll(application.getProblems());
+        annotationWalker.walkCompilationUnit(unit);
     }
 
     private void analyze(ICompilationUnit unit) throws IOException
     {
-        IASVisitor visitor = new AnnotationValidator(annotationManager);
-        ASWalker walker = new ASWalker(visitor);
-        walker.walkCompilationUnit(unit);
+        validatorWalker.walkCompilationUnit(unit);
     }
 
     protected void filter()
