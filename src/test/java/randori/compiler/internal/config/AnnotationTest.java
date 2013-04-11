@@ -99,14 +99,40 @@ public class AnnotationTest extends RandoriCompilerTestBase
         super.tearDown();
     }
 
+    //--------------------------------------------------------------------------
+    // Annotation Definitions
+    //--------------------------------------------------------------------------
+    
     @Test
-    public void test_AnnotationUsage()
+    public void test_Annotation()
     {
         IAnnotationDefinition definition = getTargetSettings()
                 .getAnnotationManager().getDefinition(
-                        "randori.annotations.AnnotationUsage");
-        assertEquals("AnnotationUsage", definition.getBaseName());
-        assertEquals("randori.annotations.AnnotationUsage",
+                        "randori.annotations.Annotation");
+        assertEquals("Annotation", definition.getBaseName());
+        assertEquals("randori.annotations.Annotation",
+                definition.getQualifiedName());
+    }
+    
+    @Test
+    public void test_Retention()
+    {
+        IAnnotationDefinition definition = getTargetSettings()
+                .getAnnotationManager().getDefinition(
+                        "randori.annotations.Retention");
+        assertEquals("Retention", definition.getBaseName());
+        assertEquals("randori.annotations.Retention",
+                definition.getQualifiedName());
+    }
+    
+    @Test
+    public void test_Target()
+    {
+        IAnnotationDefinition definition = getTargetSettings()
+                .getAnnotationManager().getDefinition(
+                        "randori.annotations.Target");
+        assertEquals("Target", definition.getBaseName());
+        assertEquals("randori.annotations.Target",
                 definition.getQualifiedName());
     }
 
@@ -123,23 +149,27 @@ public class AnnotationTest extends RandoriCompilerTestBase
                 definition.getQualifiedName());
     }
 
+    //--------------------------------------------------------------------------
+    // Annotation Attributes
+    //--------------------------------------------------------------------------
+    
     @Test
-    public void test_JavaScript_validOn()
+    public void test_JavaScript_validTarget()
     {
         IAnnotationDefinition definition = getTargetSettings()
                 .getAnnotationManager().getDefinition(
                         "randori.annotations.JavaScript");
 
-        assertEquals(1, definition.getValidOn().size());
-        assertTrue(definition.isValidOn(IAnnotationDefinition.TARGET_CLASS));
-        assertFalse(definition.isValidOn(IAnnotationDefinition.TARGET_ALL));
+        assertEquals(1, definition.getTargets().size());
+        assertTrue(definition.isValidTarget(IAnnotationDefinition.TARGET_CLASS));
+        assertFalse(definition.isValidTarget(IAnnotationDefinition.TARGET_ALL));
         assertFalse(definition
-                .isValidOn(IAnnotationDefinition.TARGET_CONSTRUCTOR));
-        assertFalse(definition.isValidOn(IAnnotationDefinition.TARGET_FIELD));
+                .isValidTarget(IAnnotationDefinition.TARGET_CONSTRUCTOR));
+        assertFalse(definition.isValidTarget(IAnnotationDefinition.TARGET_FIELD));
         assertFalse(definition
-                .isValidOn(IAnnotationDefinition.TARGET_INTERFACE));
-        assertFalse(definition.isValidOn(IAnnotationDefinition.TARGET_METHOD));
-        assertFalse(definition.isValidOn(IAnnotationDefinition.TARGET_PROPERTY));
+                .isValidTarget(IAnnotationDefinition.TARGET_INTERFACE));
+        assertFalse(definition.isValidTarget(IAnnotationDefinition.TARGET_METHOD));
+        assertFalse(definition.isValidTarget(IAnnotationDefinition.TARGET_PROPERTY));
     }
 
     @Test
@@ -154,8 +184,8 @@ public class AnnotationTest extends RandoriCompilerTestBase
 
         IClassDefinition cdef = getClassDefinition(units[0]);
 
-        assertTrue(definition.isValidOn(cdef));
-        assertTrue(definition.isValidOn("Class"));
+        assertTrue(definition.isValidTarget(cdef));
+        assertTrue(definition.isValidTarget("class"));
     }
 
     protected void assertSuccess(boolean success)

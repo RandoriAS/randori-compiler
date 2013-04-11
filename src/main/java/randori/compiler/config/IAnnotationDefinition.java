@@ -30,29 +30,33 @@ import org.apache.flex.compiler.definitions.IDefinition;
  */
 public interface IAnnotationDefinition
 {
-    public static final String TARGET_ALL = "All";
+    public static final String TARGET_ALL = "all";
 
-    public static final String TARGET_CLASS = "Class";
+    public static final String TARGET_ANNOTATION = "annotation";
 
-    public static final String TARGET_INTERFACE = "Interface";
+    public static final String TARGET_TYPE = "type";
 
-    public static final String TARGET_CONSTRUCTOR = "Constructor";
+    public static final String TARGET_CLASS = "class";
 
-    public static final String TARGET_FIELD = "Field";
+    public static final String TARGET_INTERFACE = "interface";
 
-    public static final String TARGET_PROPERTY = "Property";
+    public static final String TARGET_CONSTRUCTOR = "constructor";
 
-    public static final String TARGET_METHOD = "Method";
-    
+    public static final String TARGET_FIELD = "field";
+
+    public static final String TARGET_PROPERTY = "property";
+
+    public static final String TARGET_METHOD = "method";
+
     IClassDefinition getDefinition();
 
     String getBaseName();
 
     String getQualifiedName();
 
-    Collection<IConstantDefinition> getValidOn();
-    
-    boolean isValidOn(String type);
-    
-    boolean isValidOn(IDefinition definition);
+    Collection<IConstantDefinition> getTargets();
+
+    boolean isValidTarget(String type);
+
+    boolean isValidTarget(IDefinition definition);
 }

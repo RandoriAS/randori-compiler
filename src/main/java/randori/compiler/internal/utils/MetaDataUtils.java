@@ -100,6 +100,8 @@ public class MetaDataUtils
 
     public static final String ATT_NAME = "name";
 
+    public static final String ATT_VALUE = "value";
+
     public static final String VALUE_TRUE = "true";
 
     public static final String VALUE_FALSE = "false";
@@ -495,6 +497,15 @@ public class MetaDataUtils
     public static IMetaTag getInjectTag(IDefinition definition)
     {
         return findTag(definition, MetaData.Inject);
+    }
+
+    public static String getValue(IMetaTag tag)
+    {
+        String rawValue = tag.getValue();
+        if (rawValue != null)
+            return rawValue;
+
+        return tag.getAttributeValue(ATT_VALUE);
     }
 
 }

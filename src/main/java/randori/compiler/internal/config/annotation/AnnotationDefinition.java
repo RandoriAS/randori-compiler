@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.flex.compiler.definitions.IAccessorDefinition;
 import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IConstantDefinition;
@@ -36,6 +37,7 @@ import org.apache.flex.compiler.projects.IASProject;
 
 import randori.compiler.config.IAnnotationDefinition;
 import randori.compiler.internal.utils.AnnotationUtils;
+import randori.compiler.internal.utils.MetaDataUtils;
 
 /**
  * @author Michael Schmalle
@@ -44,11 +46,19 @@ public class AnnotationDefinition implements IAnnotationDefinition
 {
     private static final String RANDORI_ANNOTATIONS = "randori.annotations";
 
-    private static final String ANNOTATION_USAGE = "AnnotationUsage";
+    private static final String ANNOTATION_ANNOTATION = "Annotation";
+
+    private static final String ANNOTATION_TARGET = "Target";
+
+    private static final String ANNOTATION_RETENTION = "Retention";
+
+    private static final String ENUM_ELEMENT_TYPE = "ElementType";
+
+    private static final String ENUM_RETENTION_POLICY = "RetentionPolicy";
 
     private final IClassDefinition definition;
 
-    private ArrayList<IConstantDefinition> validOn = new ArrayList<IConstantDefinition>();
+    private ArrayList<IConstantDefinition> targets = new ArrayList<IConstantDefinition>();
 
     public AnnotationDefinition(IClassDefinition definition)
     {
@@ -57,8 +67,25 @@ public class AnnotationDefinition implements IAnnotationDefinition
 
     void reslove(IASProject project, List<ICompilerProblem> problems)
     {
-        // find targets
-        IMetaTag[] tags = definition.getMetaTagsByName(ANNOTATION_USAGE);
+        // every Annotation has a builtin retention RetentionPolicy
+        resolveRetention(project, problems);
+
+        // every Annotation has a builtin target collection [ElementType, ..]
+        resolveTargets(project, problems);
+    }
+
+    private void resolveRetention(IASProject project,
+            List<ICompilerProblem> problems)
+    {
+        // [Retention("RetentionPolicy.RUNTIME")]
+
+    }
+
+    private void resolveTargets(IASProject project,
+            List<ICompilerProblem> problems)
+    {
+        // [Target("ElementType.TYPE")]
+        IMetaTag[] tags = definition.getMetaTagsByName(ANNOTATION_TARGET);
         if (tags.length > 1)
         {
             // XXX (Annotation) Add MultipleAnnotationProblem
@@ -66,12 +93,12 @@ public class AnnotationDefinition implements IAnnotationDefinition
         }
         else if (tags.length == 1)
         {
-            String value = tags[0].getAttributeValue("validOn");
-            proccessValidOn(project, value);
+            String value = MetaDataUtils.getValue(tags[0]);
+            proccessValidTarget(project, value);
         }
     }
 
-    private void proccessValidOn(IASProject project, String value)
+    private void proccessValidTarget(IASProject project, String value)
     {
         String[] split = value.split(",");
         for (String type : split)
@@ -79,6 +106,7 @@ public class AnnotationDefinition implements IAnnotationDefinition
             String fieldName = AnnotationUtils.toEnumFieldName(type);
             String packageName = RANDORI_ANNOTATIONS;
             String baseName = AnnotationUtils.toEnumQualifiedName(type);
+            // public(randori.annotations) class ElementType
             IClassDefinition validOnDefinition = AnnotationUtils
                     .getClassDefinitionQualified(project, packageName, baseName);
 
@@ -91,9 +119,9 @@ public class AnnotationDefinition implements IAnnotationDefinition
             ConstantEnumDefinition enumDef = new ConstantEnumDefinition(
                     validOnDefinition);
             IConstantDefinition target = enumDef.valueOf(fieldName);
-            if (!validOn.contains(target))
+            if (!targets.contains(target))
             {
-                validOn.add(target);
+                targets.add(target);
             }
             else
             {
@@ -121,21 +149,21 @@ public class AnnotationDefinition implements IAnnotationDefinition
     }
 
     @Override
-    public Collection<IConstantDefinition> getValidOn()
+    public Collection<IConstantDefinition> getTargets()
     {
-        return validOn;
+        return targets;
     }
 
     @Override
-    public boolean isValidOn(String type)
+    public boolean isValidTarget(String type)
     {
         return isValid(type);
     }
 
     @Override
-    public boolean isValidOn(IDefinition definition)
+    public boolean isValidTarget(IDefinition definition)
     {
-        if (isValidOnAll())
+        if (isTargetAll())
             return true;
 
         if (definition instanceof IClassDefinition)
@@ -170,26 +198,27 @@ public class AnnotationDefinition implements IAnnotationDefinition
         return false;
     }
 
-    private boolean isValidOnAll()
+    private boolean isTargetAll()
     {
-        if (validOn.size() == 1)
-            return validOn.get(0).getBaseName().equals(TARGET_ALL);
+        if (targets.size() == 1)
+            return targets.get(0).getBaseName().equals(TARGET_ALL);
         return false;
     }
 
     private boolean isValid(String type)
     {
-        for (IConstantDefinition definition : validOn)
+        for (IConstantDefinition definition : targets)
         {
-            if (definition.getBaseName().equals(type))
+            // XXX Use a locale here for lowercase?
+            if (type.equals(StringUtils.lowerCase(definition.getBaseName())))
                 return true;
         }
         return false;
     }
 
-    String toValidOn(IDefinition definition)
+    String toTarget(IDefinition definition)
     {
-        if (isValidOnAll())
+        if (isTargetAll())
             return TARGET_ALL;
 
         if (definition instanceof IClassDefinition)

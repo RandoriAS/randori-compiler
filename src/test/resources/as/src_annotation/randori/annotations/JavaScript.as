@@ -1,7 +1,7 @@
 package randori.annotations
 {
 
-[AnnotationUsage(validOn="AnnotationTargets.Class")]
+[Target("ElementType.CLASS")]
 public class JavaScript extends Annotation
 {
     public function JavaScript()
