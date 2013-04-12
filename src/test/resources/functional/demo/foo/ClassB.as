@@ -347,5 +347,11 @@ public class ClassB extends ClassA
         var mapOptions:Object;
         mapOptions.mapTypeId = MapTypeIdExportFalse.ROADMAP;
     }
+    
+    public function non_resolving_identifier_masks_member():void
+    {
+        var newMap:Object;
+        var o:Object = {position:42, field1:newMap};
+    }
 }
 }

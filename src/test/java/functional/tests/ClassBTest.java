@@ -466,6 +466,16 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void non_resolving_identifier_masks_member()
+    {
+        IFunctionNode node = findFunction(
+                "non_resolving_identifier_masks_member", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.non_resolving_identifier_masks_member = "
+                + "function() {\n\tvar newMap;\n\tvar o = {position:42, field1:newMap};\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
