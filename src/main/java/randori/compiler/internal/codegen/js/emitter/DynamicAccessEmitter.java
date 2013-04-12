@@ -19,11 +19,7 @@
 
 package randori.compiler.internal.codegen.js.emitter;
 
-import org.apache.flex.compiler.definitions.IAccessorDefinition;
-import org.apache.flex.compiler.definitions.IDefinition;
-import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.as.IDynamicAccessNode;
-import org.apache.flex.compiler.tree.as.IExpressionNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
@@ -45,33 +41,11 @@ public class DynamicAccessEmitter extends BaseSubEmitter implements
     @Override
     public void emit(IDynamicAccessNode node)
     {
-        ICompilerProject project = getEmitter().getWalker().getProject();
-
-        IExpressionNode left = node.getLeftOperandNode();
-        IDefinition leftDef = left.resolve(project);
-
-        IExpressionNode right = node.getRightOperandNode();
-        IDefinition rightDef = right.resolve(project);
-
         getModel().setInAssignment(false);
 
-        getEmitter().getWalker().walk(left);
-
-        if (leftDef instanceof IAccessorDefinition)
-        {
-            write("()");
-        }
-        else
-        {
-            //write(node.getOperator().getOperatorText());
-        }
-
+        getEmitter().getWalker().walk(node.getLeftOperandNode());
         write("[");
-        getEmitter().getWalker().walk(right);
-        if (rightDef instanceof IAccessorDefinition)
-        {
-            write("()");
-        }
+        getEmitter().getWalker().walk(node.getRightOperandNode());
         write("]");
     }
 

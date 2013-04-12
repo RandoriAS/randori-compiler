@@ -55,12 +55,13 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
         IDefinition leftDef = left.resolve(project);
 
         IExpressionNode right = node.getRightOperandNode();
-        IDefinition rightDef = right.resolve(project);
+        //IDefinition rightDef = right.resolve(project);
 
         boolean isTransparent = RandoriUtils.isTransparentMemberAccess(left,
                 right);
         boolean isGlobalStatic = RandoriUtils.isGlobalStatic(left, right,
                 project);
+        
         // the left is 'Window', the right is the static method
         getModel().setSkipOperator(isTransparent || isGlobalStatic);
 
@@ -98,16 +99,6 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
         if (!getModel().skipOperator())
             getWalker().walk(left);
 
-        if (!getModel().skipOperator())
-        {
-            if (!getModel().isInAssignment()
-                    && leftDef instanceof IAccessorDefinition
-                    && left.getParent() instanceof IMemberAccessExpressionNode)
-            {
-                writeIfNotNative("()", leftDef);
-            }
-        }
-
         if (left.getParent() instanceof IMemberAccessExpressionNode)
         {
             // we are handling 'this' so don't write the '.'
@@ -133,14 +124,6 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
         getEmitter().getWalker().walk(right);
 
         getModel().setSkipOperator(false);
-
-        if (!getModel().isInAssignment()
-                && rightDef instanceof IAccessorDefinition
-                // c.get_foo().bar(42) was; c.get_foo()().bar(42)
-                && !(right.getParent().getParent() instanceof IMemberAccessExpressionNode))
-        {
-            writeIfNotNative("()", rightDef);
-        }
     }
 
 }

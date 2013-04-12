@@ -5,6 +5,7 @@ import demo.foo.support.MenuItem2;
 import demo.foo.support.PolyFill;
 
 import randori.behaviors.SimpleList;
+import randori.behaviors.ViewStack;
 import randori.jquery.Event;
 import randori.jquery.JQuery;
 import randori.jquery.JQueryStatic;
@@ -324,5 +325,14 @@ public class ClassB extends ClassA
     {
         demo.foo.support.PolyFill.fillConsoleForIE();
     }
+    
+    public function getter_in_while():void
+    {
+        var viewStack:ViewStack;
+        while ( viewStack.currentViewUrl != null ) {
+            viewStack.popView();
+        }
+    }
+
 }
 }

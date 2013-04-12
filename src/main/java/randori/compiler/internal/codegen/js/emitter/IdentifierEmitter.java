@@ -26,15 +26,10 @@ import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IParameterDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
-import org.apache.flex.compiler.tree.as.IContainerNode;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
-import org.apache.flex.compiler.tree.as.IFunctionCallNode;
 import org.apache.flex.compiler.tree.as.IIdentifierNode;
 import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
 import org.apache.flex.compiler.tree.as.IParameterNode;
-import org.apache.flex.compiler.tree.as.IReturnNode;
-import org.apache.flex.compiler.tree.as.IStatementNode;
-import org.apache.flex.compiler.tree.as.IVariableNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
@@ -108,8 +103,8 @@ public class IdentifierEmitter extends BaseSubEmitter implements
                     .getParent();
             if (mnode.getRightOperandNode() instanceof IIdentifierNode)
             {
-                IDefinition rightDef = mnode
-                        .getRightOperandNode().resolve(getProject());
+                IDefinition rightDef = mnode.getRightOperandNode().resolve(
+                        getProject());
                 if (rightDef instanceof IVariableDefinition)
                 {
                     IVariableDefinition vdef = (IVariableDefinition) rightDef;
@@ -118,20 +113,12 @@ public class IdentifierEmitter extends BaseSubEmitter implements
                     {
                         String qualifiedName = cdef.getQualifiedName();
                         write(qualifiedName);
+                        return;
                     }
                 }
-                else
-                {
-                    write(node.getName());
-                }
-            }
-            else
-            {
-                write(node.getName());
             }
         }
-        else
-            write(node.getName());
+        write(node.getName());
     }
 
     private void emitIdentifierVariable(IIdentifierNode node,
@@ -198,14 +185,7 @@ public class IdentifierEmitter extends BaseSubEmitter implements
             }
             else
             {
-                write("get_" + name);
-                // for now if (get_foo()) {} TODO this is proto, does it work right?
-                if (node.getParent() instanceof IStatementNode
-                        || node.getParent() instanceof IReturnNode
-                        || node.getParent() instanceof IContainerNode
-                        || node.getParent() instanceof IFunctionCallNode
-                        || node.getParent() instanceof IVariableNode)
-                    write("()");
+                write("get_" + name + "()");
             }
         }
         else

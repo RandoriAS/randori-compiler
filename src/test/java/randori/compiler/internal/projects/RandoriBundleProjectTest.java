@@ -26,6 +26,7 @@ import org.apache.flex.compiler.internal.workspaces.Workspace;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import randori.compiler.bundle.BundleConfiguration;
@@ -36,6 +37,7 @@ import randori.compiler.internal.projects.RandoriBundleProject;
 /**
  * @author Michael Schmalle
  */
+@Ignore
 public class RandoriBundleProjectTest
 {
     File builtinSWC = new File(TestConstants.RandoriASFramework

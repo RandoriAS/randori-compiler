@@ -26,7 +26,6 @@ import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.ASTNodeID;
 import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
-import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
@@ -56,9 +55,8 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
         IDefinition leftDefinition = left.resolve(project);
 
         IExpressionNode right = node.getRightOperandNode();
-        IDefinition rightDefinition = right.resolve(project);
+        //IDefinition rightDefinition = right.resolve(project);
 
-        // XXX Added see if this causes problems
         if (ASNodeUtils.hasParenOpen(node))
             write("(");
 
@@ -75,11 +73,6 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
         }
         else
         {
-            if (leftDefinition instanceof IAccessorDefinition)
-            {
-                // if (data == null) || ... if (this.get_data() == null) || 
-                writeIfNotNative("()", leftDefinition);
-            }
             // if not in assignment with setter, write the operator
             if (node.getNodeID() != ASTNodeID.Op_CommaID)
                 write(" ");
@@ -92,21 +85,12 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
 
         getEmitter().getWalker().walk(right);
 
-        // cases like 'this.accessor' will resolve to an accessor definition,
-        // we need to pass here and let emitMemeberAccess() take care of this
-        if (!(right instanceof IMemberAccessExpressionNode)
-                && rightDefinition instanceof IAccessorDefinition)
-        {
-            writeIfNotNative("()", rightDefinition);
-        }
-
         if (!MetaDataUtils.isNative(leftDefinition) && wasAssignment
                 && leftDefinition instanceof IAccessorDefinition)
         {
             writeIfNotNative(")", leftDefinition);
         }
 
-        // XXX Added see if this causes problems
         if (ASNodeUtils.hasParenClose(node))
             write(")");
     }

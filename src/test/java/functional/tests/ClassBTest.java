@@ -437,6 +437,16 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void getter_in_while()
+    {
+        IFunctionNode node = findFunction("getter_in_while", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.getter_in_while = function() {"
+                + "\n\tvar viewStack;\n\twhile (viewStack.get_currentViewUrl() != null) {"
+                + "\n\t\tviewStack.popView();\n\t}\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
