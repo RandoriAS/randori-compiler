@@ -50,6 +50,7 @@ import org.apache.flex.compiler.tree.as.IIdentifierNode;
 import org.apache.flex.compiler.tree.as.ILanguageIdentifierNode;
 import org.apache.flex.compiler.tree.as.ILanguageIdentifierNode.LanguageIdentifierKind;
 import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
+import org.apache.flex.compiler.tree.as.INonResolvingIdentifierNode;
 import org.apache.flex.compiler.tree.as.IScopedNode;
 import org.apache.flex.compiler.tree.as.IUnaryOperatorNode;
 import org.apache.flex.compiler.tree.as.IVariableNode;
@@ -277,13 +278,11 @@ public class ExpressionUtils
             IBinaryOperatorNode binary = (IBinaryOperatorNode) node;
             if (binary.getLeftOperandNode() instanceof IMemberAccessExpressionNode)
             {
-                return getLeftBase(binary
-                        .getLeftOperandNode());
+                return getLeftBase(binary.getLeftOperandNode());
             }
             else if (binary.getLeftOperandNode() instanceof IDynamicAccessNode)
             {
-                return getLeftBase(binary
-                        .getLeftOperandNode());
+                return getLeftBase(binary.getLeftOperandNode());
             }
             return binary.getLeftOperandNode();
         }
@@ -294,6 +293,9 @@ public class ExpressionUtils
     public static boolean isValidThis(IIdentifierNode node,
             ICompilerProject project)
     {
+        if (node instanceof INonResolvingIdentifierNode)
+            return false;
+
         // added super.foo(), wanted to 'this' behind foo
         if (node.getParent() instanceof IMemberAccessExpressionNode)
         {
@@ -375,8 +377,7 @@ public class ExpressionUtils
         }
 
         ExpressionNodeBase base = (ExpressionNodeBase) node;
-        ExpressionNodeBase parent1 = base
-                .getBaseExpression();
+        ExpressionNodeBase parent1 = base.getBaseExpression();
 
         if (parent.getParent() instanceof IFunctionCallNode)
             return false;
