@@ -1,0 +1,190 @@
+##--------------------------------------
+## - shortDescription
+## - longDescription
+## - tipTags
+## - sinceTag
+## - authorTags
+## - copyrightTags
+## - hostComponent
+## - states
+## - hostedSkins
+## - deprecated
+## - bindable
+## - defaultProperty
+## - seeTags
+## - imageTags
+## - mxmlTree
+## - exampleTags
+##--------------------------------------
+
+##---------------------------------------
+## ShortDescription
+##---------------------------------------
+
+#if( $shortDescription )<p>$shortDescription</p>#end
+
+##---------------------------------------
+## LongDescription
+##---------------------------------------
+
+#if( $longDescription )$longDescription#end
+
+##---------------------------------------
+## @tip
+##---------------------------------------
+  
+ #if( $tipTags && $tipTags.size() > 0)
+ <span class="label">Tips:</span>
+  <ul>
+    #foreach( $tag in $tipTags)
+       <li>$tag</li>
+    #end
+  </ul>
+ #end
+
+##---------------------------------------
+## @since | @productversion
+##---------------------------------------
+  
+ #if( $sinceTag )
+  <span class="label">Product Version:</span><br/><br/>
+  <div class="seeAlso">$sinceTag</div>
+ #end
+
+##---------------------------------------
+## @author
+##---------------------------------------
+  
+ #if( $authorTags && $authorTags.size() > 0)
+ <span class="label">Author:</span><br/><br/>
+  <div class="seeAlso">
+    #foreach( $tag in $authorTags)
+       $tag<br/>
+    #end
+</div>
+ #end
+
+##---------------------------------------
+## @copyright
+##---------------------------------------
+  
+ #if( $copyrightTags && $copyrightTags.size() > 0)
+ <span class="label">Copyright:</span><br/><br/>
+  <div class="seeAlso">
+    #foreach( $tag in $copyrightTags)
+       $tag<br/>
+    #end
+</div>
+ #end
+
+##---------------------------------------
+## [HostComponent]
+##---------------------------------------
+  
+ #if( $hostComponent )
+<p><span class="label">Host component:</span></p>
+  <div class="seeAlso">$hostComponent</div>
+ #end 
+
+##---------------------------------------
+## [SkinState] enum
+##---------------------------------------
+
+#if( $states )
+  <p><span class="label">Host skin states:</span></p>
+  <pre>
+&lt;s:states&gt;
+#foreach( $state in $states)
+    &lt;s:State name="$state"/&gt;
+#end
+&lt;/s:states&gt;
+</pre>
+ #end 
+
+##---------------------------------------
+## Classes the have refs from [HostComponent] Skins
+##---------------------------------------
+
+#if( $hostedSkins && $hostedSkins.size() > 0)
+  <p><span class="label">Hosted skins</span></p>
+  <div class="seeAlso">
+    #foreach( $tag in $hostedSkins)
+       $tag<br/>
+    #end
+</div>
+#end 
+
+##---------------------------------------
+## [Deprecated]
+##---------------------------------------
+  
+ #if( $deprecated)
+  <p><span class="label">Deprecated</span></p>
+  <div class="seeAlso">
+    #if ($deprecated.message)<p>$deprecated.message</p>#end
+    #if ($deprecated.version)<span class="label">Since</span> - $deprecated.version<br/>#end
+    #if ($deprecated.replacement)<span class="label">Replacement</span> - $deprecated.replacement<br/>#end
+</div>
+ #end 
+ 
+##---------------------------------------
+## [Bindable]
+##---------------------------------------
+
+#if( $bindable)
+	<p><em>${bindable}</em></p>
+#end
+ 
+##---------------------------------------
+## [DefaultProperty]
+##---------------------------------------
+
+#if( $defaultProperty)
+	<p>$defaultProperty</p>
+#end
+
+##---------------------------------------
+## @see
+##---------------------------------------
+  
+ #if( $seeTags && $seeTags.size() > 0)
+  <p><span class="label">See Also</span></p>
+  <div class="seeAlso">
+    #foreach( $tag in $seeTags)
+       $tag<br/>
+    #end
+</div>
+ #end
+
+##---------------------------------------
+## @image
+##---------------------------------------
+  
+ #if( $imageTags && $imageTags.size() > 0)
+ <span class="label">Images:</span><br/>
+    #foreach( $tag in $imageTags)
+       $tag<br/>
+    #end
+ #end
+
+##---------------------------------------
+## @mxml
+##---------------------------------------
+
+#if ($mxmlTree)
+<br/>
+<div class="label">MXML Tree</div>
+$mxmlTree
+#end
+ 
+##---------------------------------------
+## @example
+##---------------------------------------
+  
+#if( $exampleTags && $exampleTags.size() > 0)
+    <p><span class="label">Examples</span></p>
+    #foreach( $tag in $exampleTags)
+      $tag
+    #end
+
+#end

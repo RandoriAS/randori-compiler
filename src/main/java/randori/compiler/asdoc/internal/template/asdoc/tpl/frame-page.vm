@@ -1,0 +1,21 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" media="screen" href="${basePath}style.css" />
+<link rel="stylesheet" type="text/css" media="print" href="${basePath}print.css" />
+<title>${title}</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="${basePath}asdoc.js"></script>
+<script type="text/javascript" language="javascript" src="${basePath}cookies.js"></script>
+<script type="text/javascript" language="javascript"><!--  
+	asdocTitle = '${title}';
+	var baseRef = '${basePath}';
+	window.onload = configPage;
+--></script>
+${titleBar}
+${content}
+<div class="mainFooter">${footer}</div>
+<br/>
+</body>
+</html>

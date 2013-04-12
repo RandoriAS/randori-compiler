@@ -1,0 +1,169 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'maven'
+
+
+def artifact = 'randori-compiler'
+project.ext.set('artifact', artifact)
+group = 'randorias'
+version = '0.2.4-SNAPSHOT'
+
+def isReleaseVersion = !version.endsWith('SNAPSHOT')
+
+sourceCompatibility = 1.5
+
+dependencies {
+
+    compile group: 'commons-io', name: 'commons-io', version: '2.0.1'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.1'
+    compile group: 'com.google.guava', name: 'guava', version: '14.0.1'
+    compile files('lib/compiler.jar')
+
+    testCompile group: 'junit', name: 'junit', version: '4.10'
+
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Randori compiler', 'Implementation-Version': version
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+
+        test {
+            sourceSets {
+                java {
+                    srcDir 'test'
+                }
+            }
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.5'
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+/** Artifacts */
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    baseName = artifact
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    baseName = artifact
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives javadocJar
+}
+
+/** Install/Upload configuration */
+
+// Always make sure the build is up to date before uploading/installing
+uploadArchives.dependsOn ':build'
+
+// Upload to remote repositories
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom {
+                project(pomConfiguration)
+            }
+        }
+    }
+}
+
+// Install to local repository
+install {
+    repositories.mavenInstaller {
+        pom {
+            project(pomConfiguration)
+        }
+    }
+}
+
+
+/** IDEs */
+
+/** IntelliJIdea */
+
+idea {
+    module {
+
+        downloadSources = true
+        downloadJavadoc = true
+
+        // It's nice to be able to see build directory to check artifacts
+        excludeDirs = excludeDirs.findAll { it != buildDir }
+
+    }
+
+    project {
+
+        jdkName = '1.5'
+        languageLevel = '1.5'
+
+    }
+
+
+}
+
+/**
+ * Modify pom configuration adding project details
+ *
+ * @return
+ */
+def getPomConfiguration() {
+    return {
+        groupId project.group
+        artifactId project.name
+        version project.version
+        packaging 'jar'
+        name 'RandoriAS compiler'
+        description 'Randori Actionscript to Javascript compiler.'
+        url 'https://github.com/RandoriAS/randori-compiler'
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+        scm {
+            url 'https://github.com/RandoriAS/randori-compiler'
+            connection 'scm:git://github.com/RandoriAS/randori-compiler.git'
+            developerConnection 'scm:git@//github.com/RandoriAS/randori-compiler.git'
+        }
+        developers {
+            developer {
+                id 'teotigraphix'
+                name 'Teoti Graphix'
+                email 'mschmalle@teotigraphix.com'
+                url 'http://www.teotigraphix.com'
+                roles {
+                    role 'Developer'
+                }
+                timezone '+1'
+            }
+
+        }
+    }
+}

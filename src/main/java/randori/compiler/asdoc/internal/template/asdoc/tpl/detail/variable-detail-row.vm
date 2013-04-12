@@ -1,0 +1,127 @@
+#if ($row.elementKind == "method")
+<a name="${row.name}()"></a>
+#else
+<a name="${row.name}"></a>
+#end
+
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tbody>
+    <tr>
+    	#if ($row.elementKind == "method")
+        <td class="detailHeaderName">${row.nameTitle}()</td>
+        #else
+        <td class="detailHeaderName">${row.nameTitle}</td>
+        #end
+        <td class="detailHeaderType">${lcModifier}</td>
+        <td class="detailHeaderRule">&nbsp;</td>
+    </tr>
+</tbody>
+</table>
+
+<div class="detailBody">
+
+##---------------------------------------
+## Content
+##---------------------------------------
+
+<div><code class="element-attributes">$row.modifiers var </code><code>$row.nameTitle : $row.valueType</code></div>
+
+##---------------------------------------
+## [Deprecated]
+##---------------------------------------
+  
+ #if( $row.deprecated)
+  <p><span class="label">Deprecated</span></p>
+  <div class="seeAlso">
+    #if ($row.deprecated.message)<p>$row.deprecated.message</p>#end
+    #if ($row.deprecated.version)<span class="label">Since</span> - $row.deprecated.version<br/>#end
+    #if ($row.deprecated.replacement)<span class="label">Replacement</span> - $row.deprecated.replacement<br/>#end
+</div>
+ #end 
+
+    <div>
+    #if ( $row.shortDescription )<p>$row.shortDescription#end</p>
+    #if ( $row.longDescription )$row.longDescription#end
+    </div>
+
+##---------------------------------------
+## [Bindable]
+##---------------------------------------
+
+#if( $row.bindable)
+	<p><em>${row.bindable}</em></p>
+#end
+
+##---------------------------------------
+## @default
+##---------------------------------------
+
+#if( $row.defaultTag )
+<p>The default value is <strong>$row.defaultTag</strong>.</p>
+#end
+
+##---------------------------------------
+## @author
+##---------------------------------------
+  
+ #if( $row.authorTags && $row.authorTags.size() > 0)
+ <p><span class="label">Author:</span></p>
+  <div class="seeAlso">
+    #foreach( $tag in $row.authorTags)
+       $tag<br/>
+    #end
+</div>
+ #end
+
+##---------------------------------------
+## @copyright
+##---------------------------------------
+  
+ #if( $row.copyrightTags && $row.copyrightTags.size() > 0)
+ <p><span class="label">Copyright:</span></p>
+  <div class="seeAlso">
+    #foreach( $tag in $row.copyrightTags)
+       $tag<br/>
+    #end
+</div>
+ #end
+
+##---------------------------------------
+## @since | @productversion
+##---------------------------------------
+  
+ #if( $row.sinceTag )
+  <p><span class="label">Product Version:</span></p>
+  <div class="seeAlso">$row.sinceTag</div>
+ #end
+
+##---------------------------------------
+## @see
+##---------------------------------------
+  
+#if( $row.seeTags && $row.seeTags.size() > 0)
+  <p><span class="label">See Also</span></p>
+  <div class="seeAlso">
+    #foreach( $tag in $row.seeTags)
+       $tag<br/>
+    #end
+</div>
+#end
+
+##---------------------------------------
+## @example
+##---------------------------------------
+  
+#if( $row.exampleTags && $row.exampleTags.size() > 0)
+    <p><span class="label">Examples</span></p>
+    #foreach( $tag in $row.exampleTags)
+      $tag
+    #end
+
+#end
+
+##---------------------------------------
+## Content
+##---------------------------------------
+
+</div>

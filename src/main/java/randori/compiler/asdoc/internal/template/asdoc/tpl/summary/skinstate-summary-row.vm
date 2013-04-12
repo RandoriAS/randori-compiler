@@ -1,0 +1,75 @@
+##---------------------------------------
+##  01-12-10
+##
+##  - $rowFlag               boolean
+##  - $ucModifier            String
+##  - $ucTypeSingular        String
+##  - $basePath              String
+##  - $row                   Map
+##    - isInherited          boolean
+##    - name                 String
+##    - definedBy            String
+##    - definedByID          String[<a>]
+##    - event                 String
+##---------------------------------------
+
+#if( !$row.isInherited )
+  <tr class="" bgcolor="#if( ${rowFlag} )#f2f2f2#else#ffffff#end">
+#else
+  <tr class="hideInherited${ucModifier}${ucTypeSingular}" bgcolor="#if( ${rowFlag} )#f2f2f2#else#ffffff#end">
+#end
+  
+  #if( !$row.isInherited )
+	<td class="summaryTablePaddingCol"><a name="skinstate:${row.name}"> </a></td>
+  #else
+	<td class="summaryTablePaddingCol">&nbsp;</td>
+  #end 
+  
+  
+  #if( !$row.isInherited )
+    <td class="summaryTableInheritanceCol">&nbsp;</td>
+  #else
+    <td class="summaryTableInheritanceCol">
+        <img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="${basePath}images/inheritedSummary.gif"/>
+    </td>
+  #end
+  
+  #if( !$row.isInherited )
+    <td class="summaryTableSignatureCol">
+	    <div>
+	      <span class="signatureLink">${row.name}</span>
+	        #if( $row.valueType ) : ${row.valueType}#end
+	    </div>
+    </td>
+  #else
+    <td class="summaryTableSignatureCol">
+	    <div>
+	        <a class="signatureLink" href="${row.definedByID}#${row.name}">${row.name}</a>
+	        #if( $row.valueType ) : ${row.valueType}#end
+	    </div>
+    </td>
+  #end
+  
+  #if( !$row.isInherited )
+
+  <td class="summaryTableDescription">
+    <div>
+    #if ( $row.shortDescription )$row.shortDescription#end
+    ##components_text_LongDescription( $row )
+    </div>
+   </td>
+
+  #else
+
+  <td class="summaryTableDescription">
+    <div>
+    #if ( $row.shortDescription )$row.shortDescription#end
+    ##components_text_LongDescription( $row )
+    </div>
+  </td>
+  
+  #end
+
+  <td class="summaryTableOwnerCol">${row.definedBy}</td>
+
+</tr>

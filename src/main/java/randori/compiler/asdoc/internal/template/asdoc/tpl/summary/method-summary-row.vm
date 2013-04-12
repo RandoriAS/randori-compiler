@@ -1,0 +1,66 @@
+#if( !$row.isInherited )
+  <tr class="" bgcolor="#if( $rowFlag )#f2f2f2#else#ffffff#end">
+#else
+  <tr class="hideInherited${ucModifier}${ucTypeSingular}" bgcolor="#if( $rowFlag )#f2f2f2#else#ffffff#end">
+#end
+
+  <td class="summaryTablePaddingCol">&nbsp;</td>
+  <td class="summaryTablePaddingCol">&nbsp;</td>
+
+  #if( !$row.isInherited )
+    <td class="summaryTableInheritanceCol">&nbsp;</td>
+  #else
+    <td class="summaryTableInheritanceCol">
+        <img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="${basePath}images/inheritedSummary.gif">
+    </td>
+  #end
+  
+  
+  
+#if( !$row.isInherited )
+
+<td class="summaryTableSignatureCol">
+
+<div>
+<a class="signatureLink" href="#${row.name}()">${row.name}</a>#if( !$row.parameters.equals("") )(${row.parameters})#else()#end
+  #if( !$row.isConstructor )
+    #if( $row.returnType ) : ${row.returnType}#end
+  #end
+</div>
+
+    <div>
+    #if ( $row.isStatic )[static] #end
+    #if ( $row.accessType )${row.accessType} #end
+    #if ( $row.implementedFrom )<div>$row.implementedFrom</div>#end
+    #if ( $row.shortDescription )$row.shortDescription#end
+    </div>
+
+</td>
+
+#else
+
+<td class="summaryTableSignatureCol">
+
+<div>
+<a class="signatureLink" href="${row.definedByID}#${row.name}()">${row.name}</a>(${row.parameters})
+  #if( !$row.isConstructor )	
+    #if( $row.returnType ) : ${row.returnType}#end
+  #end
+</div>
+
+    <div>
+    #if ( $row.isStatic )[static] #end
+    #if ( $row.accessType )${row.accessType} #end
+    #if ( $row.implementedFrom )
+    	<div>$row.implementedFrom</div>
+    #end
+    #if ( $row.shortDescription )$row.shortDescription#end
+    </div>
+
+</td>
+
+#end
+
+  <td class="summaryTableOwnerCol">${row.definedBy}</td>
+  
+</tr>

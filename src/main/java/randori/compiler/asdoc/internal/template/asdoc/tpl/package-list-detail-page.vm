@@ -1,0 +1,83 @@
+<div class="MainContent">
+
+  #if ( $interfaces && $interfaces.size() > 0 )
+	
+  <a name="interfaceSummary"></a>
+  <div class="summaryTableTitle">Interfaces</div>
+  <table class="summaryTable" cellspacing="0" cellpadding="3">
+   
+    <tr>
+      <th>&nbsp;</th>
+      <th width="30%">Name</th>
+      <th width="70%">Description</th>
+    </tr>
+
+    #foreach( $element in $interfaces )
+	      
+	  <tr #if( $element.RowFlag ) class="prow0" #else class="prow1" #end>
+	    <td class="summaryTablePaddingCol">&nbsp;</td>
+	    <td><em>$element.Anchor</em></td>
+	    <td class="summaryTableLastCol">#if( ${element.Description} )${element.Description}#else&nbsp;#end</td>
+	  </tr>
+	      
+    #end
+    
+    </table>
+    
+  #end
+  
+
+  #if ( $classes && $classes.size() > 0 )
+    
+  <a name="interfaceSummary"></a>
+  <div class="summaryTableTitle">Classes</div>
+  <table class="summaryTable" cellspacing="0" cellpadding="3">
+   
+    <tr>
+      <th>&nbsp;</th>
+      <th width="30%">Name</th>
+      <th width="70%">Description</th>
+    </tr>
+
+    #foreach( $element in $classes )
+          
+      <tr #if( $element.RowFlag ) class="prow0" #else class="prow1" #end>
+        <td class="summaryTablePaddingCol">&nbsp;</td>
+        <td>$element.Anchor</td>
+        <td class="summaryTableLastCol">#if( ${element.Description} )${element.Description}#else&nbsp;#end</td>
+      </tr>
+          
+    #end
+    
+    </table>
+    
+  #end
+  
+  
+  #if ( $functions && $functions.size() > 0 )
+    
+  <a name="interfaceSummary"></a>
+  <div class="summaryTableTitle">Functions</div>
+  <table class="summaryTable" cellspacing="0" cellpadding="3">
+   
+    <tr>
+      <th>&nbsp;</th>
+      <th width="30%">Name</th>
+      <th width="70%">Description</th>
+    </tr>
+
+    #foreach( $element in $functions )
+          
+      <tr #if( $element.RowFlag ) class="prow0" #else class="prow1" #end>
+        <td class="summaryTablePaddingCol">&nbsp;</td>
+        <td>$element.Anchor</td>
+        <td class="summaryTableLastCol">#if( ${element.Description} )${element.Description}#else&nbsp;#end</td>
+      </tr>
+          
+    #end
+    
+    </table>
+    
+  #end
+
+</div>

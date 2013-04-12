@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>$title</title>
+    <link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="print.css" type="text/css" media="print"/>
+  </head>
+  <body class="classFrameContent">
+    <h3>
+      <a style="color:black" target="classFrame" href="class-summary.html">$title</a>
+    </h3>
+  <table cellspacing="0" cellpadding="0">
+    #foreach ($page in $pages)
+      <tr>
+      	#if ($page.isClass)
+      		<td>$page.Anchor</td>
+      	#else
+      		<td><em>$page.Anchor</em></td>
+      	#end
+      </tr>
+    #end
+  </table>
+  
+#if ($examples)
+<h3>
+  <span style="color:black">Examples</span>
+</h3>	
+  <table cellspacing="0" cellpadding="0">
+    #foreach ($example in $examples)
+      <tr>
+      	<td>$example.Anchor</td>
+      </tr>
+    #end
+  </table>
+#end  
+  
+  </body>
+</html>

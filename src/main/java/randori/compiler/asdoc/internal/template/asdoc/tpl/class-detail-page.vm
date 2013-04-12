@@ -1,0 +1,189 @@
+##--------------------------------------
+## - signature
+## - description
+## - classFileMXMLBlock
+## - summaries.variable
+## - summaries.accessor
+## - summaries.method
+## - summaries.style
+## - summaries.skinstate
+## - summaries.skinpart
+## - summaries.event
+## - summaries.effect
+## - summaries.constant
+## - details.variable
+## - details.accessor
+## - details.method
+## - details.event
+## - details.constant
+## - source
+##--------------------------------------
+
+<div class="MainContent">
+
+<a name="mainTop"></a>
+
+#if( $signature )$signature#end
+#if( $description )$description#end
+#if( $classFileMXMLBlock )<br/>$classFileMXMLBlock#end
+
+<hr />
+
+</div>
+
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+
+
+#if( $summaries.variable )
+	
+<a name="publicVariableSummary"></a>
+
+#foreach($summary in $summaries.variable)
+$summary
+#end
+
+#end
+
+#if( $summaries.accessor )
+    
+<a name="publicPropertySummary"></a>
+#foreach($summary in $summaries.accessor)
+$summary
+#end
+
+#end
+
+#if( $summaries.method )
+
+<a name="publicMethodSummary"></a>
+#foreach($summary in $summaries.method)
+$summary
+#end
+
+#end
+
+#if( $summaries.style )
+
+<a name="publicStyleSummary"></a>
+#foreach($summary in $summaries.style)
+$summary
+#end
+
+#end
+
+#if( $summaries.skinstate )
+
+<a name="publicSkinstateSummary"></a>
+#foreach($summary in $summaries.skinstate)
+$summary
+#end
+
+#end
+
+#if( $summaries.skinpart )
+
+<a name="publicSkinpartSummary"></a>
+#foreach($summary in $summaries.skinpart)
+$summary
+#end
+
+#end
+
+#if( $summaries.event )
+
+<a name="publicEventSummary"></a>
+#foreach($summary in $summaries.event)
+$summary
+#end
+
+#end
+
+#if( $summaries.effect )
+
+<a name="publicEffectSummary"></a>
+#foreach($summary in $summaries.effect)
+$summary
+#end
+
+#end
+
+#if( $summaries.constant )
+
+<a name="publicConstantSummary"></a>
+#foreach($summary in $summaries.constant)
+$summary
+#end
+
+#end
+
+
+<div class="MainContent">
+#if( $details.variable )
+
+<a name="publicVariableDetail"></a>
+
+#foreach($detail in $details.variable)
+$detail
+#end
+
+#end
+
+
+#if( $details.accessor )
+
+<a name="publicPropertyDetail"></a>
+
+#foreach($detail in $details.accessor)
+$detail
+#end
+
+#end
+
+
+#if( $details.method )
+
+<a name="publicMethodDetail"></a>
+
+#foreach($detail in $details.method)
+$detail
+#end
+
+#end
+
+
+#if( $details.event )
+
+<a name="publicEventDetail"></a>
+
+#foreach($detail in $details.event)
+$detail
+#end
+
+#end
+
+
+#if( $details.constant )
+
+<a name="publicConstantDetail"></a>
+
+#foreach($detail in $details.constant)
+$detail
+#end
+
+#end
+
+
+#if( $source )
+<a name="source"></a>
+<span class="label">Source Code:</span>
+<div class="listing">
+<pre>
+$source
+</pre>
+</div>
+#end
+
+</div>

@@ -1,0 +1,70 @@
+#if( !$row.isInherited )
+  <tr class="" bgcolor="#if( $rowFlag )#f2f2f2#else#ffffff#end">
+#else
+  <tr class="hideInherited${ucModifier}${ucTypeSingular}" bgcolor="#if( $rowFlag )#f2f2f2#else#ffffff#end">
+#end
+
+  <td class="summaryTablePaddingCol">&nbsp;</td>
+  <td class="summaryTablePaddingCol">&nbsp;</td>
+
+  #if( !$row.isInherited )
+    <td class="summaryTableInheritanceCol">&nbsp;</td>
+  #else
+    <td class="summaryTableInheritanceCol">
+        <img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="${basePath}images/inheritedSummary.gif">
+    </td>
+  #end
+  
+  #if( !$row.isInherited )
+  	
+  <td class="summaryTableSignatureCol">
+  	
+    <div>
+      <a class="signatureLink" href="#${row.name}">${row.nameTitle}</a>
+        #if( $row.valueType ) : ${row.valueType}#end
+    </div>
+    
+##---------------------------------------
+## [Deprecated]
+##---------------------------------------
+  
+ #if( $row.deprecated)
+  <div><span class="label">Deprecated[</span>
+    #if ($row.deprecated.version)<span class="label">Since</span> - $row.deprecated.version#end
+    #if ($row.deprecated.replacement) <span class="label">Replacement</span> - $row.deprecated.replacement#end
+	]
+</div>
+ #end 
+    
+    <div>
+    #if( $row.isStatic )[static] #end
+    
+    #if ( $row.shortDescription )$row.shortDescription#end
+    
+    </div>
+    
+  </td>
+    
+  #else
+  
+  <td class="summaryTableSignatureCol">
+  	
+    <div>
+        <a class="signatureLink" href="${row.definedByID}#${row.name}">${row.nameTitle}</a>
+        #if( $row.valueType ) : ${row.valueType}#end
+    </div>
+    
+    <div>
+    #if( $row.isStatic )[static] #end
+    
+    #if ( $row.shortDescription )$row.shortDescription#end
+    
+    </div>
+    
+  </td>
+  
+  #end
+
+  <td class="summaryTableOwnerCol">${row.definedBy}</td>
+  
+</tr>

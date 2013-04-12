@@ -1,0 +1,127 @@
+<?xml version="1.0" ?>
+<!--
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<project name="randori-compiler" default="main" basedir=".">
+
+	<pathconvert property="basedir_clean" dirsep="/">
+		<path location="${basedir}" />
+	</pathconvert>
+
+	<property file="${basedir_clean}/build/build.properties" />
+	<property file="${basedir_clean}/build/project.properties" />
+
+	<property name="src.dir" value="${basedir_clean}/src" />
+	<property name="lib.dir" value="${basedir_clean}/lib" />
+
+	<property name="build.output" value="${basedir_clean}/build/out" />
+	<property name="build.lib.dir" value="${build.output}/lib" />
+	<property name="randori.jar" value="${build.lib.dir}/randori.jar" />
+
+	<property name="deployed.dir" value="${basedir_clean}/deployed" />
+
+	<property name="classes.dir" value="${build.output}/classes" />
+
+	<!-- Set the classpath for randori jar compile -->
+	<path id="classpath">
+		<filelist dir="${build.lib.dir}">
+			<file name="commons-io.jar" />
+			<file name="commons-lang3-3.1.jar" />
+			<file name="guava.jar" />
+			<file name="antlr.jar" />
+		</filelist>
+	</path>
+
+	<!-- Create the build/classes directory -->
+	<target name="prebuild">
+		<mkdir dir="${classes.dir}" />
+		<!--<ant antfile="${basedir}/downloads.xml" dir="${basedir}" />-->
+	</target>
+
+	<!-- Copy all jars to the build/lib directory -->
+	<target name="copyFiles">
+		<copy todir="${build.lib.dir}">
+			<filelist dir="${falcon.basedir}/generated/dist/sdk/lib">
+				<file name="compiler.jar" />
+			</filelist>
+		</copy>
+		<copy todir="${build.lib.dir}">
+			<filelist dir="${falcon.basedir}/lib">
+				<file name="antlr.jar" />
+			</filelist>
+		</copy>
+		<copy todir="${build.lib.dir}">
+			<filelist dir="${lib.dir}">
+				<file name="commons-io.jar" />
+				<file name="commons-lang3-3.1.jar" />
+				<file name="guava.jar" />
+			</filelist>
+		</copy>
+	</target>
+
+	<!-- Compile all classes  -->
+	<target name="compile" depends="copyFiles">
+		<javac debug="true" deprecation="false" includes="**/*.java" excludes="" destdir="${classes.dir}" classpathref="classpath" includeAntRuntime="true">
+			<src path="${src.dir}" />
+			<classpath>
+				<pathelement path="${falcon.basedir}/generated/classes" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="build" depends="compile">
+
+		<property name="jar.classpath" value="antlr.jar commons-io.jar commons-lang3-3.1.jar compiler.jar guava.jar" />
+
+		<echo message="Building ${randori.jar}" />
+		<jar destfile="${randori.jar}" basedir="${classes.dir}" includes="randori/**,org/**">
+			<manifest>
+				<attribute name="Class-Path" value="${jar.classpath}" />
+				<attribute name="Main-Class" value="randori.compiler.clients.Randori" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="dist.compiler" depends="build" description="Package up the Randori compiler.">
+		<delete failonerror="false" includeemptydirs="true">
+			<fileset dir="${deployed.dir}" />
+		</delete>
+		<mkdir dir="${deployed.dir}" />
+		<zip destfile="${deployed.dir}/randori-compiler-${compiler.version}.zip">
+			<zipfileset dir="${build.lib.dir}">
+				<include name="**/*" />
+			</zipfileset>
+		</zip>
+		<antcall target="clean" />
+	</target>
+	
+	<target name="main" depends="prebuild,copyFiles,compile,build,dist.compiler">
+	</target>
+
+	<target name="super-clean" depends="thirdparty-clean,clean" />
+
+	<target name="thirdparty-clean">
+		<ant antfile="${basedir}/downloads.xml" dir="${basedir}" target="clean" />
+		<delete failonerror="false" includeemptydirs="true">
+			<fileset dir="${lib}" />
+			<fileset dir="${deployed.dir}" />
+		</delete>
+	</target>
+
+	<target name="clean">
+		<delete failonerror="false" includeemptydirs="true">
+			<fileset dir="${build.output}" />
+		</delete>
+	</target>
+
+</project>

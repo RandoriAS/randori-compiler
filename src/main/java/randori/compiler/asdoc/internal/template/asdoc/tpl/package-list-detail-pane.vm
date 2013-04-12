@@ -1,0 +1,83 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>$title : $windowTitle</title>
+    <base target="classFrame">
+    <link rel="stylesheet" href="${basePath}style.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="${basePath}print.css" type="text/css" media="print"/>
+    <script>if( self == top ){ window.location.replace("");}</script>
+  </head>
+  <body class="classFrameContent">
+    <h3>
+      <a style="color:black" target="classFrame" href="package-detail.html">Package $title</a>
+    </h3>
+    
+  #if ( $interfaces && $interfaces.size() > 0 )
+  <br/>
+  <strong>Interfaces</strong>
+  <table cellspacing="0" cellpadding="0">
+
+    #foreach( $interface in $interfaces )
+	      
+	  <tr>
+	    <td><em>$interface.Anchor</em></td>
+	  </tr>
+	      
+    #end
+    
+    </table>
+  #end
+  
+  #if( $classes && $classes.size() > 0 )
+  
+  <br/>
+  <strong>Classes</strong>
+  <table cellspacing="0" cellpadding="0">
+
+    #foreach( $element in $classes )
+	      
+	  <tr>
+	    <td>$element.Anchor</td>
+	  </tr>
+	      
+    #end
+  
+  </table>
+  #end
+  
+  #if( $functions && $functions.size() > 0 )
+  
+  <br/>
+  <strong>Functions</strong>
+  <table cellspacing="0" cellpadding="3">
+
+    #foreach( $element in $functions )
+	      
+	  <tr>
+	    <td>$element.Anchor</td>
+	  </tr>
+	      
+    #end
+  
+  </table>
+  #end
+  
+  #if( $namespaces && $namespaces.size() > 0 )
+  
+  <br/>
+  <strong>Namespaces</strong>
+  <table cellspacing="0" cellpadding="3">
+
+    #foreach( $element in $namespaces )
+	      
+	  <tr>
+	    <td>$element.Anchor</td>
+	  </tr>
+	      
+    #end
+  
+  </table>
+  #end  
+  
+  </body>
+</html>

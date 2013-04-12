@@ -1,0 +1,30 @@
+<div class="summarySection">
+<div class="summaryTableTitle">$mainHeaderText</div> 
+#if( $hasInherited )
+<div class="showHideLinks">
+    <div class="hideInherited${titleID}" id="hideInherited${titleID}">
+        <a onclick="javascript:setInheritedVisible(false,'${titleID}');" href="#${lcTitleID}Summary" class="showHideLink"><img src="${basePath}images/expanded.gif" class="showHideLinkImage">Hide Inherited ${inheritedTitle}</a>
+    </div>
+    <div class="showInherited${titleID}" id="showInherited${titleID}">
+        <a onclick="javascript:setInheritedVisible(true,'${titleID}');" href="#${lcTitleID}Summary" class="showHideLink"><img src="${basePath}images/collapsed.gif" class="showHideLinkImage">Show Inherited ${inheritedTitle}</a>
+    </div>
+</div>
+#end
+
+<table id="summaryTable${ucModifier}${ucTypeSingular}" 
+    class="summaryTable #if( $allInherited )hideInherited${ucModifier}${ucTypeSingular}#end" 
+    cellpadding="3" cellspacing="0">
+    
+    <tr>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th colspan="2">$headerText</th>
+        <th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+    </tr>
+    
+#foreach ($row in $rows)
+  $row
+#end
+
+</table>
+</div>

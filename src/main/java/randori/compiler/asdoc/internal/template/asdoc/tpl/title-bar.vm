@@ -1,0 +1,80 @@
+<table class="titleTable" #if ( ${visible} ) id="titleTable" #else id="titleTable" style="display:none" #end cellspacing="0" cellpadding="0">
+  
+  <tr>
+  	
+    <td align="left" class="titleTableTitle">${mainTitle}</td>
+    <td align="right" class="titleTableTopNav">
+    	
+    #foreach ( $link in $navigation.PrimaryLinks )
+    	
+    	#if ( $link.Included )
+    		<a #if ( ${target} ) 
+    		      target="classFrame"
+    		   #end 
+    		   
+    		   onclick="loadPackageListFrame('$link.PackageListFrame');loadClassListFrame('$link.ClassListFrame')" href="$link.ClassFrame">$link.Name</a>
+    		
+    		&nbsp;|&nbsp;
+    		
+    	#end
+    	
+    #end
+    
+    #if( $navigation.HasFrames )
+    	<a id="framesLink1" href="$navigation.RestoreFramesPath" #if( $visible )style="display:none" #end> Frames</a>
+    	<a id="noFramesLink1" href="" onclick="parent.location=parent.classFrame.location" #if (!$visible) style="display:none"#end >No Frames</a>
+    #end
+    
+    </td>
+
+    <td rowspan="3" align="right" class="titleTableLogo">
+    	<img alt="${logoAlt}" title="${logoTitle}" class="logoImage" src="${basePath}${logoSrc}"/>
+    </td>
+
+  </tr>
+
+  <tr class="titleTableRow2">
+    
+    <td id="subTitle" class="titleTableSubTitle" align="left">$subTitle</td>
+    
+    <td id="subNav" class="titleTableSubNav" align="right">
+    	<a id="publicVariablesLink" href="#publicVariableSummary" onClick="javascript:titleBar_gotoClassFrameAnchor('publicVariableSummary');" style="display:none">Variables</a>
+    	<span id="publicVariablesBar" style="display:none">&nbsp;|&nbsp;</span>
+    	<a id="publicPropertiesLink" href="#publicPropertySummary" onClick="javascript:titleBar_gotoClassFrameAnchor('publicPropertySummary');" style="display:none">Properties</a>
+    	<span id="publicPropertiesBar" style="display:none">&nbsp;|&nbsp;</span>
+    	<a id="publicMethodsLink" href="#publicMethodSummary" onClick="javascript:titleBar_gotoClassFrameAnchor('publicMethodSummary');" style="display:none">Methods</a>
+    	<span id="publicMethodsBar" style="display:none">&nbsp;|&nbsp;</span>
+    	<a id="publicEventsLink" href="#publicEventSummary" onClick="javascript:titleBar_gotoClassFrameAnchor('publicEventSummary');" style="display:none">Events</a>
+    	<span id="publicEventsBar" style="display:none">&nbsp;|&nbsp;</span>
+    	<a id="publicStylesLink" href="#publicStyleSummary" onClick="javascript:titleBar_gotoClassFrameAnchor('publicStyleSummary');" style="display:none">Styles</a>
+    	<span id="publicStylesBar" style="display:none">&nbsp;|&nbsp;</span>
+    	<a id="publicSkinpartsLink" href="#publicSkinpartSummary" onClick="javascript:titleBar_gotoClassFrameAnchor('publicSkinpartSummary');" style="display:none">Skin Parts</a>
+    	<span id="publicSkinpartsBar" style="display:none">&nbsp;|&nbsp;</span>
+      	<a id="publicSkinstatesLink" href="#publicSkinstateSummary" onClick="javascript:titleBar_gotoClassFrameAnchor('publicSkinstateSummary');" style="display:none">Skin States</a>
+    	<span id="publicSkinstatesBar" style="display:none">&nbsp;|&nbsp;</span>  	
+    	<a id="publicEffectsLink" href="#publicEffectSummary" onClick="javascript:titleBar_gotoClassFrameAnchor('publicEffectSummary');" style="display:none">Effects</a>
+    	<span id="publicEffectsBar" style="display:none">&nbsp;|&nbsp;</span>
+    	<a id="publicConstantsLink" href="#publicConstantSummary" onClick="javascript:titleBar_gotoClassFrameAnchor('publicConstantSummary');" style="display:none">Constants</a>
+    	<span id="publicConstantsBar" style="display:none">&nbsp;|&nbsp;</span>
+    	<a id="examplesLink" href="#includeExamplesSummary" onClick="javascript:titleBar_gotoClassFrameAnchor('includeExamplesSummary');" style="display:none">Examples</a>
+    	<span id="examplesBar" style="display:none">&nbsp;|&nbsp;</span>
+    	<a id="interfacesLink" href="#interfaceSummary" onClick="javascript:titleBar_gotoClassFrameAnchor('interfaceSummary');" style="display:none">Interfaces</a>
+    	<span id="interfacesBar" style="display:none">&nbsp;|&nbsp;</span>
+    	<a id="classesLink" href="#classSummary" onClick="javascript:titleBar_gotoClassFrameAnchor('classSummary');" style="display:none">Classes</a>
+    	<span id="classesBar" style="display:none">&nbsp;|&nbsp;</span>
+    </td>
+  </tr>
+  
+  <tr class="titleTableRow3">
+    <td colspan="2">&nbsp;</td>
+  </tr>
+  
+</table>
+
+<script type="text/javascript" language="javascript">
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {
+	titleBar_setSubTitle("${subTitle}");
+	#if ( $subNavigation )
+	  titleBar_setSubNav( $subNavigation.toString() );
+	#end
+}</script>

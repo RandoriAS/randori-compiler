@@ -1,0 +1,138 @@
+##--------------------------------------
+## - basePath:String
+## - packageName : URL
+## - fileType
+## - namespace
+## - modifiers
+## - type
+## - name
+## - superclasses : List<ClassListVO>
+## - implementations : List<ClassListVO>
+## - subclasses : List<ClassListVO>
+## - superinterfaces : List<ClassListVO>
+## - interfaceimplementors : List<ClassListVO>
+## - subinterfaces : List<ClassListVO>
+##--------------------------------------
+
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+	
+    <tr>
+        <td class="classHeaderTableLabel">Package</td>
+        <td><a onClick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">$packageName</a></td>
+    </tr>
+	
+    <tr>
+        <td class="classHeaderTableLabel">${fileType}</td>
+        <td class="classSignature"><span class="element-attributes">${namespace}&nbsp;#if( ${modifiers} )${modifiers}&nbsp;#end${type}</span>&nbsp;${name}</td>
+    </tr>
+    
+    ## Superclasses
+    #if( $superclasses && $superclasses.size() > 0)
+	
+    <tr>
+        <td class="classHeaderTableLabel">Inheritance</td>
+        <td class="inheritanceList">
+        	
+        	#foreach( $superclass in $superclasses )
+        		
+        		$superclass.Anchor
+        		#if( !$superclass.RowFlag)
+        		<img src="${basePath}images/inherit-arrow.gif" title="Inheritance" alt="Inheritance" class="inheritArrow"/> 
+	            #end
+	            
+	        #end
+        	
+        </td>
+        
+    </tr>	
+	
+	#end
+	
+	
+    ## Implementations
+    #if( $implementations && $implementations.size() > 0)
+    
+    <tr>
+        <td class="classHeaderTableLabel">Implements</td>
+        <td class="inheritanceList">
+            
+            #foreach( $implementation in $implementations )
+                $implementation.Anchor#if( !$implementation.RowFlag), #end
+            #end
+            
+        </td>
+        
+    </tr>   
+    
+    #end
+    
+    
+    ## Subclasses
+    #if( $subclasses && $subclasses.size() > 0)
+    
+    <tr>
+        <td class="classHeaderTableLabel">Subclasses</td>
+        <td class="inheritanceList">
+            
+            #foreach( $subclass in $subclasses )
+                $subclass.Anchor#if( !$subclass.RowFlag), #end
+            #end
+            
+        </td>
+        
+    </tr>   
+    
+    #end
+    
+    ## Superinterfaces
+    #if( $superinterfaces && $superinterfaces.size() > 0)
+    
+    <tr>
+        <td class="classHeaderTableLabel">Extends</td>
+        <td class="inheritanceList">
+            
+            #foreach( $superinterface in $superinterfaces )
+                $superinterface.Anchor#if( !$superinterface.RowFlag), #end
+            #end
+            
+        </td>
+        
+    </tr>   
+    
+    #end
+	
+    ## Interfaceimplementors
+    #if( $interfaceimplementors && $interfaceimplementors.size() > 0)
+    
+    <tr>
+        <td class="classHeaderTableLabel">Implementors</td>
+        <td class="inheritanceList">
+            
+            #foreach( $implementor in $interfaceimplementors )
+                $implementor.Anchor#if( !$implementor.RowFlag), #end
+            #end
+            
+        </td>
+        
+    </tr>
+    
+    #end
+    
+    ## Subinterfaces
+    #if( $subinterfaces && $subinterfaces.size() > 0)
+    
+    <tr>
+        <td class="classHeaderTableLabel">Subinterfaces</td>
+        <td class="inheritanceList">
+            
+            #foreach( $sub in $subinterfaces )
+                $sub.Anchor#if( !$sub.RowFlag), #end
+            #end
+            
+        </td>
+        
+    </tr>   
+    
+    #end 
+    
+</table>

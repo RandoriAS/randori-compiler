@@ -1,0 +1,45 @@
+<div class="MainContent">
+  <table class="summaryTable" cellspacing="0" cellpadding="3">
+    <tr>
+      <th>&nbsp;</th>
+      <th width="20%">Name</th>
+      <th width="20%">Package</th>
+      <th width="60%">Description</th>
+    </tr>
+    #foreach ($page in $pages)
+        <tr #if( $page.RowFlag ) class="prow0" #else class="prow1" #end>
+          <td class="summaryTablePaddingCol">&nbsp;</td>
+        #if ( ${page.isClass} )
+            <td>${page.Anchor}</td>
+        #else
+            <td><em>${page.Anchor}</em></td>
+        #end
+          <td>${page.PackageAnchor}</td>          
+          <td class="summaryTableLastCol">#if( ${page.ShortDescription} )${page.ShortDescription}#else&nbsp;#end</td>
+        </tr>
+    #end
+  </table>
+  
+#if ($examples)
+<h3>
+  <span style="color:black">Examples</span>
+</h3>
+  <table class="summaryTable" cellspacing="0" cellpadding="3">
+    <tr>
+      <th>&nbsp;</th>
+      <th width="20%">Name</th>
+      <th width="20%">Package</th>
+      <th width="60%">Description</th>
+    </tr>
+    #foreach ($example in $examples)
+        <tr #if( $example.RowFlag ) class="prow0" #else class="prow1" #end>
+          <td class="summaryTablePaddingCol">&nbsp;</td>
+          <td>$example.Anchor</td>
+          <td>$example.PackageAnchor</td>          
+          <td class="summaryTableLastCol">#if( $example.ShortDescription )$example.ShortDescription#else&nbsp;#end</td>
+        </tr>
+    #end
+  </table>
+#end    
+  
+</div> 
