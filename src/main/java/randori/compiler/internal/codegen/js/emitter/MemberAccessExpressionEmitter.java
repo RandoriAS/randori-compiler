@@ -61,7 +61,7 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
                 right);
         boolean isGlobalStatic = RandoriUtils.isGlobalStatic(left, right,
                 project);
-        
+
         // the left is 'Window', the right is the static method
         getModel().setSkipOperator(isTransparent || isGlobalStatic);
 
@@ -88,11 +88,11 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
         if (RandoriUtils.isConstantMemberAccess(left, right, project))
         {
             // if Foo.BAR, we skip below and just write the scalar value
-            IConstantDefinition cdef = (IConstantDefinition) right
+            IConstantDefinition definition = (IConstantDefinition) right
                     .resolve(project);
-            Object value = cdef.resolveInitialValue(project);
-            if (value != null)
-                write(value.toString());
+            String value = DefinitionUtils.returnInitialConstantValue(
+                    definition, getProject());
+            write(value);
             return;
         }
 

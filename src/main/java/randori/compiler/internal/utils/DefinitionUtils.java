@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.apache.flex.compiler.common.ASModifier;
 import org.apache.flex.compiler.definitions.IClassDefinition;
+import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IInterfaceDefinition;
@@ -199,6 +200,43 @@ public class DefinitionUtils
         else
             return ExpressionUtils.toInitialValue(definition, emitter
                     .getWalker().getProject());
+    }
+
+    public static String returnInitialConstantValue(
+            IConstantDefinition definition, ICompilerProject project)
+    {
+        String result = null;
+        IClassDefinition parent = (IClassDefinition) definition.getParent();
+        if (MetaDataUtils.isClassExport(parent))
+        {
+            result = parent.getQualifiedName() + "." + definition.getBaseName();
+        }
+        else
+        {
+            Object value = definition.resolveInitialValue(project);
+            if (value != null)
+            {
+                if (value instanceof String)
+                    result = "\"" + value + "\"";
+                else
+                    result = value.toString();
+            }
+        }
+
+        if (result == null) 
+        {
+            throw new RuntimeException(
+                    "DefinitionUtils.returnInitialConstantValue(); invalid constant value");
+        }
+
+        return result;
+
+        //        IExpressionNode valueNode = definition.getVariableNode().getAssignedValueNode();
+        //        if (valueNode != null)
+        //            return emitter.toNodeString(valueNode);
+        //        else
+        //            return ExpressionUtils.toInitialValue(definition, emitter
+        //                    .getWalker().getProject());
     }
 
     public static final boolean isImplicit(IContainerNode node)

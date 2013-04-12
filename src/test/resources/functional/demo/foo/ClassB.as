@@ -1,6 +1,8 @@
 package demo.foo
 {
 
+import demo.foo.support.MapTypeIdExportFalse;
+import demo.foo.support.MapTypeIdExportTrue;
 import demo.foo.support.MenuItem2;
 import demo.foo.support.PolyFill;
 
@@ -333,6 +335,17 @@ public class ClassB extends ClassA
             viewStack.popView();
         }
     }
-
+    
+    public function constant_export_true():void
+    {
+        var mapOptions:Object;
+        mapOptions.mapTypeId = MapTypeIdExportTrue.ROADMAP;
+    }
+    
+    public function constant_export_false():void
+    {
+        var mapOptions:Object;
+        mapOptions.mapTypeId = MapTypeIdExportFalse.ROADMAP;
+    }
 }
 }

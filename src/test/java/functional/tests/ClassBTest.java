@@ -447,6 +447,25 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void constant_export_true()
+    {
+        IFunctionNode node = findFunction("constant_export_true", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.constant_export_true = function() {"
+                + "\n\tvar mapOptions;\n\tmapOptions.mapTypeId = "
+                + "demo.foo.support.MapTypeIdExportTrue.ROADMAP;\n}");
+    }
+
+    @Test
+    public void constant_export_false()
+    {
+        IFunctionNode node = findFunction("constant_export_false", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.constant_export_false = function() {"
+                + "\n\tvar mapOptions;\n\tmapOptions.mapTypeId = \"roadmap\";\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
