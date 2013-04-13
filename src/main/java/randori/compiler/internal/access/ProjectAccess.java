@@ -451,6 +451,7 @@ public class ProjectAccess implements IASProjectAccess
     {
         PackageBundle bundle = (PackageBundle) getPackageBundle(definition
                 .getPackageName());
+        
         return bundle;
     }
 
@@ -485,13 +486,14 @@ public class ProjectAccess implements IASProjectAccess
 
     public void addClass(IClassDefinition definition)
     {
+        @SuppressWarnings("unused")
         PackageBundle bundle = (PackageBundle) getPackageBundle(definition);
-        if (bundle != null)
-        {
+        //if (bundle != null)
+        //{
             addType(definition);
-            bundle.addClass(definition);
+            //bundle.addClass(definition);
             classAdded(definition);
-        }
+        //}
     }
 
     private void classAdded(IClassDefinition definition)
@@ -534,15 +536,16 @@ public class ProjectAccess implements IASProjectAccess
 
     public void addInterface(IInterfaceDefinition definition)
     {
+        @SuppressWarnings("unused")
         PackageBundle bundle = (PackageBundle) getPackageBundle(definition);
-        if (bundle != null)
-        {
+        //if (bundle != null)
+        //{
 
             addType(definition);
-            bundle.addInterface(definition);
+            //bundle.addInterface(definition);
             interfaceAdded(definition);
 
-        }
+        //}
     }
 
     private void addType(ITypeDefinition definition)
