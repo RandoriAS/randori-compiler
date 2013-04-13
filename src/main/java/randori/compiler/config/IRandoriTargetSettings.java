@@ -24,6 +24,7 @@ import java.util.Collection;
 
 import org.apache.flex.compiler.targets.ITargetSettings;
 
+import randori.compiler.access.IASProjectAccess;
 import randori.compiler.clients.Randori;
 import randori.compiler.driver.IRandoriApplication;
 
@@ -38,6 +39,10 @@ public interface IRandoriTargetSettings extends ITargetSettings
     IAnnotationManager getAnnotationManager();
 
     void setAnnotationManager(IAnnotationManager manager);
+    
+    IASProjectAccess getProjectAccess();
+
+    void setProjectAccess(IASProjectAccess access);
 
     /**
      * Returns the path to an existing Randori SDK bundle extracted or zip.

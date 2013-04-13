@@ -20,12 +20,8 @@
 package randori.compiler.asdoc.internal.template;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Properties;
-
-import randori.compiler.asdoc.config.IDocConfiguration;
-import randori.compiler.asdoc.template.ITemplateRenderer;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -34,6 +30,9 @@ import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.RuntimeConstants;
+
+import randori.compiler.asdoc.config.IDocConfiguration;
+import randori.compiler.asdoc.template.ITemplateRenderer;
 
 public abstract class VelocityTemplate extends TemplateRenderer
 {
@@ -176,7 +175,7 @@ public abstract class VelocityTemplate extends TemplateRenderer
         {
             e.printStackTrace();
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
