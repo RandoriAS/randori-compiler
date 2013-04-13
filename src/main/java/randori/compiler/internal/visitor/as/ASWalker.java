@@ -26,6 +26,7 @@ import org.apache.flex.compiler.tree.as.IPackageNode;
 import org.apache.flex.compiler.tree.as.IScopedNode;
 import org.apache.flex.compiler.tree.as.ITypeNode;
 import org.apache.flex.compiler.units.ICompilationUnit;
+import org.apache.flex.compiler.units.ICompilationUnit.UnitType;
 
 import randori.compiler.visitor.as.IASVisitor;
 import randori.compiler.visitor.as.IASWalker;
@@ -54,8 +55,11 @@ public class ASWalker implements IASWalker
             Collection<ICompilationUnit> units = project.getCompilationUnits();
             for (ICompilationUnit unit : units)
             {
-                System.out.println(unit.getAbsoluteFilename());
-                walkCompilationUnit(unit);
+                if (unit.getCompilationUnitType() == UnitType.AS_UNIT)
+                {
+                    System.out.println(unit.getAbsoluteFilename());
+                    walkCompilationUnit(unit);
+                }
             }
         }
 
@@ -79,8 +83,8 @@ public class ASWalker implements IASWalker
             {
                 throw new RuntimeException(e);
             }
-
-            walkFile(node);
+            if (node != null)
+                walkFile(node);
         }
     }
 

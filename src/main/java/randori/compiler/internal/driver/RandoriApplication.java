@@ -25,12 +25,16 @@ import java.util.List;
 
 import org.apache.flex.compiler.clients.problems.ProblemQuery;
 import org.apache.flex.compiler.internal.projects.FlexProject;
+import org.apache.flex.compiler.scopes.IDefinitionSet;
 import org.apache.flex.compiler.units.ICompilationUnit;
 import org.apache.flex.compiler.units.ICompilationUnit.UnitType;
 
+import randori.compiler.access.IASProjectAccess;
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriApplication;
 import randori.compiler.driver.IRandoriBackend;
+import randori.compiler.internal.access.ProjectAccess;
+import randori.compiler.internal.access.ProjectAccessVisitor;
 import randori.compiler.internal.config.annotation.AnnotationManager;
 import randori.compiler.internal.config.annotation.AnnotationValidator;
 import randori.compiler.internal.config.annotation.AnnotationVisitor;
@@ -42,7 +46,6 @@ import randori.compiler.internal.visitor.as.ASWalker;
  */
 public class RandoriApplication implements IRandoriApplication
 {
-    @SuppressWarnings("unused")
     private final FlexProject project;
 
     private ApplicationModel application;
@@ -58,6 +61,13 @@ public class RandoriApplication implements IRandoriApplication
     private ASWalker annotationWalker;
 
     private ASWalker validatorWalker;
+
+    private IASProjectAccess projectAccess;
+
+    @SuppressWarnings("unused")
+    private ASWalker projectAccessWalker;
+
+    private IDefinitionSet annotationDefinition;
 
     public RandoriApplication(FlexProject project,
             List<ICompilationUnit> compilationUnits,
@@ -78,13 +88,18 @@ public class RandoriApplication implements IRandoriApplication
         application = new ApplicationModel(project, settings);
 
         annotationManager = new AnnotationManager(project);
-        annotationWalker = new ASWalker(new AnnotationVisitor(
-                annotationManager));
+        annotationWalker = new ASWalker(
+                new AnnotationVisitor(annotationManager));
         validatorWalker = new ASWalker(new AnnotationValidator(
                 annotationManager));
 
+        projectAccess = new ProjectAccess(project);
+        projectAccessWalker = new ASWalker(new ProjectAccessVisitor(
+                projectAccess));
+
         // XXX Is this the correct place
         settings.setAnnotationManager(annotationManager);
+        settings.setProjectAccess(projectAccess);
     }
 
     @Override
@@ -101,6 +116,10 @@ public class RandoriApplication implements IRandoriApplication
     public void analyze(ProblemQuery problems)
     {
         this.problems = problems;
+        
+        annotationDefinition = project.getScope().getLocalDefinitionSetByName(
+                "Annotation");
+        
         analyze();
         problems.addAll(annotationManager.getProblems());
         problems.addAll(application.getProblems());
@@ -110,6 +129,8 @@ public class RandoriApplication implements IRandoriApplication
     {
         try
         {
+            //projectAccessWalker.walkProject(project);
+            projectAccess.process();
             compilationUnits = preprocess(compilationUnits);
             analyze(compilationUnits);
         }
@@ -139,12 +160,18 @@ public class RandoriApplication implements IRandoriApplication
 
     private void preprocess(ICompilationUnit unit) throws IOException
     {
-        annotationWalker.walkCompilationUnit(unit);
+        if (annotationDefinition != null)
+        {
+            annotationWalker.walkCompilationUnit(unit);
+        }
     }
 
     private void analyze(ICompilationUnit unit) throws IOException
     {
-        validatorWalker.walkCompilationUnit(unit);
+        if (annotationDefinition != null)
+        {
+            validatorWalker.walkCompilationUnit(unit);
+        }
     }
 
     protected void filter()
