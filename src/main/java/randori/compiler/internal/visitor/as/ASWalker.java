@@ -26,7 +26,6 @@ import org.apache.flex.compiler.tree.as.IPackageNode;
 import org.apache.flex.compiler.tree.as.IScopedNode;
 import org.apache.flex.compiler.tree.as.ITypeNode;
 import org.apache.flex.compiler.units.ICompilationUnit;
-import org.apache.flex.compiler.units.ICompilationUnit.UnitType;
 
 import randori.compiler.visitor.as.IASVisitor;
 import randori.compiler.visitor.as.IASWalker;
@@ -52,13 +51,26 @@ public class ASWalker implements IASWalker
         boolean visitChildren = visitor.visitProject(project);
         if (visitChildren)
         {
-            Collection<ICompilationUnit> units = project.getCompilationUnits();
-            for (ICompilationUnit unit : units)
+            //            Collection<ICompilationUnit> units = project.getCompilationUnits();
+            //            for (ICompilationUnit unit : units)
+            //            {
+            //                //if (unit.getCompilationUnitType() == UnitType.AS_UNIT)
+            //                //{
+            //                    System.out.println(unit.getAbsoluteFilename());
+            //                    walkCompilationUnit(unit);
+            //                //}
+            //            }
+            Collection<IDefinition> collection = project.getScope()
+                    .getAllLocalDefinitions();
+            for (IDefinition iDefinition : collection)
             {
-                if (unit.getCompilationUnitType() == UnitType.AS_UNIT)
+                if (iDefinition instanceof IClassDefinition)
                 {
-                    System.out.println(unit.getAbsoluteFilename());
-                    walkCompilationUnit(unit);
+                    walkClass((IClassDefinition) iDefinition);
+                }
+                else if (iDefinition instanceof IInterfaceDefinition)
+                {
+                    walkInterface((IInterfaceDefinition) iDefinition);
                 }
             }
         }
@@ -84,7 +96,20 @@ public class ASWalker implements IASWalker
                 throw new RuntimeException(e);
             }
             if (node != null)
+            {
                 walkFile(node);
+            }
+            else
+            {
+                //                // SWC
+                //                List<IDefinition> promises = element.getDefinitionPromises();
+                //                promises.size();
+                //                for (IDefinition definition : promises)
+                //                {
+                //                    DefinitionPromise
+                //                    walkClass((IClassDefinition) definition);
+                //                }
+            }
         }
     }
 
@@ -144,6 +169,8 @@ public class ASWalker implements IASWalker
             IClassNode node = (IClassNode) definition.getNode();
 
             walkTypeMetaTags(definition);
+            if (node == null)
+                return;
 
             for (IDefinitionNode child : node.getAllMemberNodes())
             {
