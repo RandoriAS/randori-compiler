@@ -130,7 +130,7 @@ public class RandoriApplication implements IRandoriApplication
         try
         {
             //projectAccessWalker.walkProject(project);
-            //projectAccess.process();
+            projectAccess.process();
             compilationUnits = preprocess(compilationUnits);
             analyze(compilationUnits);
         }

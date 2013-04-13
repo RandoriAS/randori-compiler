@@ -429,12 +429,12 @@ public class ProjectAccess implements IASProjectAccess
     }
 
     @Override
-    public ITypeDefinition getType(String name)
+    public ITypeDefinition getType(String qualifiedName)
     {
         // XXX make types a Map
         for (ITypeDefinition type : types)
         {
-            if (type.getQualifiedName().equals(name))
+            if (type.getQualifiedName().equals(qualifiedName))
                 return type;
         }
         return null;
