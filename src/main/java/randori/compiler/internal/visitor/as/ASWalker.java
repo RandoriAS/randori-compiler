@@ -79,8 +79,8 @@ public class ASWalker implements IASWalker
             {
                 throw new RuntimeException(e);
             }
-
-            walkFile(node);
+            if (node != null)
+                walkFile(node);
         }
     }
 

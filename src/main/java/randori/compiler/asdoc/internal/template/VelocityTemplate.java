@@ -176,7 +176,7 @@ public abstract class VelocityTemplate extends TemplateRenderer
         {
             e.printStackTrace();
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
