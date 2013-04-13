@@ -64,6 +64,7 @@ public class RandoriApplication implements IRandoriApplication
 
     private IASProjectAccess projectAccess;
 
+    @SuppressWarnings("unused")
     private ASWalker projectAccessWalker;
 
     private IDefinitionSet annotationDefinition;
