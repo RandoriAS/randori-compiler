@@ -26,8 +26,8 @@ import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.problems.CompilerProblem;
 
-import randori.compiler.config.IAnnotationDefinition;
-import randori.compiler.config.IAnnotationManager;
+import randori.compiler.config.annotation.IAnnotationDefinition;
+import randori.compiler.config.annotation.IAnnotationManager;
 import randori.compiler.internal.visitor.as.NullASVisitor;
 
 /**

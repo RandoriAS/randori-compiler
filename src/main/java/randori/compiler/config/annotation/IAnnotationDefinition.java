@@ -17,7 +17,7 @@
  * @author Michael Schmalle <mschmalle@teotigraphix.com>
  */
 
-package randori.compiler.config;
+package randori.compiler.config.annotation;
 
 import java.util.Collection;
 

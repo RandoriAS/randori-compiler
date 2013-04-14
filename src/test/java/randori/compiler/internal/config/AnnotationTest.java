@@ -30,7 +30,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import randori.compiler.config.IAnnotationDefinition;
+import randori.compiler.config.annotation.IAnnotationDefinition;
 
 /**
  * @author Michael Schmalle

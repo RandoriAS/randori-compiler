@@ -23,8 +23,8 @@ import org.apache.flex.compiler.clients.problems.ProblemQuery;
 import org.apache.flex.compiler.projects.IASProject;
 
 import randori.compiler.access.IASProjectAccess;
-import randori.compiler.config.IAnnotationManager;
 import randori.compiler.config.IRandoriTargetSettings;
+import randori.compiler.config.annotation.IAnnotationManager;
 import randori.compiler.plugin.factory.IPluginFactory;
 
 /**

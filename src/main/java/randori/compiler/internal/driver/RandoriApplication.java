@@ -24,16 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.flex.compiler.clients.problems.ProblemQuery;
-import org.apache.flex.compiler.scopes.IDefinitionSet;
 import org.apache.flex.compiler.units.ICompilationUnit;
 import org.apache.flex.compiler.units.ICompilationUnit.UnitType;
 
-import randori.compiler.access.IASProjectAccess;
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriApplication;
 import randori.compiler.driver.IRandoriBackend;
-import randori.compiler.internal.access.ProjectAccess;
-import randori.compiler.internal.config.annotation.AnnotationManager;
 import randori.compiler.internal.config.annotation.AnnotationValidator;
 import randori.compiler.internal.config.annotation.AnnotationVisitor;
 import randori.compiler.internal.driver.model.ApplicationModel;
@@ -60,8 +56,6 @@ public class RandoriApplication implements IRandoriApplication
     private ASWalker annotationWalker;
 
     private ASWalker validatorWalker;
-
-    private IDefinitionSet annotationDefinition;
 
     public RandoriApplication(IRandoriApplicationProject project,
             List<ICompilationUnit> compilationUnits,
@@ -93,9 +87,9 @@ public class RandoriApplication implements IRandoriApplication
         this.problems = problems;
 
         filter();
-        
+
         generate(backend);
-        
+
         return true;
     }
 
@@ -104,11 +98,8 @@ public class RandoriApplication implements IRandoriApplication
     {
         this.problems = problems;
 
-        annotationDefinition = project.getScope().getLocalDefinitionSetByName(
-                "Annotation");
-
         analyze();
-        
+
         problems.addAll(project.getAnnotationManager().getProblems());
         problems.addAll(application.getProblems());
     }
@@ -151,7 +142,7 @@ public class RandoriApplication implements IRandoriApplication
 
     private void preprocess(ICompilationUnit unit) throws IOException
     {
-        if (annotationDefinition != null)
+        if (project.getAnnotationManager().isEnabled())
         {
             annotationWalker.walkCompilationUnit(unit);
         }
@@ -159,7 +150,7 @@ public class RandoriApplication implements IRandoriApplication
 
     private void analyze(ICompilationUnit unit) throws IOException
     {
-        if (annotationDefinition != null)
+        if (project.getAnnotationManager().isEnabled())
         {
             validatorWalker.walkCompilationUnit(unit);
         }

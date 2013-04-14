@@ -35,8 +35,8 @@ import org.apache.flex.compiler.targets.ITargetProgressMonitor;
 import org.apache.flex.compiler.targets.ITargetSettings;
 
 import randori.compiler.access.IASProjectAccess;
-import randori.compiler.config.IAnnotationManager;
 import randori.compiler.config.IRandoriTargetSettings;
+import randori.compiler.config.annotation.IAnnotationManager;
 import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.driver.IRandoriTarget;
 import randori.compiler.internal.access.ProjectAccess;

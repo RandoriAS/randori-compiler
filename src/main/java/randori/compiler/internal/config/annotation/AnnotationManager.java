@@ -32,8 +32,8 @@ import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.projects.IASProject;
 import org.apache.flex.compiler.scopes.IDefinitionSet;
 
-import randori.compiler.config.IAnnotationDefinition;
-import randori.compiler.config.IAnnotationManager;
+import randori.compiler.config.annotation.IAnnotationDefinition;
+import randori.compiler.config.annotation.IAnnotationManager;
 
 /**
  * @author Michael Schmalle
@@ -52,8 +52,11 @@ public class AnnotationManager implements IAnnotationManager
 
     private List<ICompilerProblem> problems = new ArrayList<ICompilerProblem>();
 
+    private boolean enabled = false;
+
     ClassDefinition loadAnnotationDefinition()
     {
+        // XXX implement multiple Annotation possibility search
         ClassDefinition definition = (ClassDefinition) project.getScope()
                 .getLocalDefinitionSetByName(ANNOTATION);
         if (definition == null)
@@ -69,6 +72,17 @@ public class AnnotationManager implements IAnnotationManager
         if (annotationDefinition == null)
             annotationDefinition = loadAnnotationDefinition();
         return annotationDefinition;
+    }
+
+    @Override
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+    
+    public void setEnabled(boolean value)
+    {
+        enabled = value;
     }
 
     @Override
@@ -143,4 +157,5 @@ public class AnnotationManager implements IAnnotationManager
 
         return null;
     }
+
 }

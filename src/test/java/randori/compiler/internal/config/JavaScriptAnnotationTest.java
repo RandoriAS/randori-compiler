@@ -27,7 +27,7 @@ import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.units.ICompilationUnit;
 import org.junit.Test;
 
-import randori.compiler.config.IAnnotationDefinition;
+import randori.compiler.config.annotation.IAnnotationDefinition;
 import randori.compiler.internal.utils.DefinitionUtils;
 
 /**
