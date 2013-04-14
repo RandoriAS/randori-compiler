@@ -40,13 +40,36 @@ import randori.compiler.config.IAnnotationManager;
  */
 public class AnnotationManager implements IAnnotationManager
 {
-    private static ClassDefinition annotationDefinition;
+    private static final String BULTIN_ANNOTATION = "randori.annotations.Annotation";
+
+    private static final String ANNOTATION = "Annotation";
+
+    private ClassDefinition annotationDefinition;
 
     private final IASProject project;
 
     Map<String, IAnnotationDefinition> map = new HashMap<String, IAnnotationDefinition>();
 
     private List<ICompilerProblem> problems = new ArrayList<ICompilerProblem>();
+
+    ClassDefinition loadAnnotationDefinition()
+    {
+        ClassDefinition definition = (ClassDefinition) project.getScope()
+                .getLocalDefinitionSetByName(ANNOTATION);
+        if (definition == null)
+            throw new RuntimeException("Annotation definition not found");
+        if (!definition.getQualifiedName().equals(BULTIN_ANNOTATION))
+            throw new RuntimeException(BULTIN_ANNOTATION
+                    + " definition not found");
+        return definition;
+    }
+
+    ClassDefinition getAnnotationDefintion()
+    {
+        if (annotationDefinition == null)
+            annotationDefinition = loadAnnotationDefinition();
+        return annotationDefinition;
+    }
 
     @Override
     public List<ICompilerProblem> getProblems()
@@ -57,9 +80,6 @@ public class AnnotationManager implements IAnnotationManager
     public AnnotationManager(IASProject project)
     {
         this.project = project;
-
-        annotationDefinition = (ClassDefinition) project.getScope()
-                .getLocalDefinitionSetByName("Annotation");
     }
 
     @Override
@@ -92,7 +112,7 @@ public class AnnotationManager implements IAnnotationManager
     @Override
     public boolean isAnnotation(IClassDefinition definition)
     {
-        if (definition.isInstanceOf(annotationDefinition, project))
+        if (definition.isInstanceOf(getAnnotationDefintion(), project))
             return true;
         return false;
     }

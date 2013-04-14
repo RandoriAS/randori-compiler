@@ -39,7 +39,9 @@ import randori.compiler.config.IAnnotationManager;
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.driver.IRandoriTarget;
+import randori.compiler.internal.access.ProjectAccess;
 import randori.compiler.internal.config.RandoriConfiguration;
+import randori.compiler.internal.config.annotation.AnnotationManager;
 import randori.compiler.internal.driver.RandoriBackend;
 import randori.compiler.plugin.factory.IPluginFactory;
 import randori.compiler.plugin.factory.PluginFactory;
@@ -112,11 +114,6 @@ public abstract class RandoriProject extends FlexProject implements
         return annotationManager;
     }
 
-    public void setAnnotationManager(IAnnotationManager manager)
-    {
-        annotationManager = manager;
-    }
-
     private IASProjectAccess projectAccess;
 
     @Override
@@ -125,11 +122,7 @@ public abstract class RandoriProject extends FlexProject implements
         return projectAccess;
     }
 
-    public void setProjectAccess(IASProjectAccess value)
-    {
-        projectAccess = value;
-    }
-
+    @Override
     public IPluginFactory getPluginFactory()
     {
         return pluginFactory;
@@ -147,7 +140,8 @@ public abstract class RandoriProject extends FlexProject implements
 
         // TEMP
         problems = new ProblemQuery();
-
+        annotationManager = new AnnotationManager(this);
+        projectAccess = new ProjectAccess(this);
         pluginFactory = new PluginFactory(null);
     }
 

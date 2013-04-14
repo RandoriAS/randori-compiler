@@ -55,15 +55,11 @@ public class RandoriApplication implements IRandoriApplication
 
     private IRandoriTargetSettings settings;
 
-    private AnnotationManager annotationManager;
-
     private ProblemQuery problems;
 
     private ASWalker annotationWalker;
 
     private ASWalker validatorWalker;
-
-    private IASProjectAccess projectAccess;
 
     private IDefinitionSet annotationDefinition;
 
@@ -85,17 +81,10 @@ public class RandoriApplication implements IRandoriApplication
 
         application = new ApplicationModel(project, settings);
 
-        annotationManager = new AnnotationManager(project);
-        annotationWalker = new ASWalker(
-                new AnnotationVisitor(annotationManager));
+        annotationWalker = new ASWalker(new AnnotationVisitor(
+                project.getAnnotationManager()));
         validatorWalker = new ASWalker(new AnnotationValidator(
-                annotationManager));
-
-        projectAccess = new ProjectAccess(project);
-
-        // XXX Is this the correct place
-        this.project.setAnnotationManager(annotationManager);
-        this.project.setProjectAccess(projectAccess);
+                project.getAnnotationManager()));
     }
 
     @Override
@@ -104,7 +93,9 @@ public class RandoriApplication implements IRandoriApplication
         this.problems = problems;
 
         filter();
+        
         generate(backend);
+        
         return true;
     }
 
@@ -117,7 +108,8 @@ public class RandoriApplication implements IRandoriApplication
                 "Annotation");
 
         analyze();
-        problems.addAll(annotationManager.getProblems());
+        
+        problems.addAll(project.getAnnotationManager().getProblems());
         problems.addAll(application.getProblems());
     }
 
@@ -125,7 +117,7 @@ public class RandoriApplication implements IRandoriApplication
     {
         if (project.getPluginFactory().hasPlugin(IPreProcessPlugin.class))
         {
-            projectAccess.process();
+            project.getProjectAccess().process();
         }
 
         try
