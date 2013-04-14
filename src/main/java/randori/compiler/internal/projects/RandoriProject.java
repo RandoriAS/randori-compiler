@@ -140,9 +140,9 @@ public abstract class RandoriProject extends FlexProject implements
 
         // TEMP
         problems = new ProblemQuery();
+        pluginFactory = new PluginFactory(null);
         annotationManager = new AnnotationManager(this);
         projectAccess = new ProjectAccess(this);
-        pluginFactory = new PluginFactory(null);
     }
 
     @Override

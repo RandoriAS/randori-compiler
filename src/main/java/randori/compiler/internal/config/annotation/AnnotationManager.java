@@ -29,11 +29,12 @@ import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.internal.definitions.ClassDefinition;
 import org.apache.flex.compiler.problems.ICompilerProblem;
-import org.apache.flex.compiler.projects.IASProject;
 import org.apache.flex.compiler.scopes.IDefinitionSet;
 
 import randori.compiler.config.annotation.IAnnotationDefinition;
 import randori.compiler.config.annotation.IAnnotationManager;
+import randori.compiler.plugin.IPreProcessAnnotationPlugin;
+import randori.compiler.projects.IRandoriProject;
 
 /**
  * @author Michael Schmalle
@@ -46,7 +47,7 @@ public class AnnotationManager implements IAnnotationManager
 
     private ClassDefinition annotationDefinition;
 
-    private final IASProject project;
+    private final IRandoriProject project;
 
     Map<String, IAnnotationDefinition> map = new HashMap<String, IAnnotationDefinition>();
 
@@ -79,7 +80,7 @@ public class AnnotationManager implements IAnnotationManager
     {
         return enabled;
     }
-    
+
     public void setEnabled(boolean value)
     {
         enabled = value;
@@ -91,9 +92,13 @@ public class AnnotationManager implements IAnnotationManager
         return problems;
     }
 
-    public AnnotationManager(IASProject project)
+    public AnnotationManager(IRandoriProject project)
     {
         this.project = project;
+
+        project.getPluginFactory().registerPlugin(
+                IPreProcessAnnotationPlugin.class,
+                PreProcessAnnotationPlugin.class);
     }
 
     @Override

@@ -31,10 +31,11 @@ import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriApplication;
 import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.internal.config.annotation.AnnotationValidator;
-import randori.compiler.internal.config.annotation.AnnotationVisitor;
 import randori.compiler.internal.driver.model.ApplicationModel;
 import randori.compiler.internal.projects.RandoriApplicationProject;
+import randori.compiler.internal.utils.PluginUtils;
 import randori.compiler.internal.visitor.as.ASWalker;
+import randori.compiler.plugin.IPreProcessAnnotationPlugin;
 import randori.compiler.plugin.IPreProcessPlugin;
 import randori.compiler.projects.IRandoriApplicationProject;
 
@@ -53,7 +54,7 @@ public class RandoriApplication implements IRandoriApplication
 
     private ProblemQuery problems;
 
-    private ASWalker annotationWalker;
+    //private ASWalker annotationWalker;
 
     private ASWalker validatorWalker;
 
@@ -75,8 +76,6 @@ public class RandoriApplication implements IRandoriApplication
 
         application = new ApplicationModel(project, settings);
 
-        annotationWalker = new ASWalker(new AnnotationVisitor(
-                project.getAnnotationManager()));
         validatorWalker = new ASWalker(new AnnotationValidator(
                 project.getAnnotationManager()));
     }
@@ -127,7 +126,15 @@ public class RandoriApplication implements IRandoriApplication
     {
         for (ICompilationUnit unit : units)
         {
-            preprocess(unit);
+            if (project.getAnnotationManager().isEnabled())
+            {
+                List<IPreProcessAnnotationPlugin> plugins = PluginUtils
+                        .getPlugins(project, IPreProcessAnnotationPlugin.class);
+                for (IPreProcessAnnotationPlugin plugin : plugins)
+                {
+                    plugin.process(unit, project.getAnnotationManager());
+                }
+            }
         }
         return units;
     }
@@ -137,14 +144,6 @@ public class RandoriApplication implements IRandoriApplication
         for (ICompilationUnit unit : units)
         {
             analyze(unit);
-        }
-    }
-
-    private void preprocess(ICompilationUnit unit) throws IOException
-    {
-        if (project.getAnnotationManager().isEnabled())
-        {
-            annotationWalker.walkCompilationUnit(unit);
         }
     }
 

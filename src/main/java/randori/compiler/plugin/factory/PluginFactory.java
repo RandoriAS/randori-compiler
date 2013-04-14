@@ -48,7 +48,7 @@ public class PluginFactory implements IPluginFactory
     @Override
     public <E> List<E> getPluginInstances(Class interfaze)
     {
-        if (!hasPlugin(interfaze))
+        if (!instanceLookup.containsKey(interfaze))
         {
             createInstances(interfaze);
         }
