@@ -39,6 +39,8 @@ import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.driver.IRandoriTarget;
 import randori.compiler.internal.config.RandoriConfiguration;
 import randori.compiler.internal.driver.RandoriBackend;
+import randori.compiler.plugin.factory.IPluginFactory;
+import randori.compiler.plugin.factory.PluginFactory;
 import randori.compiler.projects.IRandoriProject;
 
 /**
@@ -61,6 +63,8 @@ public abstract class RandoriProject extends FlexProject implements
     private ConfigurationBuffer configBuffer;
 
     private ProblemQuery problems;
+
+    private IPluginFactory pluginFactory;
 
     protected IRandoriBackend getBackend()
     {
@@ -98,6 +102,11 @@ public abstract class RandoriProject extends FlexProject implements
         targetSettings = value;
     }
 
+    public IPluginFactory getPluginFactory()
+    {
+        return pluginFactory;
+    }
+
     public RandoriProject(Workspace workspace,
             IASDocBundleDelegate asDocBundleDelegate, IRandoriBackend backend)
     {
@@ -110,6 +119,8 @@ public abstract class RandoriProject extends FlexProject implements
 
         // TEMP
         problems = new ProblemQuery();
+        
+        pluginFactory = new PluginFactory(null);
     }
 
     @Override

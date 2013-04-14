@@ -17,28 +17,12 @@
  * @author Michael Schmalle <mschmalle@teotigraphix.com>
  */
 
-package randori.compiler.projects;
-
-import org.apache.flex.compiler.clients.problems.ProblemQuery;
-import org.apache.flex.compiler.projects.IASProject;
-
-import randori.compiler.config.IRandoriTargetSettings;
-import randori.compiler.plugin.factory.IPluginFactory;
+package randori.compiler.plugin;
 
 /**
  * @author Michael Schmalle
  */
-public interface IRandoriProject extends IASProject
+public interface ICompilerPlugin
 {
-    ProblemQuery getProblemQuery();
 
-    IRandoriTargetSettings getTargetSettings();
-
-    boolean configure(String[] args);
-
-    boolean compile(boolean doBuild);
-
-    boolean compile(boolean doBuild, boolean doExport);
-
-    IPluginFactory getPluginFactory();
 }

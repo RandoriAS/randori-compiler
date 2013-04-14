@@ -29,7 +29,6 @@ import java.util.Set;
 
 import org.apache.flex.compiler.exceptions.BuildCanceledException;
 import org.apache.flex.compiler.internal.projects.CompilerProject;
-import org.apache.flex.compiler.internal.projects.FlexProject;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.targets.ITargetProgressMonitor;
 import org.apache.flex.compiler.targets.ITargetReport;
@@ -40,6 +39,7 @@ import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriApplication;
 import randori.compiler.driver.IRandoriTarget;
 import randori.compiler.internal.driver.RandoriApplication;
+import randori.compiler.projects.IRandoriApplicationProject;
 
 import com.google.common.collect.Iterables;
 
@@ -215,7 +215,8 @@ public class RandoriTarget extends Target implements IRandoriTarget
         // Note; By passing the target settings here, we allow the Application to
         // configure itself using those settings and out job here is done.
         RandoriApplication application = new RandoriApplication(
-                (FlexProject) project, reachableCompilationUnits, getSettings());
+                (IRandoriApplicationProject) project,
+                reachableCompilationUnits, getSettings());
 
         return application;
     }

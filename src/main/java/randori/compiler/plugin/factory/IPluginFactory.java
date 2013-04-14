@@ -18,6 +18,8 @@ package randori.compiler.plugin.factory;
 
 import java.util.List;
 
+import randori.compiler.plugin.ICompilerPlugin;
+
 /**
  * @author Roland Zwaga <roland@stackandheap.com>
  */
@@ -25,4 +27,9 @@ public interface IPluginFactory
 {
     @SuppressWarnings("rawtypes")
     <E> List<E> getPluginInstances(Class interfaze);
+
+    void registerPlugin(Class<? extends ICompilerPlugin> api,
+            Class<?> implementation);
+
+    boolean hasPlugin(Class<? extends ICompilerPlugin> api);
 }

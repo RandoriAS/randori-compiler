@@ -21,11 +21,11 @@ package randori.compiler.internal.driver.model;
 
 import java.io.File;
 
-import org.apache.flex.compiler.internal.projects.FlexProject;
 import org.apache.flex.compiler.tree.as.ITypeNode;
 
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriBackend;
+import randori.compiler.projects.IRandoriApplicationProject;
 
 /**
  * The compilation set for the base Randori library project.
@@ -38,7 +38,8 @@ public class RandoriModel extends BaseCompilationSet
 
     private static final String RANDORI = "randori";
 
-    public RandoriModel(FlexProject project, IRandoriTargetSettings settings)
+    public RandoriModel(IRandoriApplicationProject project,
+            IRandoriTargetSettings settings)
     {
         super(project, settings);
     }
