@@ -476,6 +476,16 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void named_inner_function()
+    {
+        IFunctionNode node = findFunction("named_inner_function", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.named_inner_function = function() {"
+                + "\n\tfunction showMe(counter) {\n\t\tconsole.log(\"this is my counter\" "
+                + "+ counter);\n\t};\n\tfor (var i = 0; i < 5; i++) {\n\t\tshowMe(i);\n\t}\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);

@@ -353,5 +353,16 @@ public class ClassB extends ClassA
         var newMap:Object;
         var o:Object = {position:42, field1:newMap};
     }
+    
+    public function named_inner_function():void
+    {
+        function showMe( counter:int ):void {
+          Window.console.log("this is my counter" + counter );
+        }
+
+        for ( var i:int = 0; i<5; i++ ) {
+          showMe( i );
+        }
+    }
 }
 }

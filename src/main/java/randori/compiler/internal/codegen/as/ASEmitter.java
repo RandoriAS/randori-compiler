@@ -627,6 +627,17 @@ public class ASEmitter implements IASEmitter, IEmitter
         emitFunctionScope(fnode.getScopedNode());
     }
 
+    @Override
+    public void emitNamedFunction(IFunctionNode node)
+    {
+        FunctionNode fnode = (FunctionNode) node;
+        write("function ");
+        write(node.getName());
+        emitParamters(fnode.getParameterNodes());
+        emitType(fnode.getTypeNode());
+        emitFunctionScope(fnode.getScopedNode());
+    }
+
     //--------------------------------------------------------------------------
     // 
     //--------------------------------------------------------------------------
