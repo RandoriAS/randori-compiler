@@ -29,24 +29,62 @@ import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.internal.definitions.ClassDefinition;
 import org.apache.flex.compiler.problems.ICompilerProblem;
-import org.apache.flex.compiler.projects.IASProject;
 import org.apache.flex.compiler.scopes.IDefinitionSet;
 
-import randori.compiler.config.IAnnotationDefinition;
-import randori.compiler.config.IAnnotationManager;
+import randori.compiler.config.annotation.IAnnotationDefinition;
+import randori.compiler.config.annotation.IAnnotationManager;
+import randori.compiler.plugin.IPreProcessAnnotationPlugin;
+import randori.compiler.projects.IRandoriProject;
 
 /**
  * @author Michael Schmalle
  */
 public class AnnotationManager implements IAnnotationManager
 {
-    private static ClassDefinition annotationDefinition;
+    private static final String BULTIN_ANNOTATION = "randori.annotations.Annotation";
 
-    private final IASProject project;
+    private static final String ANNOTATION = "Annotation";
+
+    private ClassDefinition annotationDefinition;
+
+    private final IRandoriProject project;
 
     Map<String, IAnnotationDefinition> map = new HashMap<String, IAnnotationDefinition>();
 
     private List<ICompilerProblem> problems = new ArrayList<ICompilerProblem>();
+
+    private boolean enabled = false;
+
+    ClassDefinition loadAnnotationDefinition()
+    {
+        // XXX implement multiple Annotation possibility search
+        ClassDefinition definition = (ClassDefinition) project.getScope()
+                .getLocalDefinitionSetByName(ANNOTATION);
+        if (definition == null)
+            throw new RuntimeException("Annotation definition not found");
+        if (!definition.getQualifiedName().equals(BULTIN_ANNOTATION))
+            throw new RuntimeException(BULTIN_ANNOTATION
+                    + " definition not found");
+        return definition;
+    }
+
+    ClassDefinition getAnnotationDefintion()
+    {
+        if (annotationDefinition == null)
+            annotationDefinition = loadAnnotationDefinition();
+        return annotationDefinition;
+    }
+
+    @Override
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+
+    public void setEnabled(boolean value)
+    {
+        enabled = value;
+    }
 
     @Override
     public List<ICompilerProblem> getProblems()
@@ -54,12 +92,13 @@ public class AnnotationManager implements IAnnotationManager
         return problems;
     }
 
-    public AnnotationManager(IASProject project)
+    public AnnotationManager(IRandoriProject project)
     {
         this.project = project;
 
-        annotationDefinition = (ClassDefinition) project.getScope()
-                .getLocalDefinitionSetByName("Annotation");
+        project.getPluginFactory().registerPlugin(
+                IPreProcessAnnotationPlugin.class,
+                PreProcessAnnotationPlugin.class);
     }
 
     @Override
@@ -92,7 +131,7 @@ public class AnnotationManager implements IAnnotationManager
     @Override
     public boolean isAnnotation(IClassDefinition definition)
     {
-        if (definition.isInstanceOf(annotationDefinition, project))
+        if (definition.isInstanceOf(getAnnotationDefintion(), project))
             return true;
         return false;
     }
@@ -123,4 +162,5 @@ public class AnnotationManager implements IAnnotationManager
 
         return null;
     }
+
 }

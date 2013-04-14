@@ -30,8 +30,6 @@ import org.apache.flex.compiler.config.Configuration;
 import org.apache.flex.compiler.config.Configurator;
 import org.apache.flex.compiler.internal.config.TargetSettings;
 
-import randori.compiler.access.IASProjectAccess;
-import randori.compiler.config.IAnnotationManager;
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriApplication;
 import randori.compiler.driver.IRandoriTarget;
@@ -54,34 +52,6 @@ public class RandoriTargetSettings extends TargetSettings implements
 
     private Collection<String> incrementalFiles = new ArrayList<String>();
 
-    private IAnnotationManager annotationManager;
-
-    @Override
-    public IAnnotationManager getAnnotationManager()
-    {
-        return annotationManager;
-    }
-
-    @Override
-    public void setAnnotationManager(IAnnotationManager manager)
-    {
-        annotationManager = manager;
-    }
-    
-    private IASProjectAccess projectAccess;
-
-    @Override
-    public IASProjectAccess getProjectAccess()
-    {
-        return projectAccess;
-    }
-
-    @Override
-    public void setProjectAccess(IASProjectAccess value)
-    {
-        projectAccess = value;
-    }
-    
     public RandoriTargetSettings(Configuration configuration)
     {
         super(configuration);
@@ -166,7 +136,5 @@ public class RandoriTargetSettings extends TargetSettings implements
 
         return includeSources;
     }
-
-
 
 }

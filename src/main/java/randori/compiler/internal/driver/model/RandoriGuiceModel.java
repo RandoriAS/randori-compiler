@@ -21,11 +21,11 @@ package randori.compiler.internal.driver.model;
 
 import java.io.File;
 
-import org.apache.flex.compiler.internal.projects.FlexProject;
 import org.apache.flex.compiler.tree.as.ITypeNode;
 
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriBackend;
+import randori.compiler.projects.IRandoriApplicationProject;
 
 /**
  * The compilation set for the base RandoriGuiceJS library project.
@@ -38,7 +38,7 @@ public class RandoriGuiceModel extends BaseCompilationSet
 
     private static final String GUICE = "guice";
 
-    public RandoriGuiceModel(FlexProject project,
+    public RandoriGuiceModel(IRandoriApplicationProject project,
             IRandoriTargetSettings settings)
     {
         super(project, settings);

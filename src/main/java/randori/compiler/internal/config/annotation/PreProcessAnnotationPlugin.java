@@ -19,36 +19,34 @@
 
 package randori.compiler.internal.config.annotation;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
-import org.apache.flex.compiler.definitions.IClassDefinition;
+import org.apache.flex.compiler.units.ICompilationUnit;
 
-import randori.compiler.config.annotation.IAnnotationDefinition;
 import randori.compiler.config.annotation.IAnnotationManager;
-import randori.compiler.internal.visitor.as.NullASVisitor;
+import randori.compiler.internal.visitor.as.ASWalker;
+import randori.compiler.plugin.IPreProcessAnnotationPlugin;
 
 /**
  * @author Michael Schmalle
  */
-public class AnnotationVisitor extends NullASVisitor
+public class PreProcessAnnotationPlugin implements IPreProcessAnnotationPlugin
 {
-    List<IAnnotationDefinition> definitions = new ArrayList<IAnnotationDefinition>();
 
-    private final IAnnotationManager manager;
-
-    public AnnotationVisitor(IAnnotationManager manager)
-    {
-        this.manager = manager;
-    }
+    private ASWalker walker;
 
     @Override
-    public boolean visitClass(IClassDefinition definition)
+    public void process(ICompilationUnit unit, IAnnotationManager manager)
     {
-        if (manager.isAnnotation(definition))
+        walker = new ASWalker(new AnnotationVisitor(manager));
+        try
         {
-            manager.registerDefinition(definition);
+            walker.walkCompilationUnit(unit);
         }
-        return false;
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
+
 }

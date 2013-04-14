@@ -34,11 +34,17 @@ import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.targets.ITargetProgressMonitor;
 import org.apache.flex.compiler.targets.ITargetSettings;
 
+import randori.compiler.access.IASProjectAccess;
 import randori.compiler.config.IRandoriTargetSettings;
+import randori.compiler.config.annotation.IAnnotationManager;
 import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.driver.IRandoriTarget;
+import randori.compiler.internal.access.ProjectAccess;
 import randori.compiler.internal.config.RandoriConfiguration;
+import randori.compiler.internal.config.annotation.AnnotationManager;
 import randori.compiler.internal.driver.RandoriBackend;
+import randori.compiler.plugin.factory.IPluginFactory;
+import randori.compiler.plugin.factory.PluginFactory;
 import randori.compiler.projects.IRandoriProject;
 
 /**
@@ -61,6 +67,8 @@ public abstract class RandoriProject extends FlexProject implements
     private ConfigurationBuffer configBuffer;
 
     private ProblemQuery problems;
+
+    private IPluginFactory pluginFactory;
 
     protected IRandoriBackend getBackend()
     {
@@ -98,6 +106,28 @@ public abstract class RandoriProject extends FlexProject implements
         targetSettings = value;
     }
 
+    private IAnnotationManager annotationManager;
+
+    @Override
+    public IAnnotationManager getAnnotationManager()
+    {
+        return annotationManager;
+    }
+
+    private IASProjectAccess projectAccess;
+
+    @Override
+    public IASProjectAccess getProjectAccess()
+    {
+        return projectAccess;
+    }
+
+    @Override
+    public IPluginFactory getPluginFactory()
+    {
+        return pluginFactory;
+    }
+
     public RandoriProject(Workspace workspace,
             IASDocBundleDelegate asDocBundleDelegate, IRandoriBackend backend)
     {
@@ -110,6 +140,9 @@ public abstract class RandoriProject extends FlexProject implements
 
         // TEMP
         problems = new ProblemQuery();
+        pluginFactory = new PluginFactory(null);
+        annotationManager = new AnnotationManager(this);
+        projectAccess = new ProjectAccess(this);
     }
 
     @Override

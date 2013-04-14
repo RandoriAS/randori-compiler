@@ -17,34 +17,18 @@
  * @author Michael Schmalle <mschmalle@teotigraphix.com>
  */
 
-package randori.compiler.projects;
+package randori.compiler.plugin;
 
-import org.apache.flex.compiler.clients.problems.ProblemQuery;
-import org.apache.flex.compiler.projects.IASProject;
+import org.apache.flex.compiler.units.ICompilationUnit;
 
-import randori.compiler.access.IASProjectAccess;
-import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.config.annotation.IAnnotationManager;
-import randori.compiler.plugin.factory.IPluginFactory;
 
 /**
  * @author Michael Schmalle
  */
-public interface IRandoriProject extends IASProject
+public interface IPreProcessAnnotationPlugin extends ICompilerPlugin
 {
-    ProblemQuery getProblemQuery();
 
-    IRandoriTargetSettings getTargetSettings();
+    void process(ICompilationUnit unit, IAnnotationManager manager);
 
-    IAnnotationManager getAnnotationManager();
-
-    IASProjectAccess getProjectAccess();
-
-    boolean configure(String[] args);
-
-    boolean compile(boolean doBuild);
-
-    boolean compile(boolean doBuild, boolean doExport);
-
-    IPluginFactory getPluginFactory();
 }

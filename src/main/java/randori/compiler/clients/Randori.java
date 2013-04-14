@@ -38,7 +38,6 @@ import org.apache.flex.compiler.exceptions.ConfigurationException;
 import org.apache.flex.compiler.exceptions.ConfigurationException.IOError;
 import org.apache.flex.compiler.exceptions.ConfigurationException.MustSpecifyTarget;
 import org.apache.flex.compiler.internal.projects.CompilerProject;
-import org.apache.flex.compiler.internal.projects.FlexProject;
 import org.apache.flex.compiler.internal.projects.ISourceFileHandler;
 import org.apache.flex.compiler.internal.targets.RandoriTarget;
 import org.apache.flex.compiler.internal.workspaces.Workspace;
@@ -56,6 +55,7 @@ import randori.compiler.driver.IBackend;
 import randori.compiler.driver.IRandoriApplication;
 import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.internal.driver.RandoriBackend;
+import randori.compiler.internal.projects.RandoriApplicationProject;
 
 /**
  * @author Michael Schmalle
@@ -69,7 +69,7 @@ public class Randori
         return workspace;
     }
 
-    private FlexProject project;
+    private RandoriApplicationProject project;
 
     private ProblemQuery problems;
 
@@ -205,7 +205,7 @@ public class Randori
         this.backend = backend;
 
         workspace = new Workspace();
-        project = new FlexProject(workspace);
+        project = new RandoriApplicationProject(workspace);
         problems = new ProblemQuery();
 
         sourceFileHandler = backend.getSourceFileHandlerInstance();
