@@ -37,6 +37,7 @@ import randori.compiler.internal.config.annotation.AnnotationManager;
 import randori.compiler.internal.config.annotation.AnnotationValidator;
 import randori.compiler.internal.config.annotation.AnnotationVisitor;
 import randori.compiler.internal.driver.model.ApplicationModel;
+import randori.compiler.internal.projects.RandoriApplicationProject;
 import randori.compiler.internal.visitor.as.ASWalker;
 import randori.compiler.plugin.IPreProcessPlugin;
 import randori.compiler.projects.IRandoriApplicationProject;
@@ -46,7 +47,7 @@ import randori.compiler.projects.IRandoriApplicationProject;
  */
 public class RandoriApplication implements IRandoriApplication
 {
-    private final IRandoriApplicationProject project;
+    private final RandoriApplicationProject project;
 
     private ApplicationModel application;
 
@@ -70,7 +71,7 @@ public class RandoriApplication implements IRandoriApplication
             List<ICompilationUnit> compilationUnits,
             IRandoriTargetSettings settings)
     {
-        this.project = project;
+        this.project = (RandoriApplicationProject) project;
         this.settings = settings;
 
         List<ICompilationUnit> units = new ArrayList<ICompilationUnit>();
@@ -93,8 +94,8 @@ public class RandoriApplication implements IRandoriApplication
         projectAccess = new ProjectAccess(project);
 
         // XXX Is this the correct place
-        settings.setAnnotationManager(annotationManager);
-        settings.setProjectAccess(projectAccess);
+        this.project.setAnnotationManager(annotationManager);
+        this.project.setProjectAccess(projectAccess);
     }
 
     @Override

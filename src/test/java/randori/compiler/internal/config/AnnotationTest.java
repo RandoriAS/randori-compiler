@@ -68,9 +68,8 @@ public class AnnotationTest extends AnnotationTestBase
     @Test
     public void test_Annotation()
     {
-        IAnnotationDefinition definition = getTargetSettings()
-                .getAnnotationManager().getDefinition(
-                        "randori.annotations.Annotation");
+        IAnnotationDefinition definition = project.getAnnotationManager()
+                .getDefinition("randori.annotations.Annotation");
         assertEquals("Annotation", definition.getBaseName());
         assertEquals("randori.annotations.Annotation",
                 definition.getQualifiedName());
@@ -79,9 +78,8 @@ public class AnnotationTest extends AnnotationTestBase
     @Test
     public void test_Retention()
     {
-        IAnnotationDefinition definition = getTargetSettings()
-                .getAnnotationManager().getDefinition(
-                        "randori.annotations.Retention");
+        IAnnotationDefinition definition = project.getAnnotationManager()
+                .getDefinition("randori.annotations.Retention");
         assertEquals("Retention", definition.getBaseName());
         assertEquals("randori.annotations.Retention",
                 definition.getQualifiedName());
@@ -90,9 +88,8 @@ public class AnnotationTest extends AnnotationTestBase
     @Test
     public void test_Target()
     {
-        IAnnotationDefinition definition = getTargetSettings()
-                .getAnnotationManager().getDefinition(
-                        "randori.annotations.Target");
+        IAnnotationDefinition definition = project.getAnnotationManager()
+                .getDefinition("randori.annotations.Target");
         assertEquals("Target", definition.getBaseName());
         assertEquals("randori.annotations.Target",
                 definition.getQualifiedName());
@@ -101,9 +98,8 @@ public class AnnotationTest extends AnnotationTestBase
     @Test
     public void test_JavaScript()
     {
-        IAnnotationDefinition definition = getTargetSettings()
-                .getAnnotationManager().getDefinition(
-                        "randori.annotations.JavaScript");
+        IAnnotationDefinition definition = project.getAnnotationManager()
+                .getDefinition("randori.annotations.JavaScript");
 
         assertNotNull(definition);
         assertEquals("JavaScript", definition.getBaseName());
@@ -118,9 +114,8 @@ public class AnnotationTest extends AnnotationTestBase
     @Test
     public void test_JavaScript_validTarget()
     {
-        IAnnotationDefinition definition = getTargetSettings()
-                .getAnnotationManager().getDefinition(
-                        "randori.annotations.JavaScript");
+        IAnnotationDefinition definition = project.getAnnotationManager()
+                .getDefinition("randori.annotations.JavaScript");
 
         assertEquals(1, definition.getTargets().size());
         assertTrue(definition.isValidTarget(IAnnotationDefinition.TARGET_CLASS));

@@ -22,6 +22,8 @@ package randori.compiler.projects;
 import org.apache.flex.compiler.clients.problems.ProblemQuery;
 import org.apache.flex.compiler.projects.IASProject;
 
+import randori.compiler.access.IASProjectAccess;
+import randori.compiler.config.IAnnotationManager;
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.plugin.factory.IPluginFactory;
 
@@ -33,6 +35,10 @@ public interface IRandoriProject extends IASProject
     ProblemQuery getProblemQuery();
 
     IRandoriTargetSettings getTargetSettings();
+
+    IAnnotationManager getAnnotationManager();
+
+    IASProjectAccess getProjectAccess();
 
     boolean configure(String[] args);
 

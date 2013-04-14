@@ -52,9 +52,8 @@ public class JavaScriptAnnotationTest extends AnnotationTestBase
     {
         includeClass("classes.javascript.JavaScriptAnnotated");
         compile();
-        IAnnotationDefinition definition = getTargetSettings()
-                .getAnnotationManager().getDefinition(
-                        "randori.annotations.JavaScript");
+        IAnnotationDefinition definition = project.getAnnotationManager()
+                .getDefinition("randori.annotations.JavaScript");
         Set<ICompilationUnit> set = project.getScope()
                 .getCompilationUnitsByDefinitionName("JavaScriptAnnotated");
         ICompilationUnit[] units = set.toArray(new ICompilationUnit[] {});

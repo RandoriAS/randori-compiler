@@ -25,12 +25,10 @@ import static junit.framework.Assert.assertNotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IInterfaceDefinition;
-import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.internal.workspaces.Workspace;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.utils.FilenameNormalization;
@@ -105,7 +103,7 @@ public class SimpleAccessorTest extends RandoriCompilerTestBase
         project.configure(arguments.toArguments());
         project.compile(false);
 
-        Collection<ITypeDefinition> types = getAccess().getTypes();
+        //Collection<ITypeDefinition> types = getAccess().getTypes();
         //assertEquals(10, types.size());
 
         //assertEquals(4, getAccess().getClasses().size());
@@ -138,6 +136,6 @@ public class SimpleAccessorTest extends RandoriCompilerTestBase
 
     private IASProjectAccess getAccess()
     {
-        return getTargetSettings().getProjectAccess();
+        return project.getProjectAccess();
     }
 }
