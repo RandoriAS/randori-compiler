@@ -20,6 +20,7 @@
 package demo.application.hmss;
 
 import org.apache.flex.compiler.tree.as.IFunctionNode;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import randori.compiler.internal.constants.TestConstants;
@@ -40,6 +41,7 @@ public class VerticalTabsTest extends RandoriTestProjectBase
                 + " = new randori.signal.SimpleSignal();\n}");
     }
 
+    @Ignore
     @Test
     public void test_renderList()
     {

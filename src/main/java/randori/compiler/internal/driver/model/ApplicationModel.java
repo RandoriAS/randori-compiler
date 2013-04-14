@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.util.Collection;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.flex.compiler.internal.projects.FlexProject;
 import org.apache.flex.compiler.tree.as.ITypeNode;
 import org.apache.flex.compiler.units.ICompilationUnit;
 import org.apache.flex.utils.FilenameNormalization;
@@ -36,6 +35,7 @@ import randori.compiler.codegen.as.IASWriter;
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.internal.utils.FileUtils;
+import randori.compiler.projects.IRandoriApplicationProject;
 
 /**
  * The compilation set for the base randori application project.
@@ -49,7 +49,8 @@ import randori.compiler.internal.utils.FileUtils;
 public class ApplicationModel extends BaseCompilationSet
 {
 
-    public ApplicationModel(FlexProject project, IRandoriTargetSettings settings)
+    public ApplicationModel(IRandoriApplicationProject project,
+            IRandoriTargetSettings settings)
     {
         super(project, settings);
     }

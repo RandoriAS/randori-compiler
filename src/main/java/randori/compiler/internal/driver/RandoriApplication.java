@@ -24,29 +24,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.flex.compiler.clients.problems.ProblemQuery;
-import org.apache.flex.compiler.internal.projects.FlexProject;
-import org.apache.flex.compiler.scopes.IDefinitionSet;
 import org.apache.flex.compiler.units.ICompilationUnit;
 import org.apache.flex.compiler.units.ICompilationUnit.UnitType;
 
-import randori.compiler.access.IASProjectAccess;
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriApplication;
 import randori.compiler.driver.IRandoriBackend;
-import randori.compiler.internal.access.ProjectAccess;
-import randori.compiler.internal.access.ProjectAccessVisitor;
-import randori.compiler.internal.config.annotation.AnnotationManager;
 import randori.compiler.internal.config.annotation.AnnotationValidator;
-import randori.compiler.internal.config.annotation.AnnotationVisitor;
 import randori.compiler.internal.driver.model.ApplicationModel;
+import randori.compiler.internal.projects.RandoriApplicationProject;
+import randori.compiler.internal.utils.PluginUtils;
 import randori.compiler.internal.visitor.as.ASWalker;
+import randori.compiler.plugin.IPreProcessAnnotationPlugin;
+import randori.compiler.plugin.IPreProcessPlugin;
+import randori.compiler.projects.IRandoriApplicationProject;
 
 /**
  * @author Michael Schmalle
  */
 public class RandoriApplication implements IRandoriApplication
 {
-    private final FlexProject project;
+    private final RandoriApplicationProject project;
 
     private ApplicationModel application;
 
@@ -54,26 +52,17 @@ public class RandoriApplication implements IRandoriApplication
 
     private IRandoriTargetSettings settings;
 
-    private AnnotationManager annotationManager;
-
     private ProblemQuery problems;
 
-    private ASWalker annotationWalker;
+    //private ASWalker annotationWalker;
 
     private ASWalker validatorWalker;
 
-    private IASProjectAccess projectAccess;
-
-    @SuppressWarnings("unused")
-    private ASWalker projectAccessWalker;
-
-    private IDefinitionSet annotationDefinition;
-
-    public RandoriApplication(FlexProject project,
+    public RandoriApplication(IRandoriApplicationProject project,
             List<ICompilationUnit> compilationUnits,
             IRandoriTargetSettings settings)
     {
-        this.project = project;
+        this.project = (RandoriApplicationProject) project;
         this.settings = settings;
 
         List<ICompilationUnit> units = new ArrayList<ICompilationUnit>();
@@ -87,19 +76,8 @@ public class RandoriApplication implements IRandoriApplication
 
         application = new ApplicationModel(project, settings);
 
-        annotationManager = new AnnotationManager(project);
-        annotationWalker = new ASWalker(
-                new AnnotationVisitor(annotationManager));
         validatorWalker = new ASWalker(new AnnotationValidator(
-                annotationManager));
-
-        projectAccess = new ProjectAccess(project);
-        projectAccessWalker = new ASWalker(new ProjectAccessVisitor(
-                projectAccess));
-
-        // XXX Is this the correct place
-        settings.setAnnotationManager(annotationManager);
-        settings.setProjectAccess(projectAccess);
+                project.getAnnotationManager()));
     }
 
     @Override
@@ -108,7 +86,9 @@ public class RandoriApplication implements IRandoriApplication
         this.problems = problems;
 
         filter();
+
         generate(backend);
+
         return true;
     }
 
@@ -116,21 +96,22 @@ public class RandoriApplication implements IRandoriApplication
     public void analyze(ProblemQuery problems)
     {
         this.problems = problems;
-        
-        annotationDefinition = project.getScope().getLocalDefinitionSetByName(
-                "Annotation");
-        
+
         analyze();
-        problems.addAll(annotationManager.getProblems());
+
+        problems.addAll(project.getAnnotationManager().getProblems());
         problems.addAll(application.getProblems());
     }
 
     private void analyze()
     {
+        if (project.getPluginFactory().hasPlugin(IPreProcessPlugin.class))
+        {
+            project.getProjectAccess().process();
+        }
+
         try
         {
-            //projectAccessWalker.walkProject(project);
-            projectAccess.process();
             compilationUnits = preprocess(compilationUnits);
             analyze(compilationUnits);
         }
@@ -145,7 +126,15 @@ public class RandoriApplication implements IRandoriApplication
     {
         for (ICompilationUnit unit : units)
         {
-            preprocess(unit);
+            if (project.getAnnotationManager().isEnabled())
+            {
+                List<IPreProcessAnnotationPlugin> plugins = PluginUtils
+                        .getPlugins(project, IPreProcessAnnotationPlugin.class);
+                for (IPreProcessAnnotationPlugin plugin : plugins)
+                {
+                    plugin.process(unit, project.getAnnotationManager());
+                }
+            }
         }
         return units;
     }
@@ -158,17 +147,9 @@ public class RandoriApplication implements IRandoriApplication
         }
     }
 
-    private void preprocess(ICompilationUnit unit) throws IOException
-    {
-        if (annotationDefinition != null)
-        {
-            annotationWalker.walkCompilationUnit(unit);
-        }
-    }
-
     private void analyze(ICompilationUnit unit) throws IOException
     {
-        if (annotationDefinition != null)
+        if (project.getAnnotationManager().isEnabled())
         {
             validatorWalker.walkCompilationUnit(unit);
         }

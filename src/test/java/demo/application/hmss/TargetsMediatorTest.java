@@ -20,6 +20,7 @@
 package demo.application.hmss;
 
 import org.apache.flex.compiler.tree.as.IFunctionNode;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import randori.compiler.internal.constants.TestConstants;
@@ -30,6 +31,7 @@ import randori.compiler.internal.js.codegen.RandoriTestProjectBase;
  */
 public class TargetsMediatorTest extends RandoriTestProjectBase
 {
+    @Ignore
     @Test
     public void test_constructor()
     {
@@ -39,6 +41,7 @@ public class TargetsMediatorTest extends RandoriTestProjectBase
                 + "= null;\n\tthis.service = null;\n\trandori.behaviors.AbstractMediator.call(this);\n}");
     }
 
+    @Ignore
     @Test
     public void test_onRegister()
     {

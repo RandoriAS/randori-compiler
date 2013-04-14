@@ -17,7 +17,7 @@
  * @author Michael Schmalle <mschmalle@teotigraphix.com>
  */
 
-package randori.compiler.config;
+package randori.compiler.config.annotation;
 
 import java.util.List;
 
@@ -30,6 +30,9 @@ import org.apache.flex.compiler.problems.ICompilerProblem;
  */
 public interface IAnnotationManager
 {
+
+    boolean isEnabled();
+
     List<ICompilerProblem> getProblems();
 
     void addProblem(ICompilerProblem problem);
@@ -41,4 +44,5 @@ public interface IAnnotationManager
     boolean isAnnotation(IClassDefinition definition);
 
     IAnnotationDefinition getAnnotation(IMetaTag tag);
+
 }

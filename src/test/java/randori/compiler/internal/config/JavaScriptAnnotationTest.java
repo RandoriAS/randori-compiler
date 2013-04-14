@@ -27,7 +27,7 @@ import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.units.ICompilationUnit;
 import org.junit.Test;
 
-import randori.compiler.config.IAnnotationDefinition;
+import randori.compiler.config.annotation.IAnnotationDefinition;
 import randori.compiler.internal.utils.DefinitionUtils;
 
 /**
@@ -52,9 +52,8 @@ public class JavaScriptAnnotationTest extends AnnotationTestBase
     {
         includeClass("classes.javascript.JavaScriptAnnotated");
         compile();
-        IAnnotationDefinition definition = getTargetSettings()
-                .getAnnotationManager().getDefinition(
-                        "randori.annotations.JavaScript");
+        IAnnotationDefinition definition = project.getAnnotationManager()
+                .getDefinition("randori.annotations.JavaScript");
         Set<ICompilationUnit> set = project.getScope()
                 .getCompilationUnitsByDefinitionName("JavaScriptAnnotated");
         ICompilationUnit[] units = set.toArray(new ICompilationUnit[] {});

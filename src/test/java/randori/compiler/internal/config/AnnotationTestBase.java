@@ -35,6 +35,7 @@ import org.junit.Before;
 
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.internal.client.RandoriCompilerTestBase;
+import randori.compiler.internal.config.annotation.AnnotationManager;
 import randori.compiler.internal.constants.TestConstants;
 import randori.compiler.internal.projects.RandoriApplicationProject;
 
@@ -74,6 +75,9 @@ public class AnnotationTestBase extends RandoriCompilerTestBase
     {
         workspace = new Workspace();
         project = new RandoriApplicationProject(workspace);
+        
+        //XXX Temp until we get this into the core SWC
+        ((AnnotationManager) project.getAnnotationManager()).setEnabled(true);
 
         setUpExtras();
         initializeArgs();

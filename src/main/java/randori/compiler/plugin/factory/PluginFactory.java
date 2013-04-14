@@ -18,18 +18,17 @@ package randori.compiler.plugin.factory;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import randori.compiler.plugin.ICompilerPlugin;
 import randori.compiler.plugin.jar.IJarLoader;
 
 /**
@@ -49,17 +48,35 @@ public class PluginFactory implements IPluginFactory
     @Override
     public <E> List<E> getPluginInstances(Class interfaze)
     {
-        if (instanceLookup.containsKey(interfaze) == false)
+        if (!instanceLookup.containsKey(interfaze))
         {
             createInstances(interfaze);
         }
         return (List<E>) instanceLookup.get(interfaze);
     }
 
+    @Override
+    public void registerPlugin(Class<? extends ICompilerPlugin> api,
+            Class<?> implementation)
+    {
+        if (!hasPlugin(api))
+        {
+            interfaceLookup.put(api, new ArrayList<Class>());
+        }
+        List<Class> clazzez = interfaceLookup.get(api);
+        clazzez.add(implementation);
+    }
+
+    @Override
+    public boolean hasPlugin(Class<? extends ICompilerPlugin> api)
+    {
+        return interfaceLookup.containsKey(api);
+    }
+
     private <E> void createInstances(Class interfaze)
     {
-        Vector<E> instances = new Vector<E>();
-        if (interfaceLookup.containsKey(interfaze))
+        ArrayList<E> instances = new ArrayList<E>();
+        if (hasPlugin(interfaze))
         {
             addInstances(instances, interfaceLookup.get(interfaze));
         }
@@ -74,21 +91,24 @@ public class PluginFactory implements IPluginFactory
             Class clazz = it.next();
             try
             {
-                Constructor<?> ctor = clazz.getConstructor();
-                instances.add((E) ctor.newInstance());
+                //Constructor<?> ctor = clazz.getConstructor();
+                //instances.add((E) ctor.newInstance());
+                instances.add((E) clazz.newInstance());
             }
-            catch (NoSuchMethodException e)
-            {
-            }
+            //catch (NoSuchMethodException e)
+            //{
+            //}
             catch (InstantiationException e)
             {
+                e.printStackTrace();
             }
             catch (IllegalAccessException e)
             {
+                e.printStackTrace();
             }
-            catch (InvocationTargetException e)
-            {
-            }
+            //catch (InvocationTargetException e)
+            //{
+            //}
         }
     }
 
@@ -156,9 +176,10 @@ public class PluginFactory implements IPluginFactory
     {
         if (interfaceLookup.containsKey(pluginInterface) == false)
         {
-            interfaceLookup.put(pluginInterface, new Vector<Class>());
+            interfaceLookup.put(pluginInterface, new ArrayList<Class>());
         }
         List<Class> clazzez = interfaceLookup.get(pluginInterface);
         clazzez.add(pluginImplementingClass);
     }
+
 }

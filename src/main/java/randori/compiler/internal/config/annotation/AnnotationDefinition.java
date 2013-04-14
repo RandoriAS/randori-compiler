@@ -35,7 +35,7 @@ import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.projects.IASProject;
 
-import randori.compiler.config.IAnnotationDefinition;
+import randori.compiler.config.annotation.IAnnotationDefinition;
 import randori.compiler.internal.utils.AnnotationUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
 
