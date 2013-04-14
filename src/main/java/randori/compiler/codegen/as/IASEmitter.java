@@ -303,6 +303,8 @@ public interface IASEmitter extends IEmitter
      * @param node The anonymous {@link IFunctionObjectNode}.
      */
     void emitFunctionObject(IFunctionObjectNode node);
+    
+    void emitNamedFunction(IFunctionNode node);
 
     /**
      * Emit a header at the start of a function block.
@@ -379,4 +381,6 @@ public interface IASEmitter extends IEmitter
      * @param node The node to stringify.
      */
     String toNodeString(IExpressionNode node);
+
+
 }

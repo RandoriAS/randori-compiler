@@ -25,6 +25,7 @@ import org.apache.flex.compiler.definitions.IPackageDefinition;
 import org.apache.flex.compiler.internal.semantics.SemanticUtils;
 import org.apache.flex.compiler.internal.tree.as.LabeledStatementNode;
 import org.apache.flex.compiler.internal.tree.as.NamespaceAccessExpressionNode;
+import org.apache.flex.compiler.internal.tree.as.ScopedBlockNode;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.projects.IASProject;
 import org.apache.flex.compiler.tree.ASTNodeID;
@@ -239,6 +240,10 @@ public class ASBlockWalker implements IASNodeVisitor, IASBlockWalker
         if (DefinitionUtils.isMemberDefinition(node.getDefinition()))
         {
             emitter.emitMethod(node);
+        }
+        else if (node.getParent() instanceof ScopedBlockNode)
+        {
+            emitter.emitNamedFunction(node);
         }
     }
 
