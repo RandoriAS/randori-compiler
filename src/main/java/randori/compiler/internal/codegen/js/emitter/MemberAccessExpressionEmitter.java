@@ -81,7 +81,8 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
             if (getModel().isInArguments())
             {
                 write(IRandoriEmitter.STATIC_DELEGATE_NAME);
-                write("(this, ");
+                String string = getEmitter().stringifyNode(left);
+                write("(" + string + ", ");
                 wasDelegated = true;
             }
         }

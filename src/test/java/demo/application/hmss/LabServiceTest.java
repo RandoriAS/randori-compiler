@@ -29,7 +29,7 @@ public class LabServiceTest extends RandoriTestProjectBase
         visitor.visitFunction(node);
         assertOut("services.LabService.prototype.get = function() {\n\tvar promise"
                 + " = this.sendRequest(\"GET\", this.path);\n\tvar parserPromise = "
-                + "promise.then($createStaticDelegate(this, this.targets.parseResult));"
+                + "promise.then($createStaticDelegate(this.targets, this.targets.parseResult));"
                 + "\n\treturn parserPromise;\n}");
     }
 

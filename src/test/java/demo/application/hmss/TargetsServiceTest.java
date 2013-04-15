@@ -48,7 +48,7 @@ public class TargetsServiceTest extends RandoriTestProjectBase
         visitor.visitFunction(node);
         assertOut("services.TargetsService.prototype.get = function() {"
                 + "\n\tvar promise = this.sendRequest(\"GET\", this.path);\n\tvar "
-                + "parserPromise = promise.then($createStaticDelegate(this, "
+                + "parserPromise = promise.then($createStaticDelegate(this.targets, "
                 + "this.targets.parseResult));\n\treturn parserPromise;\n}");
     }
 

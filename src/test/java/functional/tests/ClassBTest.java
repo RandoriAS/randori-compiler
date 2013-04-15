@@ -502,7 +502,7 @@ public class ClassBTest extends FunctionalTestBase
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.delegate_composite_field = function() {"
                 + "\n\tvar v;\n\tthis.get_renderFunction()(demo.foo.ClassB.FOO, "
-                + "$createStaticDelegate(this, v.get_renderFunction()));\n}");
+                + "$createStaticDelegate(v, v.get_renderFunction()));\n}");
     }
 
     @Test
