@@ -364,5 +364,21 @@ public class ClassB extends ClassA
           showMe( i );
         }
     }
+    
+    public function delegate_field():void
+    {
+        renderFunction(FOO, method1);
+    }
+    
+    public function delegate_composite_field():void
+    {
+        var v:ClassA;
+        renderFunction(FOO, v.renderFunction);
+    }
+    
+    public function delegate_static_field():void
+    {
+        renderFunction(FOO, onSelectHandler);
+    }
 }
 }

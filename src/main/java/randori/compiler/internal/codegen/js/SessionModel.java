@@ -59,9 +59,9 @@ public class SessionModel implements ISessionModel
     }
 
     @Override
-    public boolean setInAssignment(boolean value)
+    public void setInAssignment(boolean value)
     {
-        return inAssignment = value;
+        inAssignment = value;
     }
 
     private boolean skipOperator;
@@ -73,9 +73,23 @@ public class SessionModel implements ISessionModel
     }
 
     @Override
-    public boolean setSkipOperator(boolean value)
+    public void setSkipOperator(boolean value)
     {
-        return skipOperator = value;
+        skipOperator = value;
+    }
+
+    private boolean inArguments;
+
+    @Override
+    public boolean isInArguments()
+    {
+        return inArguments;
+    }
+
+    @Override
+    public void setInArguments(boolean value)
+    {
+        inArguments = value;
     }
 
     //--------------------------------------------------------------------------
@@ -176,4 +190,5 @@ public class SessionModel implements ISessionModel
                 viewInjectTags.add(tag);
         }
     }
+
 }
