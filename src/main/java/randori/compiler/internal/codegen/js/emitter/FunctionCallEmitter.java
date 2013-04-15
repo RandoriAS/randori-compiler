@@ -342,6 +342,8 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
 
     protected void walkArguments(IFunctionCallNode node)
     {
+        getModel().setInArguments(true);
+        
         FunctionCallNode fnode = (FunctionCallNode) node;
         IExpressionNode[] nodes = node.getArgumentNodes();
         int len = nodes.length;
@@ -371,6 +373,8 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                 writeToken(",");
             }
         }
+        
+        getModel().setInArguments(false);
     }
 
     private void emitArgumentIdentifier(IIdentifierNode node)
