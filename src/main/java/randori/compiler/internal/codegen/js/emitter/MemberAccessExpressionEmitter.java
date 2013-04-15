@@ -56,11 +56,14 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
 
         IExpressionNode right = node.getRightOperandNode();
         //IDefinition rightDef = right.resolve(project);
+        IDefinition rightDefType = right.resolveType(project);
 
         boolean isTransparent = RandoriUtils.isTransparentMemberAccess(left,
                 right);
         boolean isGlobalStatic = RandoriUtils.isGlobalStatic(left, right,
                 project);
+
+        boolean wasDelegated = false;
 
         // the left is 'Window', the right is the static method
         getModel().setSkipOperator(isTransparent || isGlobalStatic);
@@ -70,6 +73,17 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
         {
             write("jQuery");
             return;
+        }
+
+        if (rightDefType != null
+                && rightDefType.getBaseName().equals("Function"))
+        {
+            if (getModel().isInArguments())
+            {
+                write(IRandoriEmitter.STATIC_DELEGATE_NAME);
+                write("(this, ");
+                wasDelegated = true;
+            }
         }
 
         if (RandoriUtils.isTransparentAccessorAccess(left, right))
@@ -122,6 +136,11 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
         }
 
         getEmitter().getWalker().walk(right);
+
+        if (wasDelegated)
+        {
+            write(")");
+        }
 
         getModel().setSkipOperator(false);
     }

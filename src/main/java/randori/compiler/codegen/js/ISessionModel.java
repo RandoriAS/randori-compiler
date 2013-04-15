@@ -111,7 +111,7 @@ public interface ISessionModel
      */
     boolean isInAssignment();
 
-    boolean setInAssignment(boolean value);
+    void setInAssignment(boolean value);
 
     /**
      * Hack; Whether the next operator will be skipped, this has to do with
@@ -120,6 +120,10 @@ public interface ISessionModel
      */
     boolean skipOperator();
 
-    boolean setSkipOperator(boolean value);
+    void setSkipOperator(boolean value);
+
+    boolean isInArguments();
+    
+    void setInArguments(boolean value);
 
 }

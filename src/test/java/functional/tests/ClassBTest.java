@@ -486,6 +486,26 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void delegate_field()
+    {
+        IFunctionNode node = findFunction("delegate_field", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.delegate_field = function() {"
+                + "\n\tthis.get_renderFunction()(demo.foo.ClassB.FOO, "
+                + "$createStaticDelegate(this, this.method1));\n}");
+    }
+
+    @Test
+    public void delegate_composite_field()
+    {
+        IFunctionNode node = findFunction("delegate_composite_field", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.delegate_composite_field = function() {"
+                + "\n\tvar v;\n\tthis.get_renderFunction()(demo.foo.ClassB.FOO, "
+                + "$createStaticDelegate(this, v.get_renderFunction()));\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
