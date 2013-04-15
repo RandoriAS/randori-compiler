@@ -329,7 +329,15 @@ public class MetaDataUtils
         IMetaTag tag = findTag(definition, MetaData.JavaScript);
         if (tag == null)
             return definition.getQualifiedName();
-        return tag.getAttributeValue(ATT_NAME);
+        
+        String value = tag.getAttributeValue(ATT_NAME);
+        if (value == null)
+        {
+            // use the default qualifiedName if no 'name' attribute is specified
+            return definition.getQualifiedName(); 
+        }
+        
+        return value;
     }
 
     public static String findJavaScriptCodeTag(IMetaTagNode node)
