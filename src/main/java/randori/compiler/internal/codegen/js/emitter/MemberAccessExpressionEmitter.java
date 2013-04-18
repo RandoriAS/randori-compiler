@@ -23,6 +23,7 @@ import org.apache.flex.compiler.definitions.IAccessorDefinition;
 import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.projects.ICompilerProject;
+import org.apache.flex.compiler.tree.as.IContainerNode;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
 import org.apache.flex.compiler.tree.as.IIdentifierNode;
 import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
@@ -78,7 +79,8 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
         if (rightDefType != null
                 && rightDefType.getBaseName().equals("Function"))
         {
-            if (getModel().isInArguments())
+            if (getModel().isInArguments()
+                    && node.getParent() instanceof IContainerNode)
             {
                 write(IRandoriEmitter.STATIC_DELEGATE_NAME);
                 String string = getEmitter().stringifyNode(left);

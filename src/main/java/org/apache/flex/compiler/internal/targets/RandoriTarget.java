@@ -54,6 +54,8 @@ public class RandoriTarget extends Target implements IRandoriTarget
 
     private boolean collectIncrementalUnits = false;
 
+    private Collection<ICompilationUnit> roots;
+
     IRandoriTargetSettings getTargetSettgins()
     {
         return (IRandoriTargetSettings) targetSettings;
@@ -94,7 +96,7 @@ public class RandoriTarget extends Target implements IRandoriTarget
         if (sources.size() > 0)
         {
             collectIncrementalUnits = true;
-            Collection<ICompilationUnit> roots = new ArrayList<ICompilationUnit>();
+            roots = new ArrayList<ICompilationUnit>();
             for (File file : sources)
             {
                 Collection<ICompilationUnit> units2 = project.getWorkspace()
@@ -104,23 +106,25 @@ public class RandoriTarget extends Target implements IRandoriTarget
                     roots.add(runit);
                 }
             }
-            
+
             //units = project.getReachableCompilationUnitsInSWFOrder(roots);
-            units = new ArrayList<ICompilationUnit>();
-           
-            for (ICompilationUnit unit : roots)
-            {
-                units.add(unit);
-                Set<ICompilationUnit> set = project
-                        .getDirectReverseDependencies(unit,
-                                DependencyTypeSet.allOf());
-                units.addAll(set);
-            }
+//            units = new ArrayList<ICompilationUnit>();
+//
+//            for (ICompilationUnit unit : roots)
+//            {
+//                units.add(unit);
+//                Set<ICompilationUnit> set = project
+//                        .getDirectReverseDependencies(unit,
+//                                DependencyTypeSet.allOf());
+//                units.addAll(set);
+//            }
         }
-        else
-        {
-            units = project.getCompilationUnits();
-        }
+//        else
+//        {
+//            units = project.getCompilationUnits();
+//        }
+        
+        units = project.getCompilationUnits();
 
         HashSet<ICompilationUnit> set = new HashSet<ICompilationUnit>();
         for (ICompilationUnit unit : units)
@@ -168,25 +172,36 @@ public class RandoriTarget extends Target implements IRandoriTarget
             // multithreaded parse, ast, scope, definition creation
             buildAndCollectProblems(compilationUnitSet, problems);
 
-            // !!! end multithreaded parsing
-            // all units have been parsed; scopes and definitions have been created
-            List<ICompilationUnit> reachableCompilationUnits = project
-                    .getReachableCompilationUnitsInSWFOrder(rootedCompilationUnits
-                            .getUnits());
+            List<ICompilationUnit> units = new ArrayList<ICompilationUnit>();
 
             // collect explicit and dependent classes
-            if (collectIncrementalUnits)
+            if (collectIncrementalUnits && roots != null)
             {
-                // XXX prototype
-                for (ICompilationUnit unit : reachableCompilationUnits)
+                for (ICompilationUnit unit : roots)
                 {
+                    Set<ICompilationUnit> set = project
+                            .getDirectReverseDependencies(unit, DependencyTypeSet.allOf());
+                    for (ICompilationUnit sub : set)
+                    {
+                        units.add(sub);
+                        getTargetSettgins().addIncrementalFile(
+                                sub.getAbsoluteFilename());
+                    }
+                    units.add(unit);
+
                     getTargetSettgins().addIncrementalFile(
                             unit.getAbsoluteFilename());
                 }
                 collectIncrementalUnits = false;
             }
+            else
+            {
+                units = project
+                        .getReachableCompilationUnitsInSWFOrder(rootedCompilationUnits
+                                .getUnits());
+            }
 
-            IRandoriApplication application = initializeApplication(reachableCompilationUnits);
+            IRandoriApplication application = initializeApplication(units);
             return application;
         }
         catch (BuildCanceledException bce)
