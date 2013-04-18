@@ -15,6 +15,8 @@ import randori.webkit.fileapi.FileReader;
 import randori.webkit.html.HTMLBRElement;
 import randori.webkit.page.Location;
 import randori.webkit.page.Window;
+import randori.async.Promise;
+import randori.behaviors.AbstractMediator;
 
 public class ClassB extends ClassA
 {
@@ -380,5 +382,15 @@ public class ClassB extends ClassA
     {
         renderFunction(FOO, onSelectHandler);
     }
+    
+    public function delegate_bug1():void
+    {
+        var promise:Promise;
+        promise.then(function(mediator:AbstractMediator):void
+        {
+             Window.console.log("got it");
+        });
+    }
+
 }
 }

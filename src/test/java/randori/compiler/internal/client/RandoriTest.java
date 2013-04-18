@@ -83,7 +83,7 @@ public class RandoriTest extends RandoriCompilerTestBase
         getArgs().addIncludedSources(ClassTwoAFile.getAbsolutePath());
 
         compile();
-        assertOutFileLength(3);
+        assertOutFileLength(1);
     }
 
 }

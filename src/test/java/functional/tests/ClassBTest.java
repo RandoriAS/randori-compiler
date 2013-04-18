@@ -506,6 +506,16 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void delegate_bug1()
+    {
+        IFunctionNode node = findFunction("delegate_bug1", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.delegate_bug1 = function() {"
+                + "\n\tvar promise;\n\tpromise.then(function(mediator) {\n\t\t"
+                + "console.log(\"got it\");\n\t});\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
