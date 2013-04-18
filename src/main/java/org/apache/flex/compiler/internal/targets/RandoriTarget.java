@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.flex.compiler.common.DependencyTypeSet;
 import org.apache.flex.compiler.exceptions.BuildCanceledException;
 import org.apache.flex.compiler.internal.projects.CompilerProject;
 import org.apache.flex.compiler.problems.ICompilerProblem;
@@ -103,7 +104,18 @@ public class RandoriTarget extends Target implements IRandoriTarget
                     roots.add(runit);
                 }
             }
-            units = project.getReachableCompilationUnitsInSWFOrder(roots);
+            
+            //units = project.getReachableCompilationUnitsInSWFOrder(roots);
+            units = new ArrayList<ICompilationUnit>();
+           
+            for (ICompilationUnit unit : roots)
+            {
+                units.add(unit);
+                Set<ICompilationUnit> set = project
+                        .getDirectReverseDependencies(unit,
+                                DependencyTypeSet.allOf());
+                units.addAll(set);
+            }
         }
         else
         {
