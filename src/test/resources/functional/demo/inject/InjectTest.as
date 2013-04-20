@@ -7,11 +7,15 @@ import guice.reflection.TypeDefinition;
 
 import randori.jquery.JQuery;
 import randori.webkit.html.HTMLDivElement;
+import demo.foo.support.TimeSignal;
 
 public class InjectTest
 {
     [Inject]
     public var injectField:ClassA;
+    
+    [Inject]
+    public var dataLoadStarted:TimeSignal;
     
     [Inject]
     public function get injectAccessor():String
@@ -28,6 +32,7 @@ public class InjectTest
     
     public function InjectTest(param1:String, param2:int = 1)
     {
+        var x:TimeSignal = new TimeSignal();
         var div:HTMLDivElement = new HTMLDivElement();
         var a:ClassA = new ClassA();
         var b:TypeDefinition = new TypeDefinition();

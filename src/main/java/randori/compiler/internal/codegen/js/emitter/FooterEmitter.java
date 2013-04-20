@@ -34,6 +34,7 @@ import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
 import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
+import randori.compiler.internal.utils.RandoriUtils;
 
 /**
  * Handles the production of the specialized footer Randori requires for;
@@ -249,10 +250,11 @@ public class FooterEmitter extends BaseSubEmitter implements
 
             write("p.push({n:'" + owner.getBaseName() + "'");
 
-            if (!MetaDataUtils.isNative(ownerType))
+            if (RandoriUtils.isValidInjectType(ownerType))
             {
+                String name = MetaDataUtils.getExportName(ownerType);
                 write(",");
-                write(" t:'" + ownerType.getQualifiedName() + "'");
+                write(" t:'" + name + "'");
             }
 
             write(",");
