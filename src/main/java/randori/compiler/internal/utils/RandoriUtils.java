@@ -27,6 +27,8 @@ import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
+import org.apache.flex.compiler.definitions.metadata.IMetaTag;
+import org.apache.flex.compiler.internal.definitions.AppliedVectorDefinition;
 import org.apache.flex.compiler.internal.definitions.ClassTraitsDefinition;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.projects.ICompilerProject;
@@ -198,5 +200,22 @@ public class RandoriUtils
             }
         }
         return false;
+    }
+
+    public static boolean isValidInjectType(ITypeDefinition definition)
+    {
+        if (definition == null)
+            return false;
+
+        if (definition instanceof AppliedVectorDefinition)
+            return false;
+
+        IMetaTag tag = null;
+
+        tag = definition.getMetaTagByName("native");
+        if (tag != null)
+            return false;
+
+        return true;
     }
 }
