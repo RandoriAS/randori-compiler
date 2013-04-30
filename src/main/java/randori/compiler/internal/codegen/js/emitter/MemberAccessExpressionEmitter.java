@@ -20,8 +20,10 @@
 package randori.compiler.internal.codegen.js.emitter;
 
 import org.apache.flex.compiler.definitions.IAccessorDefinition;
+import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
+import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.as.IContainerNode;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
@@ -31,6 +33,7 @@ import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
 import randori.compiler.internal.utils.DefinitionUtils;
+import randori.compiler.internal.utils.MetaDataUtils;
 import randori.compiler.internal.utils.RandoriUtils;
 
 /**
@@ -56,7 +59,7 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
         IDefinition leftDef = left.resolve(project);
 
         IExpressionNode right = node.getRightOperandNode();
-        //IDefinition rightDef = right.resolve(project);
+        IDefinition rightDef = right.resolve(project);
         IDefinition rightDefType = right.resolveType(project);
 
         boolean isTransparent = RandoriUtils.isTransparentMemberAccess(left,
@@ -112,9 +115,25 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
             write(value);
             return;
         }
-
+        
+        // this is Randori specific, where we skip things like 'Window' for now
+        // and the operator
         if (!getModel().skipOperator())
-            getWalker().walk(left);
+        {
+            // if the left def is a class and the
+            if (leftDef instanceof IClassDefinition && rightDef != null
+                    && rightDef.isStatic())
+            {
+                // this takes care of 'Foo.bar()' and 'foo.bar.Baz.goo()' calls
+                String qualifiedName = MetaDataUtils
+                        .getExportName((ITypeDefinition) leftDef);
+                write(qualifiedName);
+            }
+            else
+            {
+                getWalker().walk(left);
+            }
+        }
 
         if (left.getParent() instanceof IMemberAccessExpressionNode)
         {

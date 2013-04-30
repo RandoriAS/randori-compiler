@@ -5,7 +5,10 @@ import demo.foo.support.MapTypeIdExportFalse;
 import demo.foo.support.MapTypeIdExportTrue;
 import demo.foo.support.MenuItem2;
 import demo.foo.support.PolyFill;
+import demo.foo.support.StaticClass;
 
+import randori.async.Promise;
+import randori.behaviors.AbstractMediator;
 import randori.behaviors.SimpleList;
 import randori.behaviors.ViewStack;
 import randori.jquery.Event;
@@ -15,8 +18,6 @@ import randori.webkit.fileapi.FileReader;
 import randori.webkit.html.HTMLBRElement;
 import randori.webkit.page.Location;
 import randori.webkit.page.Window;
-import randori.async.Promise;
-import randori.behaviors.AbstractMediator;
 
 public class ClassB extends ClassA
 {
@@ -391,6 +392,15 @@ public class ClassB extends ClassA
              Window.console.log("got it");
         });
     }
-
+    
+    public function static_export_false_rename():void
+    {
+        StaticClass.foo();
+    }
+    
+    public function static_qualified_export_false_rename():void
+    {
+        demo.foo.support.StaticClass.foo();
+    }
 }
 }
