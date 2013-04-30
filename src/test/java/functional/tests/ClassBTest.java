@@ -516,6 +516,26 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void static_export_false_rename()
+    {
+        IFunctionNode node = findFunction("static_export_false_rename",
+                classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.static_export_false_rename = function() "
+                + "{\n\tmy.name.is.Mike.foo();\n}");
+    }
+
+    @Test
+    public void static_qualified_export_false_rename()
+    {
+        IFunctionNode node = findFunction("static_qualified_export_false_rename",
+                classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.static_qualified_export_false_rename = function() "
+                + "{\n\tmy.name.is.Mike.foo();\n}");
+    }
+    
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
