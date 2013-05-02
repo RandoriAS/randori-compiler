@@ -402,5 +402,11 @@ public class ClassB extends ClassA
     {
         demo.foo.support.StaticClass.foo();
     }
+    
+    public function parseInt_radix():void
+    {
+        parseInt("42");
+        parseInt("42", 10);
+    }
 }
 }

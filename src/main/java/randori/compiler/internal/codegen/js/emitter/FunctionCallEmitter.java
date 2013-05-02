@@ -177,8 +177,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         // if the called expression type is NOT the same as the parent class
         if (definiton != newDefinition)
         {
-            getEmitter().getModel().addDependency(
-                    newDefinition);
+            getEmitter().getModel().addDependency(newDefinition);
         }
 
         if (expression instanceof IClassDefinition)
@@ -343,7 +342,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
     protected void walkArguments(IFunctionCallNode node)
     {
         getModel().setInArguments(true);
-        
+
         FunctionCallNode fnode = (FunctionCallNode) node;
         IExpressionNode[] nodes = node.getArgumentNodes();
         int len = nodes.length;
@@ -372,9 +371,29 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
             {
                 writeToken(",");
             }
+            else if (i == len - 1)
+            {
+                emitExtra(node);
+            }
         }
-        
+
         getModel().setInArguments(false);
+    }
+
+    // TODO (mschmalle) Eventually we need a plugin for these edge case language diffs
+    /*
+     * - parseInt; add null if 1 argument
+     */
+    private void emitExtra(IFunctionCallNode node)
+    {
+        // parseInt()
+        IDefinition definition = node.getNameNode().resolve(getProject());
+        if (definition != null)
+        {
+            if (definition.getBaseName().equals("parseInt")
+                    && node.getArgumentNodes().length == 1)
+                write(", null");
+        }
     }
 
     private void emitArgumentIdentifier(IIdentifierNode node)
