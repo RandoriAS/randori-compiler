@@ -70,6 +70,11 @@ public class RandoriApplicationTest extends RandoriCompilerTestBase
         super.tearDown();
     }
 
+    /**
+     * Tests a basic Application compile and target build.
+     * <p>
+     * Configure the project, compile and build the target.
+     */
     @Test
     public void test_basic_compile() throws IOException
     {
@@ -89,6 +94,9 @@ public class RandoriApplicationTest extends RandoriCompilerTestBase
         FileUtils.deleteDirectory(outDir);
     }
 
+    /**
+     * Tests a basic Application compile with problem.
+     */
     @Test
     public void test_export_with_sdk_problem() throws IOException
     {
@@ -97,10 +105,18 @@ public class RandoriApplicationTest extends RandoriCompilerTestBase
         project.configure(getArgs().toArguments());
         boolean success = project.compile(true, true);
         Assert.assertFalse(success);
-
+        
+        // 'no -app-name specified during monolithic generation'
         Assert.assertEquals(1, getProblems().size());
     }
 
+    /**
+     * Tests a basic Application compile, build and export using an sdk
+     * directory.
+     * <p>
+     * Configure the project, compile and build the target, then export the
+     * randori libraries to the out/lib directory.
+     */
     @Test
     public void test_basic_compile_with_export_from_directory()
             throws IOException
@@ -123,6 +139,13 @@ public class RandoriApplicationTest extends RandoriCompilerTestBase
                 .exists());
     }
 
+    /**
+     * Tests a basic Application compile, build and export using an sdk .rbl
+     * bundle archive.
+     * <p>
+     * Configure the project, compile and build the target, then export the
+     * randori libraries to the out/lib directory.
+     */
     @Test
     public void test_basic_compile_with_export_from_rbl() throws IOException
     {

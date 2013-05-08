@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.flex.compiler.clients.problems.ProblemQuery;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.utils.FilenameNormalization;
 import org.junit.After;
@@ -46,40 +47,43 @@ import randori.compiler.internal.driver.RandoriBackend;
  */
 public class RandoriCompilerTestBase
 {
-    protected static final String JS_PATH_CLASS_TWO_A = "test\\two\\ClassTwoA.js";
-    protected static final String JS_PATH_SUB_CLASS_ONE_A = "test\\one\\a\\SubClassOneA.js";
-    protected static final String JS_PATH_CLASS_ONE_A = "test\\one\\ClassOneA.js";
-    protected static final String JS_PATH_ROOT_CLASS_AS = "test\\RootClass.js";
+    protected static final String JS_PATH_CLASS_TWO_A = "test/two/ClassTwoA.js";
+    protected static final String JS_PATH_SUB_CLASS_ONE_A = "test/one/a/SubClassOneA.js";
+    protected static final String JS_PATH_CLASS_ONE_A = "test/one/ClassOneA.js";
+    protected static final String JS_PATH_ROOT_CLASS_AS = "test/RootClass.js";
 
-    protected static final String PATH_CLASS_TWO_A = "test\\two\\ClassTwoA.as";
-    protected static final String PATH_SUB_CLASS_ONE_A = "test\\one\\a\\SubClassOneA.as";
-    protected static final String PATH_CLASS_ONE_A = "test\\one\\ClassOneA.as";
-    protected static final String PATH_ROOT_CLASS_AS = "test\\RootClass.as";
+    protected static final String PATH_CLASS_TWO_A = "test/two/ClassTwoA.as";
+    protected static final String PATH_SUB_CLASS_ONE_A = "test/one/a/SubClassOneA.as";
+    protected static final String PATH_CLASS_ONE_A = "test/one/ClassOneA.as";
+    protected static final String PATH_ROOT_CLASS_AS = "test/RootClass.as";
 
-    protected static final String PATH_JAVASCRIPT_AS = "test\\JavaScript.as";
+    protected static final String PATH_JAVASCRIPT_AS = "test/JavaScript.as";
 
-    protected File tempDir = new File(
-            FilenameNormalization.normalize(TestConstants.RandoriASFramework
-                    + "\\randori-compiler\\temp"));
+    /**
+     * The <code>randori-compiler/temp</code> directory.
+     */
+    protected File tempDir = new File(FilenameNormalization.normalize("temp"));
 
+    /**
+     * The <code>randori-compiler/temp/out</code> directory.
+     */
     protected File outDir = new File(
-            FilenameNormalization.normalize(TestConstants.RandoriASFramework
-                    + "\\randori-compiler\\temp\\out"));
+            FilenameNormalization.normalize("temp/out"));
 
     protected File builtinSWC = new File(
-            FilenameNormalization.normalize(TestConstants.RandoriASFramework
-                    + "\\randori-compiler\\temp\\builtin.swc"));
+            FilenameNormalization.normalize("temp/builtin.swc"));
 
     protected File basepathDir = new File(
             FilenameNormalization
-                    .normalize(TestConstants.RandoriASFramework
-                            + "\\randori-compiler\\src\\test\\resources\\functional_compiler"));
+                    .normalize("src/test/resources/functional_compiler"));
 
     protected File sdkDir = new File(
             FilenameNormalization.normalize(TestConstants.RandoriASFramework
-                    + "\\randori-sdk"));
+                    + "/randori-sdk"));
 
-    protected File sdkRBL = new File(tempDir, "randori-sdk-0.2.3.rbl");
+    protected File sdkRBL = new File(
+            FilenameNormalization
+                    .normalize("src/test/resources/libs/randori-sdk.rbl"));
 
     //----------------------------------
     // 
@@ -104,12 +108,22 @@ public class RandoriCompilerTestBase
 
     private Randori randori;
 
+    /**
+     * do not access directly
+     */
     private List<ICompilerProblem> problems;
 
     private CompilerArguments arguments;
 
+    /**
+     * Override in subclasses that use the {@link ProblemQuery#getProblems()}.
+     * <p>
+     * Default impl returns an {@link ArrayList} lazy init.
+     */
     protected List<ICompilerProblem> getProblems()
     {
+        if (problems == null)
+            problems = new ArrayList<ICompilerProblem>();
         return problems;
     }
 
@@ -137,7 +151,7 @@ public class RandoriCompilerTestBase
 
     protected void setUpExtras()
     {
-        problems = new ArrayList<ICompilerProblem>();
+        //problems = new ArrayList<ICompilerProblem>();
         arguments = new CompilerArguments();
     }
 
@@ -172,9 +186,9 @@ public class RandoriCompilerTestBase
 
     protected void assertFinish(int code)
     {
-        if (problems.size() > 0)
+        if (getProblems().size() > 0)
         {
-            System.out.println(problems);
+            System.out.println(getProblems());
         }
         assertEquals("Prolems ", 0, getProblems().size());
         assertEquals("Error code ", 0, code);
