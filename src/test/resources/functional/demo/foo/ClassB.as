@@ -408,5 +408,15 @@ public class ClassB extends ClassA
         parseInt("42");
         parseInt("42", 10);
     }
+    
+    public function for_each_impl():void
+    {
+        var x:Array = ["e","f"];
+        for each(var s:String in x)
+        {
+            Window.console.log(s);
+        } 
+    }
+
 }
 }

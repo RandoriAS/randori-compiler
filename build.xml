@@ -21,7 +21,7 @@
 	<property file="${basedir_clean}/build/build.properties" />
 	<property file="${basedir_clean}/build/project.properties" />
 
-	<property name="src.dir" value="${basedir_clean}/src" />
+	<property name="src.dir" value="${basedir_clean}/src/main/java" />
 	<property name="lib.dir" value="${basedir_clean}/lib" />
 
 	<property name="build.output" value="${basedir_clean}/build/out" />
@@ -35,8 +35,12 @@
 	<!-- Set the classpath for randori jar compile -->
 	<path id="classpath">
 		<filelist dir="${build.lib.dir}">
+			<file name="compiler.jar" />
 			<file name="commons-io.jar" />
 			<file name="commons-lang3-3.1.jar" />
+			<file name="jatl-0.2.2.jar" />
+			<file name="velocity-1.6.2-dep.jar" />
+			<file name="velocity-1.6.2.jar" />
 			<file name="guava.jar" />
 			<file name="antlr.jar" />
 		</filelist>
@@ -62,9 +66,13 @@
 		</copy>
 		<copy todir="${build.lib.dir}">
 			<filelist dir="${lib.dir}">
+				<file name="compiler.jar" />
 				<file name="commons-io.jar" />
 				<file name="commons-lang3-3.1.jar" />
 				<file name="guava.jar" />
+				<file name="jatl-0.2.2.jar" />
+				<file name="velocity-1.6.2-dep.jar" />
+				<file name="velocity-1.6.2.jar" />
 			</filelist>
 		</copy>
 	</target>

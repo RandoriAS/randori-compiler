@@ -73,7 +73,7 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("for_each_statement", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.for_each_statement = function() {"
-                + "\n\tfor (var id in this.thenContracts) {\n\t}\n}");
+                + "\n\tvar $1\n\tfor (var $0 in ($1 = this.thenContracts)) {\n\t}\n}");
     }
 
     @Test
@@ -542,6 +542,16 @@ public class ClassBTest extends FunctionalTestBase
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.parseInt_radix = function() "
                 + "{\n\tparseInt(\"42\", null);\n\tparseInt(\"42\", 10);\n}");
+    }
+
+    @Test
+    public void for_each_impl()
+    {
+        IFunctionNode node = findFunction("for_each_impl", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.for_each_impl = function() {\n\tvar x = "
+                + "[\"e\", \"f\"];\n\tvar $1\n\tfor (var $0 in ($1 = x)) {\n\t\tvar s = "
+                + "$1[$0];\n\t\tconsole.log(s)\n\t}\n}");
     }
 
     @Test
