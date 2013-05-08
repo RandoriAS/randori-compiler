@@ -555,6 +555,15 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void regexp_literal()
+    {
+        IFunctionNode node = findFunction("regexp_literal", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.regexp_literal = function() {"
+                + "\n\tvar fooPattern = /bar/ms;\n\tvar barPattern = /bar/;\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);

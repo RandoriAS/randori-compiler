@@ -417,6 +417,11 @@ public class ClassB extends ClassA
             Window.console.log(s);
         } 
     }
-
+    
+    public function regexp_literal():void
+    {
+        var fooPattern:RegExp = /bar/ms;
+        var barPattern:RegExp = /bar/;
+    }
 }
 }

@@ -465,6 +465,10 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
         {
             value = "\"" + StringEscapeUtils.escapeEcmaScript(value) + "\"";
         }
+        else if (node.getLiteralType() == LiteralType.REGEXP)
+        {
+            value = node.getValue(true);
+        }
         write(value);
     }
 
