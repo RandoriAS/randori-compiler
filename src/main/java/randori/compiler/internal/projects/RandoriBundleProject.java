@@ -84,6 +84,7 @@ public class RandoriBundleProject extends RandoriProject implements
     public boolean configure(IBundleConfiguration configuration)
     {
         this.bundleConfiguration = configuration;
+        // TODO Validate IBundleConfiguration
         return true;
     }
 
