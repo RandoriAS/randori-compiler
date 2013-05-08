@@ -26,31 +26,28 @@ import org.apache.flex.compiler.internal.workspaces.Workspace;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import randori.compiler.bundle.BundleConfiguration;
 import randori.compiler.bundle.IBundleConfigurationEntry;
 import randori.compiler.internal.constants.TestConstants;
-import randori.compiler.internal.projects.RandoriBundleProject;
 
 /**
  * @author Michael Schmalle
  */
-@Ignore
 public class RandoriBundleProjectTest
 {
     File builtinSWC = new File(TestConstants.RandoriASFramework
-            + "\\randori-sdk\\randori-framework\\bin\\swc\\builtin.swc");
+            + "/randori-sdk/randori-framework/bin/swc/builtin.swc");
     File htmlCoreLibSWC = new File(TestConstants.RandoriASFramework
-            + "\\randori-sdk\\randori-framework\\bin\\swc\\HTMLCoreLib.swc");
+            + "/randori-sdk/randori-framework/bin/swc/HTMLCoreLib.swc");
     File jQuerySWC = new File(TestConstants.RandoriASFramework
-            + "\\randori-sdk\\randori-framework\\bin\\swc\\JQuery.swc");
+            + "/randori-sdk/randori-framework/bin/swc/JQuery.swc");
 
     String randoriSrc = TestConstants.RandoriASFramework
-            + "\\randori-framework\\src";
+            + "/randori-framework/src";
     String randoriGuiceSrc = TestConstants.RandoriASFramework
-            + "\\randori-guice-framework\\src";
+            + "/randori-guice-framework/src";
 
     private BundleConfiguration configuration;
 
@@ -85,7 +82,7 @@ public class RandoriBundleProjectTest
     private void createSDKConfiguration() throws IOException
     {
         String path = TestConstants.RandoriASFramework
-                + "\\randori-compiler\\temp\\bundle\\randori-sdk-0.2.3.rbl";
+                + "/randori-compiler/temp/bundle/randori-sdk-0.2.3.rbl";
 
         configuration = new BundleConfiguration("randori-framework", path);
 
