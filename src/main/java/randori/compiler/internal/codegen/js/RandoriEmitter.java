@@ -337,7 +337,7 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
         IContainerNode conditionalNode = node.getConditionalsContainerNode();
         IContainerNode containerNode = (IContainerNode) node.getChild(1);
 
-        writeNewline("var $1");
+        writeNewline("var $1;");
         writeToken("for");
         write("(var $0");
         IBinaryOperatorNode bnode = (IBinaryOperatorNode) conditionalNode
