@@ -334,18 +334,47 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     @Override
     public void emitForEachLoop(IForLoopNode node)
     {
-        IContainerNode containerNode = (IContainerNode) node.getChild(1);
-        writeToken("for");
-        write("(");
-
         IContainerNode conditionalNode = node.getConditionalsContainerNode();
-        getWalker().walk(conditionalNode.getChild(0));
+        IContainerNode containerNode = (IContainerNode) node.getChild(1);
 
-        write(")");
+        writeNewline("var $1");
+        writeToken("for");
+        write("(var $0");
+        IBinaryOperatorNode bnode = (IBinaryOperatorNode) conditionalNode
+                .getChild(0);
+        write(" in ($1 = ");
+        getWalker().walk(bnode.getRightOperandNode());
+        write("))");
+
         if (!isImplicit(containerNode))
             write(" ");
 
-        getWalker().walk(node.getStatementContentsNode());
+        final int len = node.getStatementContentsNode().getChildCount();
+        if (len > 0)
+            writeNewline("{", true);
+        else
+            writeNewline("{");
+
+        for (int i = 0; i < len; i++)
+        {
+            if (i == 0)
+            {
+                getWalker().walk(bnode.getLeftOperandNode());
+                writeNewline(" = $1[$0];");
+            }
+
+            getWalker().walk(node.getStatementContentsNode().getChild(i));
+            if (i < len - 1)
+                writeNewline();
+        }
+        
+        if (len > 0)
+        {
+            indentPop();
+            writeNewline();
+        }
+        
+        write("}");
     }
 
     @Override
