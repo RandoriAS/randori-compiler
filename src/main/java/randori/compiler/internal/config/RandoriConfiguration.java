@@ -19,11 +19,20 @@
 
 package randori.compiler.internal.config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.flex.compiler.config.Configuration;
 import org.apache.flex.compiler.config.ConfigurationValue;
 import org.apache.flex.compiler.exceptions.ConfigurationException;
+import org.apache.flex.compiler.exceptions.ConfigurationException.CannotOpen;
+import org.apache.flex.compiler.internal.config.annotations.Arguments;
 import org.apache.flex.compiler.internal.config.annotations.Config;
+import org.apache.flex.compiler.internal.config.annotations.InfiniteArguments;
 import org.apache.flex.compiler.internal.config.annotations.Mapping;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * The configuration specific randori compiler arguments.
@@ -120,6 +129,29 @@ public class RandoriConfiguration extends Configuration
             throws ConfigurationException
     {
         appName = value;
+    }
+
+    //
+    // 'bundle-path'
+    //
+
+    private final List<String> bundlePath = new ArrayList<String>();
+
+    public List<String> getBundlePath()
+    {
+        return bundlePath;
+    }
+
+    @Config(allowMultiple = true, isPath = true)
+    @Mapping({ "bundle-path" })
+    @Arguments(Arguments.PATH_ELEMENT)
+    @InfiniteArguments
+    public void setBundlePath(ConfigurationValue cv, String[] pathlist)
+            throws CannotOpen
+    {
+        final ImmutableList<String> resolvedPaths = expandTokens(
+                Arrays.asList(pathlist), Arrays.asList(""), cv, false);
+        bundlePath.addAll(resolvedPaths);
     }
 
     //

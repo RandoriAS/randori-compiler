@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.flex.compiler.asdoc.IASDocBundleDelegate;
 import org.apache.flex.compiler.exceptions.ConfigurationException;
 import org.apache.flex.compiler.internal.projects.CompilerProject;
@@ -33,11 +34,13 @@ import org.apache.flex.compiler.problems.ConfigurationProblem;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.problems.InternalCompilerProblem;
 import org.apache.flex.compiler.problems.UnableToBuildSWFProblem;
+import org.apache.flex.swc.ISWC;
 import org.apache.flex.utils.FilenameNormalization;
 
 import randori.compiler.bundle.IBundle;
 import randori.compiler.bundle.io.BundleUtils;
 import randori.compiler.driver.IRandoriApplication;
+import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.driver.IRandoriTarget;
 import randori.compiler.internal.driver.RandoriBackend;
 import randori.compiler.projects.IRandoriApplicationProject;
@@ -50,6 +53,14 @@ public class RandoriApplicationProject extends RandoriProject implements
 {
 
     private IRandoriTarget target;
+    
+    private File tempOutput;
+
+    public RandoriApplicationProject(Workspace workspace,
+            IRandoriBackend backend)
+    {
+        super(workspace, IASDocBundleDelegate.NIL_DELEGATE, backend);
+    }
 
     public RandoriApplicationProject(Workspace workspace)
     {
@@ -149,6 +160,41 @@ public class RandoriApplicationProject extends RandoriProject implements
     @Override
     protected void validateConfiguration() throws ConfigurationException
     {
+        List<String> bundles = getConfiguration().getBundlePath();
+        if (bundles.size() > 0)
+        {
+            Collection<ISWC> result = new ArrayList<ISWC>();
+
+            // temporarily copy swcs in bundles
+            for (String bundle : bundles)
+            {
+                Collection<ISWC> swcs = null;
+                // XXX Figure out what random dir name is best here
+                tempOutput = new File(getConfiguration().getOutput(), "___temp___");
+                try
+                {
+                    swcs = BundleUtils.tempWriteSWCs(new File(bundle),
+                            tempOutput);
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+
+                result.addAll(swcs);
+            }
+
+            result.addAll(getLibraries());
+
+            ArrayList<File> files = new ArrayList<File>();
+            // add all the swc file to the library path
+            for (ISWC swc : result)
+            {
+                files.add(swc.getSWCFile());
+            }
+
+            setLibraries(files);
+        }
     }
 
     @Override
@@ -186,6 +232,25 @@ public class RandoriApplicationProject extends RandoriProject implements
         }
 
         return true;
+    }
+
+    @Override
+    protected void finish()
+    {
+        super.finish();
+
+        if (tempOutput != null)
+        {
+            try
+            {
+                FileUtils.deleteDirectory(tempOutput);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            tempOutput = null;
+        }
     }
 
     private File setupLibraryDirectory()

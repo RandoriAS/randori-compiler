@@ -19,14 +19,21 @@
 
 package randori.compiler.internal.client;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.flex.swc.ISWC;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import randori.compiler.bundle.io.BundleUtils;
 
 /**
  * @author Michael Schmalle
@@ -97,4 +104,39 @@ public class RandoriCompilerArgsTest extends RandoriCompilerTestBase
         compile();
         assertOutFileLength(1);
     }
+
+    protected void initializeArgs()
+    {
+        //getArgs().addLibraryPath(builtinSWC.getAbsolutePath());
+        //getArgs().setOutput(outDir.getAbsolutePath());
+        //getArgs().setJsOutputAsFiles(true);
+        super.initializeArgs();
+    }
+
+    @Test
+    public void test_copy_extract_remove_rbl_swcs() throws IOException
+    {
+        getArgs().clearLibraries();
+
+        File tempOutput = new File(tempDir, "foo");
+        Collection<ISWC> swcs = BundleUtils.tempWriteSWCs(sdkRBL, tempOutput);
+
+        assertEquals(5, swcs.size());
+
+        FileUtils.deleteDirectory(tempOutput);
+    }
+
+    @Test
+    public void test_builtin_used_from_rbl_archive()
+    {
+        // clear the libraries so we know that builtin.swc was not included
+        getArgs().clearLibraries();
+        getArgs().addSourcepath(basepathDir.getAbsolutePath());
+        getArgs().addBundlePath(sdkRBL.getAbsolutePath());
+        getArgs().setJsOutputAsFiles(true);
+
+        compile();
+        assertOutFileLength(4);
+    }
+
 }
