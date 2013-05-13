@@ -19,42 +19,21 @@
 
 package randori.compiler.clients;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.flex.compiler.clients.problems.ProblemPrinter;
 import org.apache.flex.compiler.clients.problems.ProblemQuery;
 import org.apache.flex.compiler.clients.problems.WorkspaceProblemFormatter;
-import org.apache.flex.compiler.config.Configuration;
-import org.apache.flex.compiler.config.ConfigurationBuffer;
-import org.apache.flex.compiler.config.Configurator;
-import org.apache.flex.compiler.config.ICompilerSettingsConstants;
-import org.apache.flex.compiler.exceptions.ConfigurationException;
-import org.apache.flex.compiler.exceptions.ConfigurationException.IOError;
-import org.apache.flex.compiler.exceptions.ConfigurationException.MustSpecifyTarget;
-import org.apache.flex.compiler.internal.projects.CompilerProject;
-import org.apache.flex.compiler.internal.projects.ISourceFileHandler;
-import org.apache.flex.compiler.internal.targets.RandoriTarget;
 import org.apache.flex.compiler.internal.workspaces.Workspace;
-import org.apache.flex.compiler.problems.ConfigurationProblem;
 import org.apache.flex.compiler.problems.ICompilerProblem;
-import org.apache.flex.compiler.problems.InternalCompilerProblem;
-import org.apache.flex.compiler.problems.UnableToBuildSWFProblem;
 import org.apache.flex.compiler.problems.UnexpectedExceptionProblem;
 import org.apache.flex.compiler.projects.ICompilerProject;
-import org.apache.flex.compiler.targets.ITarget;
-import org.apache.flex.compiler.targets.ITargetSettings;
 import org.apache.flex.compiler.units.ICompilationUnit;
 
 import randori.compiler.driver.IBackend;
-import randori.compiler.driver.IRandoriApplication;
 import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.internal.driver.RandoriBackend;
 import randori.compiler.internal.projects.RandoriApplicationProject;
@@ -74,22 +53,6 @@ public class Randori
     private RandoriApplicationProject project;
 
     private ProblemQuery problems;
-
-    private IBackend backend;
-
-    private RandoriTarget target;
-
-    private ISourceFileHandler sourceFileHandler;
-
-    private Configuration configuration;
-
-    private Configurator projectConfigurator;
-
-    private ConfigurationBuffer configBuffer;
-
-    private ITargetSettings targetSettings;
-
-    private IRandoriApplication application;
 
     /**
      * @param args
@@ -204,24 +167,10 @@ public class Randori
 
     public Randori(IBackend backend)
     {
-        this.backend = backend;
-
         workspace = new Workspace();
-        project = new RandoriApplicationProject(workspace);
+        project = new RandoriApplicationProject(workspace,
+                (IRandoriBackend) backend);
         problems = new ProblemQuery();
-
-        sourceFileHandler = backend.getSourceFileHandlerInstance();
-    }
-
-    /**
-     * Create a new Configurator. This method may be overridden to allow
-     * Configurator subclasses to be created that have custom configurations.
-     * 
-     * @return a new instance or subclass of {@link Configurator}.
-     */
-    protected Configurator createConfigurator()
-    {
-        return backend.createConfigurator();
     }
 
     /**
@@ -232,200 +181,12 @@ public class Randori
      */
     protected boolean configure(final String[] args)
     {
-        project.getSourceCompilationUnitFactory().addHandler(sourceFileHandler);
-        projectConfigurator = createConfigurator();
-
-        try
-        {
-            //            // Print brief usage if no arguments provided.
-            //            if (args.length == 0)
-            //            {
-            //                final String usage = CommandLineConfigurator.brief(
-            //                        getProgramName(), DEFAULT_VAR,
-            //                        LocalizationManager.get(), L10N_CONFIG_PREFIX);
-            //                if (usage != null)
-            //                    println(usage);
-            //                return false;
-            //            }
-            //
-            projectConfigurator.setConfiguration(args,
-                    ICompilerSettingsConstants.FILE_SPECS_VAR);
-            projectConfigurator.applyToProject(project);
-            problems = new ProblemQuery(
-                    projectConfigurator.getCompilerProblemSettings());
-
-            // Get the configuration and configBuffer which are now initialized.
-            configuration = projectConfigurator.getConfiguration();
-            configBuffer = projectConfigurator.getConfigurationBuffer();
-            problems.addAll(projectConfigurator.getConfigurationProblems());
-
-            // Print version if "-version" is present.
-            if (configBuffer.getVar("version") != null) //$NON-NLS-1$
-            {
-                return false;
-            }
-
-            if (problems.hasErrors())
-                return false;
-
-            validateTargetFile();
-            return true;
-        }
-        catch (ConfigurationException e)
-        {
-            final ICompilerProblem problem = new ConfigurationProblem(e);
-            problems.add(problem);
-            return false;
-        }
-        catch (Exception e)
-        {
-            final ICompilerProblem problem = new ConfigurationProblem(null, -1,
-                    -1, -1, -1, e.getMessage());
-            problems.add(problem);
-            return false;
-        }
-        finally
-        {
-            // If we couldn't create a configuration, then create a default one
-            // so we can exit without throwing an exception.
-            if (configuration == null)
-            {
-                configuration = new Configuration();
-                configBuffer = new ConfigurationBuffer(Configuration.class,
-                        Configuration.getAliases());
-            }
-        }
+        return project.configure(args);
     }
 
     protected boolean compile()
     {
-        boolean compilationSuccess = false;
-
-        try
-        {
-            prebuild();
-
-            if (!setupBuild())
-                return false;
-
-            //if (config.isDumpAst())
-            //    dumpAST();
-
-            build();
-
-            if (target != null)
-            {
-                Collection<ICompilerProblem> errors = new ArrayList<ICompilerProblem>();
-                Collection<ICompilerProblem> warnings = new ArrayList<ICompilerProblem>();
-
-                //                if (!configuration.getCreateTargetWithErrors())
-                //                {
-                //                    problems.getErrorsAndWarnings(errors, warnings);
-                //                    if (errors.size() > 0)
-                //                        return false;
-                //                }
-                // for now we let warnings pass
-                problems.getErrorsAndWarnings(errors, warnings);
-                if (errors.size() > 0)
-                    return false;
-
-                RandoriBackend randoriBackend = (RandoriBackend) backend;
-                if (!randoriBackend.isParseOnly())
-                {
-                    compilationSuccess = application.compile(
-                            (IRandoriBackend) backend, problems);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            final ICompilerProblem problem = new InternalCompilerProblem(e);
-            problems.add(problem);
-        }
-
-        return compilationSuccess;
-    }
-
-    private ITargetSettings getTargetSettings()
-    {
-        if (targetSettings == null)
-            targetSettings = projectConfigurator.getTargetSettings(null);
-
-        return targetSettings;
-    }
-
-    private void prebuild()
-    {
-        project.getSourceCompilationUnitFactory().addHandler(sourceFileHandler);
-    }
-
-    private void build() throws InterruptedException, IOException,
-            ConfigurationException
-    {
-        application = buildTarget();
-    }
-
-    private IRandoriApplication buildTarget() throws InterruptedException,
-            FileNotFoundException, ConfigurationException
-    {
-        final List<ICompilerProblem> problemsBuildingSWF = new ArrayList<ICompilerProblem>();
-
-        final IRandoriApplication app = buildApplication(project,
-                problemsBuildingSWF);
-        problems.addAll(problemsBuildingSWF);
-        if (app == null)
-        {
-            ICompilerProblem problem = new UnableToBuildSWFProblem(
-                    configuration.getOutput());
-            problems.add(problem);
-        }
-
-        return app;
-    }
-
-    private IRandoriApplication buildApplication(
-            CompilerProject applicationProject,
-            Collection<ICompilerProblem> problems) throws InterruptedException,
-            ConfigurationException, FileNotFoundException
-    {
-        Collection<ICompilerProblem> fatalProblems = applicationProject
-                .getFatalProblems();
-        if (!fatalProblems.isEmpty())
-        {
-            problems.addAll(fatalProblems);
-            return null;
-        }
-
-        return target.build(problems);
-    }
-
-    /**
-     * Creates the {@link ITarget}.
-     * 
-     * @return Whether its a go to continue compiling.
-     */
-    private boolean setupBuild()
-    {
-        target = (RandoriTarget) backend.createTarget(project,
-                getTargetSettings(), null);
-        return true;
-    }
-
-    /**
-     * Validate target file.
-     * 
-     * @throws MustSpecifyTarget
-     * @throws IOError
-     */
-    protected void validateTargetFile() throws ConfigurationException
-    {
-        //        final String targetFile = config.getTargetFile();
-        //        if (targetFile == null)
-        //            throw new ConfigurationException.MustSpecifyTarget(null, null, -1);
-        //
-        //        final File file = new File(targetFile);
-        //        if (!file.exists())
-        //            throw new ConfigurationException.IOError(targetFile);
+        return project.compile(true);
     }
 
     /**

@@ -23,6 +23,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.xml.stream.XMLStreamException;
@@ -31,6 +32,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.flex.swc.ISWC;
 
 import randori.compiler.bundle.Bundle;
+import randori.compiler.bundle.BundleLibrary;
 import randori.compiler.bundle.IBundle;
 import randori.compiler.bundle.IBundleCategory;
 import randori.compiler.bundle.IBundleContainer;
@@ -216,5 +218,33 @@ public class BundleUtils
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Writes the swcs into a temp directory from the {@link IBundle} libraries.
+     * 
+     * @param bundleFile The absolute location of the <code>.rbl</code> bundle
+     * file archive.
+     * @param tempOutput The temporary location the swcs are extracted to.
+     * @return The {@link ISWC} collection.
+     * @throws IOException
+     */
+    public static Collection<ISWC> tempWriteSWCs(File bundleFile,
+            File tempOutput) throws IOException
+    {
+        BundleReader reader = new BundleReader(bundleFile.getPath());
+        Bundle bundle = (Bundle) reader.getBundle();
+        Collection<ISWC> result = new ArrayList<ISWC>();
+        for (IBundleLibrary library : bundle.getLibraries())
+        {
+            BundleLibrary bl = (BundleLibrary) library;
+            Collection<ISWC> swcs = bl.getSWCS(tempOutput,
+                    bundle.getBundleFile());
+            if (swcs != null)
+            {
+                result.addAll(swcs);
+            }
+        }
+        return result;
     }
 }
