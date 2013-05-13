@@ -107,7 +107,8 @@ public class ApplicationModel extends BaseCompilationSet
                 }
                 catch (RuntimeException e)
                 {
-                    // cancel compile
+                    System.err
+                            .println("Aborted compile in ApplicationModel.generate()");
                     break;
                 }
             }

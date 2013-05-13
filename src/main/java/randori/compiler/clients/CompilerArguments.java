@@ -29,6 +29,7 @@ import org.apache.flex.utils.StringUtils;
  */
 public class CompilerArguments
 {
+    private List<String> bundles = new ArrayList<String>();
 
     private List<String> libraries = new ArrayList<String>();
 
@@ -47,6 +48,13 @@ public class CompilerArguments
     private String jsBasePath = "";
 
     private Boolean jsOutputAsFiles = null;
+
+    public void addBundlePath(String path)
+    {
+        if (bundles.contains(path))
+            return;
+        bundles.add(path);
+    }
 
     public void addLibraryPath(String path)
     {
@@ -67,6 +75,26 @@ public class CompilerArguments
         if (includes.contains(path))
             return;
         includes.add(path);
+    }
+
+    public List<String> getBundles()
+    {
+        return bundles;
+    }
+
+    public List<String> getLibraries()
+    {
+        return libraries;
+    }
+
+    public List<String> getSources()
+    {
+        return sources;
+    }
+
+    public List<String> getIncludes()
+    {
+        return includes;
     }
 
     public String getSDKPath()
@@ -144,6 +172,11 @@ public class CompilerArguments
         sources = new ArrayList<String>();
     }
 
+    public void clearBundles()
+    {
+        bundles = new ArrayList<String>();
+    }
+
     public void clearLibraries()
     {
         libraries = new ArrayList<String>();
@@ -152,6 +185,11 @@ public class CompilerArguments
     public String[] toArguments()
     {
         List<String> result = new ArrayList<String>();
+
+        for (String arg : bundles)
+        {
+            result.add("-bundle-path=" + arg);
+        }
 
         for (String arg : libraries)
         {
@@ -167,7 +205,6 @@ public class CompilerArguments
         {
             result.add("-include-sources="
                     + StringUtils.join(includes.toArray(new String[] {}), ","));
-
         }
 
         // XXX TEMP
@@ -197,15 +234,6 @@ public class CompilerArguments
 
         return result.toArray(new String[] {});
     }
-
-    //    public void configure(Project project, RandoriProjectModel model)
-    //    {
-    //        setAppName(project.getName());
-    //        setJsBasePath(model.getBasePath());
-    //        setJsLibraryPath(model.getLibraryPath());
-    //        setJsOutputAsFiles(model.isClassesAsFile());
-    //        setOutput(project.getBasePath());
-    //    }
 
     public static class CompilerArgument
     {

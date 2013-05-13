@@ -48,6 +48,8 @@ public class RandoriTargetSettings extends TargetSettings implements
 
     private RandoriConfiguration configuration;
 
+    private Collection<File> bundlePaths;
+
     private Collection<File> includeSources;
 
     private Collection<String> incrementalFiles = new ArrayList<String>();
@@ -87,6 +89,16 @@ public class RandoriTargetSettings extends TargetSettings implements
     public boolean getJsClassesAsFiles()
     {
         return configuration.getJsClassesAsFiles();
+    }
+
+    @Override
+    public Collection<File> getBundlePaths()
+    {
+        if (bundlePaths == null)
+            bundlePaths = Configurator
+                    .toFileList(configuration.getBundlePath());
+
+        return bundlePaths;
     }
 
     @Override

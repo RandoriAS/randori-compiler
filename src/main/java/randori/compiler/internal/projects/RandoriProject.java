@@ -217,7 +217,10 @@ public abstract class RandoriProject extends FlexProject implements
             return false;
 
         if (!doExport)
+        {
+            finish();
             return true;
+        }
 
         success = export();
 

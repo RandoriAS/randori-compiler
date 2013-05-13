@@ -19,11 +19,18 @@
 
 package randori.compiler.bundle;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.flex.swc.ISWC;
+import org.apache.flex.swc.SWC;
 
 import randori.compiler.bundle.IBundleContainer.Type;
 import randori.compiler.bundle.io.BundleUtils;
@@ -89,6 +96,47 @@ public class BundleLibrary implements IBundleLibrary
     public Collection<ISWC> getSWCS()
     {
         return swcs.values();
+    }
+
+    public Collection<ISWC> getSWCS(File output, File bundleFile)
+            throws IOException
+    {
+        // XXX TEMP
+        if (swcs.size() == 0)
+        {
+            IBundleContainer container = getContainer(IBundleContainer.Type.BIN);
+            if (container != null)
+            {
+                IBundleCategory category = container
+                        .getCategory(IBundleCategory.Type.SWC);
+                if (category != null)
+                {
+                    for (IBundleEntry entry : category.getEntries())
+                    {
+                        final File file = new File(output, entry.getPath())
+                                .getAbsoluteFile();
+                        String name = entry.getPath();
+                        writeFile(output, entry);
+                        swcs.put(name, new SWC(file));
+                    }
+                }
+            }
+        }
+        return swcs.values();
+    }
+
+    void writeFile(File output, IBundleEntry entry) throws IOException
+    {
+        final File file = new File(output, entry.getPath()).getAbsoluteFile();
+        final File parentFolder = file.getParentFile();
+        if (!parentFolder.isDirectory())
+            parentFolder.mkdirs();
+        file.createNewFile();
+        final OutputStream outputStream = new FileOutputStream(file);
+        final InputStream fileInputStream = entry.createInputStream();
+        IOUtils.copy(fileInputStream, outputStream);
+        fileInputStream.close();
+        outputStream.close();
     }
 
     @Override

@@ -80,6 +80,8 @@ public interface IRandoriTargetSettings extends ITargetSettings
      */
     boolean getJsClassesAsFiles();
 
+    Collection<File> getBundlePaths();
+
     @Override
     Collection<File> getIncludeSources();
 
