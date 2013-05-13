@@ -29,7 +29,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.flex.compiler.clients.problems.ProblemPrinter;
 import org.apache.flex.compiler.clients.problems.ProblemQuery;
+import org.apache.flex.compiler.clients.problems.WorkspaceProblemFormatter;
 import org.apache.flex.compiler.config.Configuration;
 import org.apache.flex.compiler.config.ConfigurationBuffer;
 import org.apache.flex.compiler.config.Configurator;
@@ -131,13 +133,13 @@ public class Randori
         {
             if (problems != null && !problems.isEmpty())
             {
-                boolean printProblems = false; //XXX TEMP
+                boolean printProblems = true;
                 if (printProblems)
                 {
-                    //                    final WorkspaceProblemFormatter formatter = new WorkspaceProblemFormatter(
-                    //                            workspace);
-                    //                    final ProblemPrinter printer = new ProblemPrinter(formatter);
-                    //                    printer.printProblems(problems);
+                    final WorkspaceProblemFormatter formatter = new WorkspaceProblemFormatter(
+                            workspace);
+                    final ProblemPrinter printer = new ProblemPrinter(formatter);
+                    printer.printProblems(problems);
                 }
             }
         }
