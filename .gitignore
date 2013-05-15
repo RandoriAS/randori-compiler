@@ -18,7 +18,6 @@ local.properties
 .loadpath
 generated/
 in/
-deployed/
 
 ## Trying to figure this out
 build/classes
