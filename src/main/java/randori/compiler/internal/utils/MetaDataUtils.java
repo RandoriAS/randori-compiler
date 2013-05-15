@@ -205,8 +205,13 @@ public class MetaDataUtils
         IMetaTag tag = findTag(type, MetaData.JavaScript);
         if (tag != null)
         {
+            // if mode=json, we do not export
+            String value = tag.getAttributeValue(ATT_MODE);
+            if (value != null && value.equals("json"))
+                return false;
+
             // only if the tag has export="false" will we return false
-            String value = tag.getAttributeValue(ATT_EXPORT);
+            value = tag.getAttributeValue(ATT_EXPORT);
             if (value != null && value.equals(VALUE_FALSE))
                 return false;
         }
@@ -323,20 +328,20 @@ public class MetaDataUtils
         if (definition.getBaseName().equals(NativeType.Any.getValue()))
             return NativeType.Object.getValue();
 
-        if (!isNative(definition))
-            return definition.getQualifiedName();
+        //if (!isNative(definition))
+        //    return definition.getQualifiedName();
 
         IMetaTag tag = findTag(definition, MetaData.JavaScript);
         if (tag == null)
             return definition.getQualifiedName();
-        
+
         String value = tag.getAttributeValue(ATT_NAME);
         if (value == null)
         {
             // use the default qualifiedName if no 'name' attribute is specified
-            return definition.getQualifiedName(); 
+            return definition.getQualifiedName();
         }
-        
+
         return value;
     }
 

@@ -123,6 +123,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         IDefinition expression = node.resolveCalledExpression(project);
         if (!(expression instanceof IClassDefinition))
         {
+            // variable or accessor reference getting instantiated
             IVariableDefinition vdef = (IVariableDefinition) expression;
             if (vdef instanceof IAccessorDefinition)
             {
@@ -299,34 +300,36 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         IParameterDefinition[] parameters = constructor.getParameters();
         IExpressionNode[] arguments = node.getArgumentNodes();
 
-        final int len = parameters.length;
         write("{");
-        int i = 0;
-        for (IParameterDefinition parameter : parameters)
+        if (arguments.length > 0)
         {
-            // name
-            write(parameter.getBaseName());
-            write(":");
-
-            // vaule
-            if (i < arguments.length)
+            int i = 0;
+            final int len = parameters.length;
+            for (IParameterDefinition parameter : parameters)
             {
-                getWalker().walk(arguments[i]);
-            }
-            else
-            {
-                // default
-                String value = DefinitionUtils.returnInitialVariableValue(
-                        parameter.getVariableNode(), getEmitter());
-                write(value);
-            }
+                // name
+                write(parameter.getBaseName());
+                write(":");
 
-            if (i < len - 1)
-                write(", ");
-            i++;
+                // vaule
+                if (i < arguments.length)
+                {
+                    getWalker().walk(arguments[i]);
+                }
+                else
+                {
+                    // default
+                    String value = DefinitionUtils.returnInitialVariableValue(
+                            parameter.getVariableNode(), getEmitter());
+                    write(value);
+                }
+
+                if (i < len - 1)
+                    write(", ");
+                i++;
+            }
         }
         write("}");
-
     }
 
     private void emitGlobal(IFunctionCallNode node, ITypeDefinition type)
@@ -423,6 +426,8 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
     private String toPrototype(ITypeDefinition definition)
     {
         // this 'would' be a IFunctionCallNode.getNameNode()
-        return definition.getQualifiedName();
+        String name = MetaDataUtils.getExportName(definition);
+        //return definition.getQualifiedName();
+        return name;
     }
 }
