@@ -61,6 +61,7 @@ public class FieldEmitter extends BaseSubEmitter implements
 
         write(" ");
         write("=");
+        write(" ");
         getWalker().walk(node);
     }
 
