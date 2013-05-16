@@ -53,7 +53,7 @@ public class RandoriApplicationProject extends RandoriProject implements
 {
 
     private IRandoriTarget target;
-    
+
     private File tempOutput;
 
     public RandoriApplicationProject(Workspace workspace,
@@ -170,7 +170,8 @@ public class RandoriApplicationProject extends RandoriProject implements
             {
                 Collection<ISWC> swcs = null;
                 // XXX Figure out what random dir name is best here
-                tempOutput = new File(getConfiguration().getOutput(), "___temp___");
+                tempOutput = new File(getConfiguration().getOutput(),
+                        "___temp___");
                 try
                 {
                     swcs = BundleUtils.tempWriteSWCs(new File(bundle),
