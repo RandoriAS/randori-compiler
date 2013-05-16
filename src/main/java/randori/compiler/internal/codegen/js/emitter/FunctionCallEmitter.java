@@ -198,13 +198,12 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
             }
             else if (baseName.equals("Array"))
             {
-                //IExpressionNode[] nodes = node.getArgumentNodes();
                 write("[");
                 walkArguments(node);
                 write("]");
                 return;
             }
-            else if (!MetaDataUtils.isExport(expression))
+            else
             {
                 IMetaTag tag = MetaDataUtils.findTag(expression,
                         MetaData.JavaScriptConstructor);
@@ -214,7 +213,20 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                             .getAttributeValue("factoryMethod");
                     if (factoryMethod != null)
                     {
-                        write(factoryMethod);
+                        int start = factoryMethod.indexOf("...");
+                        if (start != -1)
+                        {
+                            final String head = factoryMethod.substring(0,
+                                    factoryMethod.indexOf("("));
+                            write(head);
+                            write("(");
+                            walkArguments(node);
+                            write(")");
+                        }
+                        else
+                        {
+                            write(factoryMethod);
+                        }
                         return;
                     }
                 }
