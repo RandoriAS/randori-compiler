@@ -155,6 +155,25 @@ public class RandoriConfiguration extends Configuration
     }
 
     //
+    // 'exclude-packages'
+    //
+
+    private String excludePackages = "";
+
+    public String getExcludePackages()
+    {
+        return excludePackages;
+    }
+
+    @Config(allowMultiple = false)
+    @Mapping("exclude-packages")
+    public void setExcludePackages(ConfigurationValue cv, String value)
+            throws ConfigurationException
+    {
+        excludePackages = value;
+    }
+
+    //
     // 'js-base-path'
     //
 
