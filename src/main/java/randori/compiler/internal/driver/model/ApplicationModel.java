@@ -61,6 +61,14 @@ public class ApplicationModel extends BaseCompilationSet
         if (node == null)
             return false;
 
+        // -exclude-packages trumps all for now, if there are problems
+        // with this the below logic can be altered
+        for (String test : settings.getExcludePackages())
+        {
+            if (node.getQualifiedName().startsWith(test))
+                return false;
+        }
+
         // no -include-sources everything gets included (-source-path)
         Collection<File> sources = settings.getIncludeSources();
         if (sources == null || sources.size() == 0)

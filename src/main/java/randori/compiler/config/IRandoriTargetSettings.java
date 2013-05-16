@@ -47,6 +47,14 @@ public interface IRandoriTargetSettings extends ITargetSettings
     String getAppName();
 
     /**
+     * Excludes a set of package names during rendering.
+     * <p>
+     * Adding a package name like <code>randori.guice</code> would exclude all
+     * classes located under that package from render.
+     */
+    Collection<String> getExcludePackages();
+
+    /**
      * The base path that all output will be rendered to in the application's
      * project.
      * <p>

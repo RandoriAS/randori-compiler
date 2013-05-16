@@ -50,6 +50,8 @@ public class RandoriTargetSettings extends TargetSettings implements
 
     private Collection<File> bundlePaths;
 
+    private Collection<String> excludePackages;
+
     private Collection<File> includeSources;
 
     private Collection<String> incrementalFiles = new ArrayList<String>();
@@ -71,6 +73,24 @@ public class RandoriTargetSettings extends TargetSettings implements
     public String getAppName()
     {
         return configuration.getAppName();
+    }
+
+    @Override
+    public Collection<String> getExcludePackages()
+    {
+        if (excludePackages == null)
+        {
+            excludePackages = new ArrayList<String>();
+            final String packages = configuration.getExcludePackages();
+            if (packages != null && !packages.isEmpty())
+            {
+                for (String pckg : packages.split(","))
+                {
+                    excludePackages.add(pckg.trim());
+                }
+            }
+        }
+        return excludePackages;
     }
 
     @Override

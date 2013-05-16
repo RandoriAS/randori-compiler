@@ -153,10 +153,10 @@ public class Randori
         finally
         {
             waitAndClose();
-
-            if (outProblems != null && problems.hasFilteredProblems())
+            ProblemQuery query = project.getProblemQuery();
+            if (query != null && query.hasFilteredProblems())
             {
-                for (ICompilerProblem problem : problems.getFilteredProblems())
+                for (ICompilerProblem problem : query.getFilteredProblems())
                 {
                     outProblems.add(problem);
                 }
@@ -186,7 +186,8 @@ public class Randori
 
     protected boolean compile()
     {
-        return project.compile(true);
+        final String path = project.getTargetSettings().getSDKPath();
+        return project.compile(true, path != null && !path.isEmpty());
     }
 
     /**
