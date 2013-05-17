@@ -21,6 +21,7 @@ package randori.compiler.internal.utils;
 
 import org.apache.flex.compiler.common.DependencyType;
 import org.apache.flex.compiler.definitions.IClassDefinition;
+import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IGetterDefinition;
@@ -332,12 +333,13 @@ public class ExpressionUtils
             {
                 //return false;
             }
-
         }
 
         IDefinition definition = node.resolve(project);
         if (definition == null)
             return false; // Is this correct?
+        if (definition instanceof IConstantDefinition)
+            return false;
         if (definition instanceof IParameterDefinition)
             return false;
         if (definition.getParent() instanceof IMemberAccessExpressionNode)
