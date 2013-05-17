@@ -241,6 +241,10 @@ public class ASBlockWalker implements IASNodeVisitor, IASBlockWalker
         {
             emitter.emitMethod(node);
         }
+        else if (node.getParent().getParent() instanceof IPackageNode)
+        {
+            emitter.emitFunction(node);
+        }
         else if (node.getParent() instanceof ScopedBlockNode)
         {
             emitter.emitNamedFunction(node);

@@ -32,6 +32,7 @@ import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IInterfaceDefinition;
 import org.apache.flex.compiler.definitions.IParameterDefinition;
+import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.definitions.references.IReference;
@@ -157,6 +158,18 @@ public class DefinitionUtils
         return null;
     }
 
+    public static final IFunctionNode findFunctionNode(IPackageNode node)
+    {
+        IScopedNode scope = node.getScopedNode();
+        for (int i = 0; i < scope.getChildCount(); i++)
+        {
+            IASNode child = scope.getChild(i);
+            if (child instanceof IFunctionNode)
+                return (IFunctionNode) child;
+        }
+        return null;
+    }
+
     public static final ITypeNode findTypeNode(IASNode node)
     {
         IASNode parent = node.getParent();
@@ -223,7 +236,7 @@ public class DefinitionUtils
             }
         }
 
-        if (result == null) 
+        if (result == null)
         {
             throw new RuntimeException(
                     "DefinitionUtils.returnInitialConstantValue(); invalid constant value");
@@ -255,7 +268,7 @@ public class DefinitionUtils
         }
         return null;
     }
-
+    
     public static IClassDefinition getClassDefinition(IDefinition definition)
     {
         while (definition != null)
@@ -266,7 +279,18 @@ public class DefinitionUtils
         }
         return null;
     }
-
+    
+    public static IScopedDefinition getParentScopedDefinition(IDefinition definition)
+    {
+        while (definition != null)
+        {
+            if (definition instanceof IScopedDefinition)
+                return (IScopedDefinition) definition;
+            definition = definition.getParent();
+        }
+        return null;
+    }
+    
     public static String toSuperBaseName(IASNode node)
     {
         ITypeNode tnode = (ITypeNode) node.getAncestorOfType(ITypeNode.class);
