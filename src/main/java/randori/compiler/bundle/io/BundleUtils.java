@@ -30,6 +30,7 @@ import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.flex.swc.ISWC;
+import org.apache.flex.swc.SWC;
 
 import randori.compiler.bundle.Bundle;
 import randori.compiler.bundle.BundleLibrary;
@@ -240,6 +241,34 @@ public class BundleUtils
             BundleLibrary bl = (BundleLibrary) library;
             Collection<ISWC> swcs = bl.getSWCS(tempOutput,
                     bundle.getBundleFile());
+            if (swcs != null)
+            {
+                result.addAll(swcs);
+            }
+        }
+        return result;
+    }
+
+    public static Collection<ISWC> getSWCsFromBundleDir(File dirRoot)
+            throws IOException
+    {
+        Bundle bundle = (Bundle) getBundle(dirRoot);
+        Collection<ISWC> result = new ArrayList<ISWC>();
+        for (IBundleLibrary library : bundle.getLibraries())
+        {
+            Collection<ISWC> swcs = new ArrayList<ISWC>();
+            IBundleContainer container = library
+                    .getContainer(IBundleContainer.Type.BIN);
+            IBundleCategory category = container
+                    .getCategory(IBundleCategory.Type.SWC);
+
+            for (IBundleEntry entry : category.getEntries())
+            {
+                String path = entry.getPath();
+                File file = new File(dirRoot, path);
+                swcs.add(new SWC(file));
+            }
+
             if (swcs != null)
             {
                 result.addAll(swcs);
