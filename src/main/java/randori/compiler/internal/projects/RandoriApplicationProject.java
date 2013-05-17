@@ -160,36 +160,40 @@ public class RandoriApplicationProject extends RandoriProject implements
     @Override
     protected void validateConfiguration() throws ConfigurationException
     {
+        ArrayList<File> files = new ArrayList<File>();
+
+        // if the -sdk-path is set, get all libraries from that
+        String path = getTargetSettings().getSDKPath();
+        if (path != null && !path.isEmpty())
+        {
+            File dir = new File(FilenameNormalization.normalize(path));
+            if (dir.isDirectory())
+            {
+                addSWCsFromSDKPath(path, files);
+            }
+            else
+            {
+                if (dir.getName().endsWith(".rbl"))
+                {
+                    // sdk path is a bundle, add it to the -bundle-path
+                    getConfiguration().getBundlePath().add(
+                            dir.getAbsolutePath());
+                }
+            }
+        }
+
         List<String> bundles = getConfiguration().getBundlePath();
+        // if -bundle-path is present, add all SWCs from the bundles
         if (bundles.size() > 0)
         {
-            Collection<ISWC> result = new ArrayList<ISWC>();
+            addSWCsFromBundles(bundles, files);
+        }
 
-            // temporarily copy swcs in bundles
-            for (String bundle : bundles)
-            {
-                Collection<ISWC> swcs = null;
-                // XXX Figure out what random dir name is best here
-                tempOutput = new File(getConfiguration().getOutput(),
-                        "___temp___");
-                try
-                {
-                    swcs = BundleUtils.tempWriteSWCs(new File(bundle),
-                            tempOutput);
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-
-                result.addAll(swcs);
-            }
-
-            result.addAll(getLibraries());
-
-            ArrayList<File> files = new ArrayList<File>();
-            // add all the swc file to the library path
-            for (ISWC swc : result)
+        if (files.size() > 0)
+        {
+            // if we do have new files, add the original libraries
+            // to the new result
+            for (ISWC swc : getLibraries())
             {
                 files.add(swc.getSWCFile());
             }
@@ -251,6 +255,62 @@ public class RandoriApplicationProject extends RandoriProject implements
                 e.printStackTrace();
             }
             tempOutput = null;
+        }
+    }
+
+    private void addSWCsFromBundles(List<String> bundles, ArrayList<File> files)
+    {
+        Collection<ISWC> result = new ArrayList<ISWC>();
+
+        // temporarily copy swcs in bundles
+        for (String bundle : bundles)
+        {
+            Collection<ISWC> swcs = null;
+            // XXX Figure out what random dir name is best here
+            tempOutput = new File(
+                    FilenameNormalization.normalize(getConfiguration()
+                            .getOutput()), "___temp___");
+            try
+            {
+                swcs = BundleUtils.tempWriteSWCs(
+                        new File(FilenameNormalization.normalize(bundle)),
+                        tempOutput);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+
+            result.addAll(swcs);
+        }
+
+        // add all the swc file to the library path
+        for (ISWC swc : result)
+        {
+            files.add(swc.getSWCFile());
+        }
+    }
+
+    private void addSWCsFromSDKPath(String path, Collection<File> files)
+    {
+        File dir = new File(FilenameNormalization.normalize(path));
+        if (dir.exists() && dir.isDirectory())
+        {
+            Collection<ISWC> swcs = null;
+            try
+            {
+                swcs = BundleUtils.getSWCsFromBundleDir(dir);
+            }
+            catch (IOException e)
+            {
+                // TODO (mschmalle) add Problem
+                e.printStackTrace();
+            }
+
+            for (ISWC swc : swcs)
+            {
+                files.add(swc.getSWCFile());
+            }
         }
     }
 

@@ -105,7 +105,7 @@ public class RandoriApplicationTest extends RandoriCompilerTestBase
         project.configure(getArgs().toArguments());
         boolean success = project.compile(true, true);
         Assert.assertFalse(success);
-        
+
         // 'no -app-name specified during monolithic generation'
         Assert.assertEquals(1, getProblems().size());
     }
@@ -121,6 +121,10 @@ public class RandoriApplicationTest extends RandoriCompilerTestBase
     public void test_basic_compile_with_export_from_directory()
             throws IOException
     {
+        // clear the library proves that builtin.swc is getting added automatically
+        // from the -sdk-path
+        getArgs().clearLibraries();
+        
         // with passing export= true, the compiler will copy
         // the libs from the sdk to the js-library-path
         getArgs().addSourcepath(basepathDir.getAbsolutePath());

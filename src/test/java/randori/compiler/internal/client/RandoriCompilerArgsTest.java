@@ -132,11 +132,14 @@ public class RandoriCompilerArgsTest extends RandoriCompilerTestBase
         // clear the libraries so we know that builtin.swc was not included
         getArgs().clearLibraries();
         getArgs().addSourcepath(basepathDir.getAbsolutePath());
-        getArgs().addBundlePath(sdkRBL.getAbsolutePath());
+        // automatically adds this sdk.rbl to the -bundle-path
+        getArgs().setSDKPath(sdkRBL.getAbsolutePath());
         getArgs().setJsOutputAsFiles(true);
-
+        
+        // since the sdk-path is valid, randori and guice get copied in out
+        // so this is 4 gen plus 2 framework .js which gives us 6 output files
         compile();
-        assertOutFileLength(4);
+        assertOutFileLength(6);
     }
 
 }
