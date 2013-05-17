@@ -112,7 +112,7 @@ public class MetaDataUtils
 
     public static final Mode getMode(IDefinition definition)
     {
-        IMetaTag tag = findTag(definition, metaDataFor(definition));
+        IMetaTag tag = findTag(definition, MetaData.JavaScript);
         if (tag == null)
             return Mode.PROTOTYPE;
 

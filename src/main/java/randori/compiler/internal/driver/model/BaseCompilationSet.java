@@ -32,11 +32,13 @@ import java.util.Map.Entry;
 
 import org.apache.flex.compiler.clients.problems.ProblemQuery;
 import org.apache.flex.compiler.definitions.IClassDefinition;
+import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.tree.as.IASNode;
 import org.apache.flex.compiler.tree.as.IClassNode;
 import org.apache.flex.compiler.tree.as.IFileNode;
+import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.apache.flex.compiler.tree.as.IPackageNode;
 import org.apache.flex.compiler.tree.as.ITypeNode;
 import org.apache.flex.compiler.units.ICompilationUnit;
@@ -50,6 +52,7 @@ import randori.compiler.driver.IRandoriTarget;
 import randori.compiler.internal.codegen.as.ASFilterWriter;
 import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
+import randori.compiler.internal.utils.MetaDataUtils.MetaData.Mode;
 import randori.compiler.projects.IRandoriApplicationProject;
 import randori.compiler.visitor.as.IASBlockWalker;
 
@@ -110,6 +113,12 @@ public abstract class BaseCompilationSet
         {
             IClassNode node = getClassNode(unit);
             if (accept(node))
+            {
+                addCompilationUnit(unit);
+            }
+            // XXX HACK
+            IFunctionNode fnode = getFunctionNode(unit);
+            if (fnode != null)
             {
                 addCompilationUnit(unit);
             }
@@ -259,6 +268,30 @@ public abstract class BaseCompilationSet
         builder.append(writer.toString());
     }
 
+    protected void writeFunction(IFunctionDefinition definition)
+    {
+        //if (!accept(definition.getNode()))
+        //    return;
+
+        builder.append("\n// ====================================================\n");
+        builder.append("// " + definition.getQualifiedName() + "\n");
+        builder.append("// ====================================================\n\n");
+
+        IFunctionNode node = (IFunctionNode) definition.getNode();
+        IFileNode fileNode = (IFileNode) node
+                .getAncestorOfType(IFileNode.class);
+
+        ASFilterWriter writer = backend.createWriterBuffer(project);
+        IRandoriEmitter emitter = (IRandoriEmitter) backend
+                .createEmitter(writer);
+        IASBlockWalker visitor = backend.createWalker(project, problems,
+                emitter);
+
+        visitor.visitFile(fileNode);
+
+        builder.append(writer.toString());
+    }
+
     /**
      * Writes a full project's classes out to one single monolithic file in
      * inheritance order.
@@ -280,18 +313,36 @@ public abstract class BaseCompilationSet
 
         List<IClassNode> globals = new ArrayList<IClassNode>();
 
+        List<IFunctionNode> functionNodes = new ArrayList<IFunctionNode>();
+
+        List<IFunctionNode> functionGlobals = new ArrayList<IFunctionNode>();
+
         for (ICompilationUnit unit : getCompilationUnits())
         {
             IClassNode node = getClassNode(unit);
             if (node != null)
             {
-                if (MetaDataUtils.isGlobal(node))
+                Mode mode = MetaDataUtils.getMode(node.getDefinition());
+                if (mode == Mode.GLOBAL)
                 {
                     globals.add(node);
                 }
                 else
                 {
                     nodes.add(node);
+                }
+            }
+            IFunctionNode fnode = getFunctionNode(unit);
+            if (fnode != null)
+            {
+                Mode mode = MetaDataUtils.getMode(fnode.getDefinition());
+                if (mode == Mode.GLOBAL)
+                {
+                    functionGlobals.add(fnode);
+                }
+                else
+                {
+                    functionNodes.add(fnode);
                 }
             }
         }
@@ -305,9 +356,19 @@ public abstract class BaseCompilationSet
             handleClass(node.getDefinition(), null);
         }
 
+        for (IFunctionNode node : functionGlobals)
+        {
+            writeFunction(node.getDefinition());
+        }
+
         for (IClassNode node : globals)
         {
             writeClass(node.getDefinition());
+        }
+
+        for (IFunctionNode node : functionNodes)
+        {
+            writeFunction(node.getDefinition());
         }
 
         for (Entry<IClassDefinition, BinaryEntry> entry : map.entrySet())
@@ -334,6 +395,7 @@ public abstract class BaseCompilationSet
             out = new BufferedOutputStream(new FileOutputStream(outputFile));
             out.write(builder.toString().getBytes());
             out.close();
+            System.out.println("Generating " + outputFile.getAbsolutePath());
         }
         catch (IOException e)
         {
@@ -362,6 +424,38 @@ public abstract class BaseCompilationSet
                     {
                         return classNode;
                     }
+                }
+            }
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    protected IFunctionNode getFunctionNode(ICompilationUnit unit)
+    {
+        if (unit.getCompilationUnitType() != UnitType.AS_UNIT)
+            return null;
+
+        try
+        {
+            IFileNode fileNode = (IFileNode) unit.getSyntaxTreeRequest().get()
+                    .getAST();
+            IASNode child = fileNode.getChild(0);
+            if (child instanceof IPackageNode)
+            {
+                IPackageNode packageNode = (IPackageNode) child;
+                IFunctionNode functionNode = DefinitionUtils
+                        .findFunctionNode(packageNode);
+                if (functionNode != null)
+                {
+                    //if (MetaDataUtils.isExport(functionNode.getDefinition()))
+                    //{
+                    return functionNode;
+                    //}
                 }
             }
         }

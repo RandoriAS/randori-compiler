@@ -444,6 +444,12 @@ public class ASEmitter implements IASEmitter, IEmitter
         write("}");
     }
 
+    @Override
+    public void emitFunction(IFunctionNode node)
+    {
+        // TODO Implement ASEmitter.emitFunction()
+    }
+
     //--------------------------------------------------------------------------
     // 
     //--------------------------------------------------------------------------
@@ -1105,6 +1111,18 @@ public class ASEmitter implements IASEmitter, IEmitter
             IASNode child = scope.getChild(i);
             if (child instanceof ITypeNode)
                 return (ITypeNode) child;
+        }
+        return null;
+    }
+
+    protected IFunctionNode findFunctionNode(IPackageNode node)
+    {
+        IScopedNode scope = node.getScopedNode();
+        for (int i = 0; i < scope.getChildCount(); i++)
+        {
+            IASNode child = scope.getChild(i);
+            if (child instanceof IFunctionNode)
+                return (IFunctionNode) child;
         }
         return null;
     }
