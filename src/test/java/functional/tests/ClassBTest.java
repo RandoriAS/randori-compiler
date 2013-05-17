@@ -564,6 +564,16 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void constant_private()
+    {
+        IFunctionNode node = findFunction("constant_private", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.constant_private = function() {"
+                + "\n\tvar margin;\n\tthis.field2 = 500 - margin.left - margin.right;"
+                + "\n\tthis.field2 = 300 - margin.top - margin.bottom;\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
