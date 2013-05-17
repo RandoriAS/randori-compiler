@@ -23,6 +23,7 @@ import java.io.FilterWriter;
 import java.util.List;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IPackageDefinition;
@@ -242,7 +243,8 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
                     model.addInjection(definition);
                     model.addViewInjection(definition);
 
-                    if (definition.isStatic())
+                    if (definition.isStatic()
+                            || definition instanceof IConstantDefinition)
                     {
                         getWalker().walk(member);
 
@@ -367,13 +369,13 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
             if (i < len - 1)
                 writeNewline();
         }
-        
+
         if (len > 0)
         {
             indentPop();
             writeNewline();
         }
-        
+
         write("}");
     }
 
