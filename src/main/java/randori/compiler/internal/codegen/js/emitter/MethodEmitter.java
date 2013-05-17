@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.flex.compiler.definitions.IAccessorDefinition;
 import org.apache.flex.compiler.definitions.IClassDefinition;
+import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
@@ -188,6 +189,9 @@ public class MethodEmitter extends BaseSubEmitter implements
         for (IVariableDefinition field : fields)
         {
             if (field instanceof IAccessorDefinition)
+                continue;
+            // constants do not get initialized
+            if (field instanceof IConstantDefinition)
                 continue;
             if (DefinitionUtils.isVariableAParameter(field,
                     definition.getParameters()))

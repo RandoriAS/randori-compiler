@@ -423,5 +423,15 @@ public class ClassB extends ClassA
         var fooPattern:RegExp = /bar/ms;
         var barPattern:RegExp = /bar/;
     }
+    
+    private const WIDTH:Number = 500;
+    private const HEIGHT:Number = 300;
+    
+    public function constant_private():void
+    {
+        var margin:Object;
+        field2 = WIDTH - margin.left - margin.right;
+        field2 = HEIGHT - margin.top - margin.bottom;
+    }
 }
 }
