@@ -35,6 +35,7 @@ import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.apache.flex.compiler.tree.as.IGetterNode;
 import org.apache.flex.compiler.tree.as.IInterfaceNode;
 import org.apache.flex.compiler.tree.as.IPackageNode;
+import org.apache.flex.compiler.tree.as.IScopedDefinitionNode;
 import org.apache.flex.compiler.tree.as.IScopedNode;
 import org.apache.flex.compiler.tree.as.ISetterNode;
 import org.apache.flex.compiler.tree.as.ITypeNode;
@@ -61,6 +62,8 @@ public abstract class RandoriTestProjectBase extends TestBase
 
     protected IInterfaceNode interfaceNode;
 
+    protected IFunctionNode functionNode;
+
     private Collection<ICompilerProblem> problems;
 
     protected Collection<ICompilerProblem> getFileProblems()
@@ -80,13 +83,16 @@ public abstract class RandoriTestProjectBase extends TestBase
         if (fileNode == null)
             return;
         Assert.assertNotNull(fileNode);
-        ITypeNode type = (ITypeNode) findFirstDescendantOfType(fileNode,
-                ITypeNode.class);
-        Assert.assertNotNull(type);
-        if (type instanceof IClassNode)
-            classNode = (IClassNode) type;
-        else if (type instanceof IInterfaceNode)
-            interfaceNode = (IInterfaceNode) type;
+        // child 0 is always the PackageNode
+        IScopedDefinitionNode scopedNode = (IScopedDefinitionNode) findFirstDescendantOfType(
+                fileNode.getChild(0), IScopedDefinitionNode.class);
+        Assert.assertNotNull(scopedNode);
+        if (scopedNode instanceof IClassNode)
+            classNode = (IClassNode) scopedNode;
+        else if (scopedNode instanceof IInterfaceNode)
+            interfaceNode = (IInterfaceNode) scopedNode;
+        else if (scopedNode instanceof IFunctionNode)
+            functionNode = (IFunctionNode) scopedNode;
     }
 
     abstract protected String getTypeUnderTest();

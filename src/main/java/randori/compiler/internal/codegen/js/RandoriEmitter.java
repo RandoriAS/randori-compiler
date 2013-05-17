@@ -48,6 +48,7 @@ import org.apache.flex.compiler.tree.as.ILiteralNode.LiteralType;
 import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
 import org.apache.flex.compiler.tree.as.IPackageNode;
 import org.apache.flex.compiler.tree.as.IParameterNode;
+import org.apache.flex.compiler.tree.as.IScopedNode;
 import org.apache.flex.compiler.tree.as.ITypeNode;
 import org.apache.flex.compiler.tree.as.IVariableNode;
 
@@ -58,12 +59,14 @@ import randori.compiler.internal.codegen.js.emitter.DynamicAccessEmitter;
 import randori.compiler.internal.codegen.js.emitter.FieldEmitter;
 import randori.compiler.internal.codegen.js.emitter.FooterEmitter;
 import randori.compiler.internal.codegen.js.emitter.FunctionCallEmitter;
+import randori.compiler.internal.codegen.js.emitter.FunctionFooterEmitter;
 import randori.compiler.internal.codegen.js.emitter.HeaderEmitter;
 import randori.compiler.internal.codegen.js.emitter.IdentifierEmitter;
 import randori.compiler.internal.codegen.js.emitter.MemberAccessExpressionEmitter;
 import randori.compiler.internal.codegen.js.emitter.MethodEmitter;
 import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
+import randori.compiler.internal.utils.MetaDataUtils.MetaData.Mode;
 
 /**
  * The base ship...
@@ -116,6 +119,8 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
 
     private FooterEmitter footer;
 
+    private FunctionFooterEmitter functionFooter;
+
     //--------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------
@@ -149,6 +154,7 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
 
         header = new HeaderEmitter(this);
         footer = new FooterEmitter(this);
+        functionFooter = new FunctionFooterEmitter(this);
     }
 
     //--------------------------------------------------------------------------
@@ -166,9 +172,18 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     {
         IPackageNode node = definition.getNode();
         ITypeNode tnode = findTypeNode(node);
-        if (!MetaDataUtils.isGlobal((IClassNode) tnode))
+        if (tnode != null && !MetaDataUtils.isGlobal((IClassNode) tnode))
         {
             header.emit(definition);
+        }
+        IFunctionNode fnode = findFunctionNode(node);
+        if (fnode != null)
+        {
+            Mode mode = MetaDataUtils.getMode(fnode.getDefinition());
+            if (mode != Mode.GLOBAL)
+            {
+                header.emit(definition);
+            }
         }
     }
 
@@ -182,11 +197,29 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
             writeNewline();
             getWalker().walk(tnode); // IClassNode | IInterfaceNode
         }
+        // try the function
+        IFunctionNode fnode = findFunctionNode(node);
+        if (fnode != null)
+        {
+            writeNewline();
+            getWalker().walk(fnode); // IFunctionNode
+        }
     }
 
     @Override
     public void emitPackageFooter(IPackageDefinition definition)
     {
+        IFunctionNode fnode = findFunctionNode(definition.getNode());
+        if (fnode != null)
+        {
+            Mode mode = MetaDataUtils.getMode(fnode.getDefinition());
+            if (mode != Mode.GLOBAL)
+            {
+                functionFooter.emit(fnode);
+            }
+            return;
+        }
+
         IClassNode node = (IClassNode) findTypeNode(definition.getNode());
         if (node == null)
             return; // temp because of unit tests
@@ -281,6 +314,39 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
                 i++;
             }
         }
+    }
+
+    @Override
+    public void emitFunction(IFunctionNode node)
+    {
+        FunctionNode fnode = (FunctionNode) node;
+        fnode.parseFunctionBody(problems);
+
+        Mode mode = MetaDataUtils.getMode(fnode.getDefinition());
+        if (mode == Mode.GLOBAL)
+        {
+            IScopedNode scopedNode = node.getScopedNode();
+            final int len = scopedNode.getChildCount();
+            for (int i = 0; i < len; i++)
+            {
+                getWalker().walk(scopedNode.getChild(i));
+                write(";");
+                writeNewline();
+            }
+            return;
+        }
+
+        IPackageNode pnode = (IPackageNode) fnode.getParent().getParent();
+        String packageName = pnode.getName();
+        if (packageName != null && !packageName.isEmpty())
+        {
+            write(packageName);
+            write(".");
+        }
+        write(fnode.getName());
+        write(" = function");
+        emitParamters(node.getParameterNodes());
+        emitFunctionScope(node.getScopedNode());
     }
 
     @Override
