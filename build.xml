@@ -105,7 +105,7 @@
 			<fileset dir="${deployed.dir}" />
 		</delete>
 		<mkdir dir="${deployed.dir}" />
-		<zip destfile="${deployed.dir}/randori-compiler-${compiler.version}.zip">
+		<zip destfile="${deployed.dir}/randori-compiler-latest.zip">
 			<zipfileset dir="${build.lib.dir}">
 				<include name="**/*" />
 			</zipfileset>
