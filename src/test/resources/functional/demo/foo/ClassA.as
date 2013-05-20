@@ -1,5 +1,6 @@
 package demo.foo
 {
+import demo.foo.support.MenuItem2;
 
 public class ClassA
 {
@@ -12,6 +13,11 @@ public class ClassA
         return null;
     }
     
+    public function get menuItem():MenuItem2
+    {
+        return null;
+    }
+
     public function get foo():Object
     {
         return null;

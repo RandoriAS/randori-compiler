@@ -433,5 +433,13 @@ public class ClassB extends ClassA
         field2 = WIDTH - margin.left - margin.right;
         field2 = HEIGHT - margin.top - margin.bottom;
     }
+    
+    public var modela:ClassA;
+    
+    // selectedMovieModel.selectedMovie.similars = value;
+    public function getter_bug():void
+    {
+        modela.menuItem.isRedirect = false;
+    }
 }
 }

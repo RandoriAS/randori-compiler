@@ -34,12 +34,12 @@ public class ClassBTest extends FunctionalTestBase
     {
         IFunctionNode node = findFunction("ClassB", classNode);
         visitor.visitFunction(node);
-        assertOut("demo.foo.ClassB = function(param1, param2, param3) {\n\tthis.names = "
-                + "null;\n\tthis.thenContracts = null;\n\tthis.field2 = 42;\n\tthis.field1 "
-                + "= \"Hello\";\n\tthis.j = null;\n\tif (arguments.length < 3) {\n\t\tif "
-                + "(arguments.length < 2) {\n\t\t\tparam2 = 42;\n\t\t}\n\t\tparam3 "
-                + "= 'foo';\n\t}\n\tdemo.foo.ClassA.call(this, param1);\n\t"
-                + "this.field2 = param2;\n}");
+        assertOut("demo.foo.ClassB = function(param1, param2, param3) {\n\tthis.modela"
+                + " = null;\n\tthis.names = null;\n\tthis.thenContracts = null;\n\tthis."
+                + "field2 = 42;\n\tthis.field1 = \"Hello\";\n\tthis.j = null;\n\tif (arguments."
+                + "length < 3) {\n\t\tif (arguments.length < 2) {\n\t\t\tparam2 = "
+                + "42;\n\t\t}\n\t\tparam3 = 'foo';\n\t}\n\tdemo.foo.ClassA.call(this, "
+                + "param1);\n\tthis.field2 = param2;\n}");
     }
 
     @Test
@@ -571,6 +571,15 @@ public class ClassBTest extends FunctionalTestBase
         assertOut("demo.foo.ClassB.prototype.constant_private = function() {"
                 + "\n\tvar margin;\n\tthis.field2 = 500 - margin.left - margin.right;"
                 + "\n\tthis.field2 = 300 - margin.top - margin.bottom;\n}");
+    }
+
+    @Test
+    public void getter_bug()
+    {
+        IFunctionNode node = findFunction("getter_bug", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.getter_bug = function() {"
+                + "\n\tthis.modela.get_menuItem().isRedirect = false;\n}");
     }
 
     @Test

@@ -30,6 +30,7 @@ import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
+import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
 
 import randori.compiler.codegen.js.ISessionModel;
 import randori.compiler.internal.utils.MetaDataUtils;
@@ -62,6 +63,21 @@ public class SessionModel implements ISessionModel
     public void setInAssignment(boolean value)
     {
         inAssignment = value;
+        assign = null;
+    }
+
+    private IBinaryOperatorNode assign;
+
+    @Override
+    public IBinaryOperatorNode getAssign()
+    {
+        return assign;
+    }
+
+    @Override
+    public void setAssign(IBinaryOperatorNode value)
+    {
+        assign = value;
     }
 
     private boolean skipOperator;
