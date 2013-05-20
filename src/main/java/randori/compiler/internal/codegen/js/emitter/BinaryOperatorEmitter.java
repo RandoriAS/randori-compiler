@@ -62,6 +62,7 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
 
         // if on the left side with '=' , we are in setter mode
         getModel().setInAssignment(isInAssignment(node));
+        getModel().setAssign(node);
 
         getEmitter().getWalker().walk(left);
 
@@ -101,4 +102,5 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
             return true;
         return false;
     }
+
 }
