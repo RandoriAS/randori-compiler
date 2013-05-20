@@ -179,7 +179,8 @@ public class IdentifierEmitter extends BaseSubEmitter implements
                 write(name);
                 return;
             }
-            if (getModel().isInAssignment())
+            if (getModel().isInAssignment()
+                    && ExpressionUtils.isRight(getModel().getAssign(), node))
             {
                 write("set_" + name);
             }
@@ -214,4 +215,5 @@ public class IdentifierEmitter extends BaseSubEmitter implements
             write(node.getName());
         }
     }
+
 }

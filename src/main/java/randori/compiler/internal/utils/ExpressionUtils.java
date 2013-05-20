@@ -34,6 +34,8 @@ import org.apache.flex.compiler.internal.definitions.ClassTraitsDefinition;
 import org.apache.flex.compiler.internal.definitions.FunctionDefinition;
 import org.apache.flex.compiler.internal.definitions.VariableDefinition;
 import org.apache.flex.compiler.internal.scopes.ASScope;
+import org.apache.flex.compiler.internal.tree.as.BinaryOperatorAssignmentNode;
+import org.apache.flex.compiler.internal.tree.as.BinaryOperatorNodeBase;
 import org.apache.flex.compiler.internal.tree.as.ExpressionNodeBase;
 import org.apache.flex.compiler.internal.tree.as.FunctionCallNode;
 import org.apache.flex.compiler.internal.tree.as.MemberAccessExpressionNode;
@@ -61,6 +63,37 @@ import org.apache.flex.compiler.tree.as.IVariableNode;
  */
 public class ExpressionUtils
 {
+    public static boolean isRight(IBinaryOperatorNode assignNode,
+            IIdentifierNode node)
+
+    {
+        if (node.getParent() == assignNode)
+            return true;
+        // if the left node IS the right most node, we are a setter
+        // if the left node is member access and is not the right most
+        // in the lhs, we cannot be a setter
+        if (assignNode instanceof BinaryOperatorAssignmentNode)
+        {
+            IExpressionNode right = getRightOfMemberAccess(assignNode
+                    .getLeftOperandNode());
+            return node == right;
+        }
+        return false;
+    }
+
+    private static IExpressionNode getRightOfMemberAccess(IExpressionNode node)
+    {
+        if (node instanceof IMemberAccessExpressionNode)
+        {
+            IASNode right = ((BinaryOperatorNodeBase) node)
+                    .getRightOperandNode();
+            if (right instanceof IBinaryOperatorNode)
+                return getRightOfMemberAccess((IBinaryOperatorNode) right);
+            return (IExpressionNode) right;
+        }
+        return node;
+    }
+
     public static IExpressionNode getNode(IASNode iNode, Boolean toRight,
             ICompilerProject project)
     {

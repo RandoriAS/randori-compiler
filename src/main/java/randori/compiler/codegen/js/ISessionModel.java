@@ -27,6 +27,7 @@ import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
+import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
 import org.apache.flex.compiler.units.ICompilationUnit;
 
 /**
@@ -126,4 +127,7 @@ public interface ISessionModel
     
     void setInArguments(boolean value);
 
+    IBinaryOperatorNode getAssign();
+    
+    void setAssign(IBinaryOperatorNode node);
 }
