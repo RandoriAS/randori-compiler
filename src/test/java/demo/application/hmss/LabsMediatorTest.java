@@ -23,13 +23,13 @@ import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import randori.compiler.internal.RandoriTestBase;
 import randori.compiler.internal.constants.TestConstants;
-import randori.compiler.internal.js.codegen.RandoriTestProjectBase;
 
 /**
  * @author Michael Schmalle
  */
-public class LabsMediatorTest extends RandoriTestProjectBase
+public class LabsMediatorTest extends RandoriTestBase
 {
     @Ignore
     @Test

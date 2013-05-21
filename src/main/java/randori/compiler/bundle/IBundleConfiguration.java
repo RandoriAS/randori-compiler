@@ -62,9 +62,17 @@ public interface IBundleConfiguration
      * Adds a <code>-library-path</code> compiler argument that will be used for
      * all bundle entry compilation.
      * 
-     * @param string The path to the swc library.
+     * @param path The path to the swc library.
      */
     void addLibraryPath(String path);
+
+    /**
+     * Adds a <code>-bundle-path</code> compiler argument that will be used for
+     * all bundle entry compilation.
+     * 
+     * @param path The path to the rbl bundle.
+     */
+    void addBundlePath(String path);
 
     /**
      * Returns an entry that exists as a bundle library within the

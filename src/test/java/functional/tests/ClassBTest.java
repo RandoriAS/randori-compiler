@@ -583,6 +583,26 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void compound_assignment()
+    {
+        IFunctionNode node = findFunction("compound_assignment", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.compound_assignment = function() {\n\t"
+                + "this.set_foo(this.get_foo() << 42));\n\t"
+                + "this.set_foo(this.get_foo() >> 42));\n\t"
+                + "this.set_foo(this.get_foo() >>> 42));\n\t"
+                + "this.set_foo(this.get_foo() * 42));\n\t"
+                + "this.set_foo(this.get_foo() / 42));\n\t"
+                + "this.set_foo(this.get_foo() % 42));\n\t"
+                + "this.set_foo(this.get_foo() & 42));\n\t"
+                + "this.set_foo(this.get_foo() ^ 42));\n\t"
+                + "this.set_foo(this.get_foo() | 42));\n\t"
+                + "this.set_foo(this.get_foo() + 42));\n\t"
+                + "this.set_foo(this.get_foo() - 42));\n\t"
+                + "this.set_foo(this.get_foo() && 42));\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
