@@ -22,13 +22,13 @@ package demo.application.hmss;
 import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.junit.Test;
 
+import randori.compiler.internal.RandoriTestBase;
 import randori.compiler.internal.constants.TestConstants;
-import randori.compiler.internal.js.codegen.RandoriTestProjectBase;
 
 /**
  * @author Michael Schmalle
  */
-public class EchoBehaviorTest extends RandoriTestProjectBase
+public class EchoBehaviorTest extends RandoriTestBase
 {
     @Test
     public void test_constructor()

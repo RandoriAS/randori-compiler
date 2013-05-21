@@ -24,8 +24,8 @@ import java.util.List;
 
 import org.apache.flex.utils.FilenameNormalization;
 
+import randori.compiler.internal.ResourceTestBase;
 import randori.compiler.internal.constants.TestConstants;
-import randori.compiler.internal.js.codegen.ResourceTestBase;
 
 /**
  * @author Michael Schmalle

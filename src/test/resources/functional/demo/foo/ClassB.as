@@ -441,5 +441,22 @@ public class ClassB extends ClassA
     {
         modela.menuItem.isRedirect = false;
     }
+    
+    public function compound_assignment():void
+    {
+        foo <<= 42;
+        foo >>= 42;
+        foo >>>= 42;
+        foo *= 42;
+        foo /= 42;
+        foo %= 42;
+        foo &= 42;
+        foo ^= 42;
+        foo |= 42;
+        foo += 42;
+        foo -= 42;
+        foo &&= 42;
+    }
+
 }
 }

@@ -43,21 +43,21 @@ public class ASTestBase extends TestBase
             Class<? extends IASNode> type)
     {
         return (IExpressionNode) getNode(
-                "package{public class A {public function a():void{" + code
+                "package{public class A {public function foo():void{" + code
                         + "}}}", type);
     }
 
     protected IBinaryOperatorNode getBinaryNode(String code)
     {
         return (IBinaryOperatorNode) getNode(
-                "package{public class A {public function a():void{" + code
+                "package{public class A {public function foo():void{" + code
                         + "}}}", IBinaryOperatorNode.class);
     }
 
     protected IUnaryOperatorNode getUnaryNode(String code)
     {
         return (IUnaryOperatorNode) getNode(
-                "package{public class A {public function a():void{" + code
+                "package{public class A {public function foo():void{" + code
                         + "}}}", IUnaryOperatorNode.class);
     }
 }
