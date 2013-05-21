@@ -19,6 +19,13 @@
 
 package randori.compiler.internal.projects;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.flex.compiler.asdoc.IASDocBundleDelegate;
 import org.apache.flex.compiler.clients.problems.ProblemQuery;
 import org.apache.flex.compiler.config.Configuration;
@@ -33,8 +40,11 @@ import org.apache.flex.compiler.problems.ConfigurationProblem;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.targets.ITargetProgressMonitor;
 import org.apache.flex.compiler.targets.ITargetSettings;
+import org.apache.flex.swc.ISWC;
+import org.apache.flex.utils.FilenameNormalization;
 
 import randori.compiler.access.IASProjectAccess;
+import randori.compiler.bundle.io.BundleUtils;
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.config.annotation.IAnnotationManager;
 import randori.compiler.driver.IRandoriBackend;
@@ -69,6 +79,8 @@ public abstract class RandoriProject extends FlexProject implements
     private ProblemQuery problems;
 
     private IPluginFactory pluginFactory;
+
+    private File tempOutput;
 
     protected IRandoriBackend getBackend()
     {
@@ -243,6 +255,23 @@ public abstract class RandoriProject extends FlexProject implements
     protected abstract void validateConfiguration()
             throws ConfigurationException;
 
+    protected void populateBundleSWCs(List<File> files)
+    {
+        List<String> bundles = getConfiguration().getBundlePath();
+        // if -bundle-path is present, add all SWCs from the bundles
+        if (bundles.size() > 0)
+        {
+            addSWCsFromBundles(bundles, files);
+        }
+
+        // if we do have new files, add the original libraries
+        // to the new result
+        for (ISWC swc : getLibraries())
+        {
+            files.add(swc.getSWCFile());
+        }
+    }
+
     protected abstract boolean startCompile(boolean doBuild);
 
     protected IRandoriTarget createTarget(ITargetSettings targetSettings)
@@ -263,6 +292,50 @@ public abstract class RandoriProject extends FlexProject implements
 
     protected void finish()
     {
+        if (tempOutput != null)
+        {
+            try
+            {
+                FileUtils.deleteDirectory(tempOutput);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            tempOutput = null;
+        }
     }
 
+    protected void addSWCsFromBundles(List<String> bundles, List<File> files)
+    {
+        Collection<ISWC> result = new ArrayList<ISWC>();
+
+        // temporarily copy swcs in bundles
+        for (String bundle : bundles)
+        {
+            Collection<ISWC> swcs = null;
+            // XXX Figure out what random dir name is best here
+            tempOutput = new File(
+                    FilenameNormalization.normalize(getConfiguration()
+                            .getOutput()), "___temp___");
+            try
+            {
+                swcs = BundleUtils.tempWriteSWCs(
+                        new File(FilenameNormalization.normalize(bundle)),
+                        tempOutput);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+
+            result.addAll(swcs);
+        }
+
+        // add all the swc file to the library path
+        for (ISWC swc : result)
+        {
+            files.add(swc.getSWCFile());
+        }
+    }
 }
