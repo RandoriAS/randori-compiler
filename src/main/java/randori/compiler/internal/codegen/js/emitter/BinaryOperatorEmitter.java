@@ -46,6 +46,32 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
         super(emitter);
     }
 
+    private boolean isCompoundAssignment(IBinaryOperatorNode node,
+            IDefinition lhsDefinition)
+    {
+        if (!(lhsDefinition instanceof IAccessorDefinition))
+            return false;
+
+        switch (node.getNodeID())
+        {
+        case Op_LeftShiftAssignID:
+        case Op_RightShiftAssignID:
+        case Op_UnsignedRightShiftAssignID:
+        case Op_MultiplyAssignID:
+        case Op_DivideAssignID:
+        case Op_ModuloAssignID:
+        case Op_BitwiseAndAssignID:
+        case Op_BitwiseXorAssignID:
+
+        case Op_BitwiseOrAssignID:
+        case Op_AddAssignID:
+        case Op_SubtractAssignID:
+        case Op_LogicalAndAssignID:
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void emit(IBinaryOperatorNode node)
     {
@@ -56,6 +82,21 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
 
         IExpressionNode right = node.getRightOperandNode();
         //IDefinition rightDefinition = right.resolve(project);
+
+        // compund statements
+        if (isCompoundAssignment(node, leftDefinition))
+        {
+            IAccessorDefinition accessor = (IAccessorDefinition) leftDefinition;
+            String name = accessor.getBaseName();
+            write("this.set_" + name + "(");
+            write("this.get_" + name + "()");
+            write(" ");
+            write(node.getOperator().getOperatorText().replace("=", ""));
+            write(" ");
+            getWalker().walk(right);
+            write("))");
+            return;
+        }
 
         if (ASNodeUtils.hasParenOpen(node))
             write("(");

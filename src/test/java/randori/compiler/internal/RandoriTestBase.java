@@ -17,7 +17,7 @@
  * @author Michael Schmalle <mschmalle@teotigraphix.com>
  */
 
-package randori.compiler.internal.js.codegen;
+package randori.compiler.internal;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,14 +45,13 @@ import org.apache.flex.utils.FilenameNormalization;
 import org.junit.Assert;
 
 import randori.compiler.driver.IBackend;
-import randori.compiler.internal.TestBase;
 import randori.compiler.internal.constants.TestConstants;
 import randori.compiler.internal.driver.RandoriBackend;
 
 /**
  * @author Michael Schmalle
  */
-public abstract class RandoriTestProjectBase extends TestBase
+public abstract class RandoriTestBase extends TestBase
 {
     private String normalizedMainFileName;
 

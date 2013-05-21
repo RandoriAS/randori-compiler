@@ -17,30 +17,32 @@
  * @author Michael Schmalle <mschmalle@teotigraphix.com>
  */
 
-package randori.compiler.internal.js.codegen;
+package randori.compiler.internal;
 
-import org.junit.Test;
+import java.io.File;
+import java.util.List;
+
+import org.apache.flex.utils.FilenameNormalization;
 
 import randori.compiler.internal.constants.TestConstants;
 
-public class RandoriFrameworkTest extends RandoriTestProjectBase
+/**
+ * @author Michael Schmalle
+ */
+public abstract class ResourceTestBase extends RandoriTestBase
 {
-
-    @Test
-    public void test_file()
+    @Override
+    protected void addSourcePaths(List<File> sourcePaths)
     {
+        super.addSourcePaths(sourcePaths);
+        sourcePaths.add(new File(FilenameNormalization
+                .normalize(TestConstants.RandoriASFramework
+                        + "/randori-compiler/test/resources")));
     }
 
     @Override
     protected String getBasePath()
     {
-        return TestConstants.RandoriASFramework + "Randori\\src";
+        return "test/resources";
     }
-
-    @Override
-    protected String getTypeUnderTest()
-    {
-        return "randori.signal.SimpleSignal";
-    }
-
 }

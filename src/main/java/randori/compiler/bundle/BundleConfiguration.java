@@ -91,6 +91,14 @@ public class BundleConfiguration implements IBundleConfiguration
             return;
         libraryPaths.add(path);
     }
+    
+    @Override
+    public void addBundlePath(String path)
+    {
+        if (bundlePaths.contains(path))
+            return;
+        bundlePaths.add(path);
+    }
 
     public BundleConfigurationEntry addEntry(String name)
     {
