@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.flex.compiler.asdoc.IASDocBundleDelegate;
 import org.apache.flex.compiler.exceptions.ConfigurationException;
 import org.apache.flex.compiler.internal.projects.CompilerProject;
@@ -53,8 +52,6 @@ public class RandoriApplicationProject extends RandoriProject implements
 {
 
     private IRandoriTarget target;
-
-    private File tempOutput;
 
     public RandoriApplicationProject(Workspace workspace,
             IRandoriBackend backend)
@@ -182,24 +179,9 @@ public class RandoriApplicationProject extends RandoriProject implements
             }
         }
 
-        List<String> bundles = getConfiguration().getBundlePath();
-        // if -bundle-path is present, add all SWCs from the bundles
-        if (bundles.size() > 0)
-        {
-            addSWCsFromBundles(bundles, files);
-        }
+        populateBundleSWCs(files);
 
-        if (files.size() > 0)
-        {
-            // if we do have new files, add the original libraries
-            // to the new result
-            for (ISWC swc : getLibraries())
-            {
-                files.add(swc.getSWCFile());
-            }
-
-            setLibraries(files);
-        }
+        setLibraries(files);
     }
 
     @Override
@@ -243,52 +225,6 @@ public class RandoriApplicationProject extends RandoriProject implements
     protected void finish()
     {
         super.finish();
-
-        if (tempOutput != null)
-        {
-            try
-            {
-                FileUtils.deleteDirectory(tempOutput);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            tempOutput = null;
-        }
-    }
-
-    private void addSWCsFromBundles(List<String> bundles, ArrayList<File> files)
-    {
-        Collection<ISWC> result = new ArrayList<ISWC>();
-
-        // temporarily copy swcs in bundles
-        for (String bundle : bundles)
-        {
-            Collection<ISWC> swcs = null;
-            // XXX Figure out what random dir name is best here
-            tempOutput = new File(
-                    FilenameNormalization.normalize(getConfiguration()
-                            .getOutput()), "___temp___");
-            try
-            {
-                swcs = BundleUtils.tempWriteSWCs(
-                        new File(FilenameNormalization.normalize(bundle)),
-                        tempOutput);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-
-            result.addAll(swcs);
-        }
-
-        // add all the swc file to the library path
-        for (ISWC swc : result)
-        {
-            files.add(swc.getSWCFile());
-        }
     }
 
     private void addSWCsFromSDKPath(String path, Collection<File> files)
