@@ -37,6 +37,8 @@ public class BundleConfiguration implements IBundleConfiguration
 
     private Collection<String> libraryPaths = new ArrayList<String>();
 
+    private Collection<String> bundlePaths = new ArrayList<String>();
+
     private Map<String, IBundleConfigurationEntry> entries = new HashMap<String, IBundleConfigurationEntry>();
 
     @Override
@@ -55,6 +57,12 @@ public class BundleConfiguration implements IBundleConfiguration
     public Collection<String> getLibraryPaths()
     {
         return libraryPaths;
+    }
+
+    @Override
+    public Collection<String> getBundlePaths()
+    {
+        return bundlePaths;
     }
 
     @Override

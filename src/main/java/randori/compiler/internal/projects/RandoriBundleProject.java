@@ -22,7 +22,10 @@ package randori.compiler.internal.projects;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import org.apache.flex.compiler.asdoc.IASDocBundleDelegate;
 import org.apache.flex.compiler.clients.COMPC;
@@ -31,8 +34,6 @@ import org.apache.flex.compiler.internal.workspaces.Workspace;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.swc.SWC;
 import org.apache.flex.utils.FilenameNormalization;
-
-import com.google.common.io.Files;
 
 import randori.compiler.bundle.Bundle;
 import randori.compiler.bundle.BundleLibrary;
@@ -52,6 +53,8 @@ import randori.compiler.clients.Randori;
 import randori.compiler.common.VersionInfo;
 import randori.compiler.internal.driver.RandoriBackend;
 import randori.compiler.projects.IRandoriBundleProject;
+
+import com.google.common.io.Files;
 
 /**
  * @author Michael Schmalle
@@ -85,6 +88,21 @@ public class RandoriBundleProject extends RandoriProject implements
     {
         this.bundleConfiguration = configuration;
         // TODO Validate IBundleConfiguration
+        ArrayList<File> files = new ArrayList<File>();
+
+        Collection<String> bundles = configuration.getBundlePaths();
+        // if -bundle-path is present, add all SWCs from the bundles
+        if (bundles.size() > 0)
+        {
+            addSWCsFromBundles((List<String>) bundles, files);
+        }
+
+        // add the swcs for the .rbl archives onto the library path
+        for (File file : files)
+        {
+            bundleConfiguration.addLibraryPath(file.getAbsolutePath());
+        }
+
         return true;
     }
 
