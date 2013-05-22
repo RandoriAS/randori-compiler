@@ -94,13 +94,33 @@ public class RandoriBundleProject extends RandoriProject implements
         // if -bundle-path is present, add all SWCs from the bundles
         if (bundles.size() > 0)
         {
-            addSWCsFromBundles((List<String>) bundles, files);
+            File output = new File(
+                    FilenameNormalization.normalize(configuration.getOutput()));
+            addSWCsFromBundles((List<String>) bundles, files,
+                    output.getParentFile());
         }
 
         // add the swcs for the .rbl archives onto the library path
         for (File file : files)
         {
             bundleConfiguration.addLibraryPath(file.getAbsolutePath());
+        }
+
+        files = new ArrayList<File>();
+        bundles = configuration.getExternalBundlePaths();
+        // if -bundle-path is present, add all SWCs from the bundles
+        if (bundles.size() > 0)
+        {
+            File output = new File(
+                    FilenameNormalization.normalize(configuration.getOutput()));
+            addSWCsFromBundles((List<String>) bundles, files,
+                    output.getParentFile());
+        }
+
+        // add them as external so they don't get included int he rbl archive
+        for (File file : files)
+        {
+            bundleConfiguration.addExternalLibraryPath(file.getAbsolutePath());
         }
 
         return true;
@@ -159,6 +179,8 @@ public class RandoriBundleProject extends RandoriProject implements
             e.printStackTrace();
         }
 
+        finish();
+
         return true;
     }
 
@@ -190,7 +212,10 @@ public class RandoriBundleProject extends RandoriProject implements
     @Override
     protected void finish()
     {
-        tempDir.deleteOnExit();
+        super.finish();
+
+        if (tempDir != null)
+            tempDir.deleteOnExit();
     }
 
     private void compileRandori(IBundleLibrary library,
@@ -229,6 +254,11 @@ public class RandoriBundleProject extends RandoriProject implements
             arguments.addLibraryPath(FilenameNormalization.normalize(path));
         }
 
+        for (String path : getBundleConfiguration().getExternalLibraryPaths())
+        {
+            arguments.addLibraryPath(FilenameNormalization.normalize(path));
+        }
+
         for (String path : entry.getSourcePaths())
         {
             arguments.addSourcepath(FilenameNormalization.normalize(path));
@@ -252,6 +282,11 @@ public class RandoriBundleProject extends RandoriProject implements
             arguments.addLibraryPath(FilenameNormalization.normalize(path));
             library.addSWC(new SWC(new File(FilenameNormalization
                     .normalize(path))));
+        }
+
+        for (String path : entry.getExternalLibraryPaths())
+        {
+            arguments.addLibraryPath(FilenameNormalization.normalize(path));
         }
 
         for (String path : entry.getSourcePaths())

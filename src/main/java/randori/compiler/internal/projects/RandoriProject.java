@@ -255,13 +255,13 @@ public abstract class RandoriProject extends FlexProject implements
     protected abstract void validateConfiguration()
             throws ConfigurationException;
 
-    protected void populateBundleSWCs(List<File> files)
+    protected void populateBundleSWCs(List<File> files, File output)
     {
         List<String> bundles = getConfiguration().getBundlePath();
         // if -bundle-path is present, add all SWCs from the bundles
         if (bundles.size() > 0)
         {
-            addSWCsFromBundles(bundles, files);
+            addSWCsFromBundles(bundles, files, output);
         }
 
         // if we do have new files, add the original libraries
@@ -306,7 +306,8 @@ public abstract class RandoriProject extends FlexProject implements
         }
     }
 
-    protected void addSWCsFromBundles(List<String> bundles, List<File> files)
+    protected void addSWCsFromBundles(List<String> bundles, List<File> files,
+            File output)
     {
         Collection<ISWC> result = new ArrayList<ISWC>();
 
@@ -315,9 +316,7 @@ public abstract class RandoriProject extends FlexProject implements
         {
             Collection<ISWC> swcs = null;
             // XXX Figure out what random dir name is best here
-            tempOutput = new File(
-                    FilenameNormalization.normalize(getConfiguration()
-                            .getOutput()), "___temp___");
+            tempOutput = new File(output, "___temp___");
             try
             {
                 swcs = BundleUtils.tempWriteSWCs(
