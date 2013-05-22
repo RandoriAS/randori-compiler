@@ -88,7 +88,23 @@ public interface IRandoriTargetSettings extends ITargetSettings
      */
     boolean getJsClassesAsFiles();
 
+    /**
+     * Returns a collection of <code>.rbl</code> bundle archives that will be
+     * used to compile an application or bundle archive.
+     * <p>
+     * If the compile target is a bundle, using this arg will include the swcs
+     * contained in the bundle-path inside the new compiled bundle.
+     */
     Collection<File> getBundlePaths();
+
+    /**
+     * Returns a collection of <code>.rbl</code> bundle archives that will only
+     * be used for compiler definitions.
+     * <p>
+     * Any assets or swcs contained in these bundles will not be included in the
+     * target.
+     */
+    Collection<File> getExternalBundlePaths();
 
     @Override
     Collection<File> getIncludeSources();

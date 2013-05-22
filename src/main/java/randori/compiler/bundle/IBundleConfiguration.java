@@ -45,12 +45,20 @@ public interface IBundleConfiguration
      * used for the bundle compiler.
      */
     Collection<String> getLibraryPaths();
+    
+    Collection<String> getExternalLibraryPaths();
 
     /**
      * Returns a collection of all <code>-bundle-path</code> compiler arguments
      * used for the bundle compiler.
      */
     Collection<String> getBundlePaths();
+
+    /**
+     * Returns a collection of all <code>-external-bundle-path</code> compiler
+     * arguments used for the bundle compiler.
+     */
+    Collection<String> getExternalBundlePaths();
 
     /**
      * Returns the entries of the bundle compiler that will be compiled into
@@ -65,6 +73,19 @@ public interface IBundleConfiguration
      * @param path The path to the swc library.
      */
     void addLibraryPath(String path);
+
+    void addExternalLibraryPath(String path);
+
+    /**
+     * Adds a <code>-external-library-path</code> compiler argument that will be
+     * used for all bundle entry compilation.
+     * <p>
+     * This entry will not be included when the bundle rbl file is created. The
+     * library is used for compile only.
+     * 
+     * @param path The path to the swc library.
+     */
+    void addExternalBundlePath(String absolutePath);
 
     /**
      * Adds a <code>-bundle-path</code> compiler argument that will be used for

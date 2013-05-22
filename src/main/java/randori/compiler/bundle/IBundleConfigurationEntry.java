@@ -30,6 +30,8 @@ public interface IBundleConfigurationEntry
     String getName();
 
     Collection<String> getLibraryPaths();
+    
+    Collection<String> getExternalLibraryPaths();
 
     Collection<String> getSourcePaths();
 
