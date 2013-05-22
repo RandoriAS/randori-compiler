@@ -155,6 +155,29 @@ public class RandoriConfiguration extends Configuration
     }
 
     //
+    // 'external-bundle-path'
+    //
+
+    private final List<String> externalBundlePath = new ArrayList<String>();
+
+    public List<String> getExternalBundlePath()
+    {
+        return externalBundlePath;
+    }
+
+    @Config(allowMultiple = true, isPath = true)
+    @Mapping({ "external-bundle-path" })
+    @Arguments(Arguments.PATH_ELEMENT)
+    @InfiniteArguments
+    public void setExternalBundlePath(ConfigurationValue cv, String[] pathlist)
+            throws CannotOpen
+    {
+        final ImmutableList<String> resolvedPaths = expandTokens(
+                Arrays.asList(pathlist), Arrays.asList(""), cv, false);
+        externalBundlePath.addAll(resolvedPaths);
+    }
+
+    //
     // 'exclude-packages'
     //
 

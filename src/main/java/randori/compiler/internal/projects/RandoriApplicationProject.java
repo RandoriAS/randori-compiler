@@ -179,7 +179,10 @@ public class RandoriApplicationProject extends RandoriProject implements
             }
         }
 
-        populateBundleSWCs(files);
+        populateBundleSWCs(
+                files,
+                new File(FilenameNormalization.normalize(getConfiguration()
+                        .getOutput())));
 
         setLibraries(files);
     }

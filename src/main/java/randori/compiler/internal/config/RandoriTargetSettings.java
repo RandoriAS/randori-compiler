@@ -50,6 +50,8 @@ public class RandoriTargetSettings extends TargetSettings implements
 
     private Collection<File> bundlePaths;
 
+    private Collection<File> externalBundlePaths;
+
     private Collection<String> excludePackages;
 
     private Collection<File> includeSources;
@@ -119,6 +121,16 @@ public class RandoriTargetSettings extends TargetSettings implements
                     .toFileList(configuration.getBundlePath());
 
         return bundlePaths;
+    }
+
+    @Override
+    public Collection<File> getExternalBundlePaths()
+    {
+        if (externalBundlePaths == null)
+            externalBundlePaths = Configurator.toFileList(configuration
+                    .getExternalBundlePath());
+
+        return externalBundlePaths;
     }
 
     @Override

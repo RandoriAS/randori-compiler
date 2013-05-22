@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.flex.compiler.internal.workspaces.Workspace;
+import org.apache.flex.utils.FilenameNormalization;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -48,6 +49,10 @@ public class RandoriBundleProjectTest
             + "/randori-framework/src";
     String randoriGuiceSrc = TestConstants.RandoriASFramework
             + "/randori-guice-framework/src";
+
+    protected File sdkRBL = new File(
+            FilenameNormalization
+                    .normalize("src/test/resources/libs/randori-sdk.rbl"));
 
     private BundleConfiguration configuration;
 
@@ -77,6 +82,34 @@ public class RandoriBundleProjectTest
         project.configure(configuration);
         boolean success = project.compile(true, true);
         Assert.assertTrue(success);
+    }
+
+    @Test
+    public void test_compile_with_rbl()
+    {
+        String source = "C:/Users/Work/Documents/git-randori/randori-compiler/"
+                + "src/test/resources/functional_compiler";
+        String path = TestConstants.RandoriASFramework
+                + "/randori-compiler/temp/bundle/test-bundle.rbl";
+        File target = new File(path);
+
+        Assert.assertFalse(target.exists());
+
+        BundleConfiguration config = new BundleConfiguration("test-bundle",
+                path);
+
+        // add the sdk as external so the swcs will not get packaged
+        // within the new bundle
+        config.addExternalBundlePath(sdkRBL.getAbsolutePath());
+
+        IBundleConfigurationEntry randori = config.addEntry("test-library");
+        randori.addSourcePath(source);
+
+        project.configure(config);
+        boolean success = project.compile(true, true);
+        Assert.assertTrue(success);
+        Assert.assertTrue(target.exists());
+        Assert.assertTrue(target.delete());
     }
 
     private void createSDKConfiguration() throws IOException

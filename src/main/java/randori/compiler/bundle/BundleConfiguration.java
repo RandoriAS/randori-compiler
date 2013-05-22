@@ -37,7 +37,11 @@ public class BundleConfiguration implements IBundleConfiguration
 
     private Collection<String> libraryPaths = new ArrayList<String>();
 
+    private Collection<String> externalLibraryPaths = new ArrayList<String>();
+
     private Collection<String> bundlePaths = new ArrayList<String>();
+
+    private Collection<String> externalBundlePaths = new ArrayList<String>();
 
     private Map<String, IBundleConfigurationEntry> entries = new HashMap<String, IBundleConfigurationEntry>();
 
@@ -60,9 +64,21 @@ public class BundleConfiguration implements IBundleConfiguration
     }
 
     @Override
+    public Collection<String> getExternalLibraryPaths()
+    {
+        return externalLibraryPaths;
+    }
+
+    @Override
     public Collection<String> getBundlePaths()
     {
         return bundlePaths;
+    }
+
+    @Override
+    public Collection<String> getExternalBundlePaths()
+    {
+        return externalBundlePaths;
     }
 
     @Override
@@ -83,7 +99,6 @@ public class BundleConfiguration implements IBundleConfiguration
         this.output = output;
     }
 
-    // XXX make sure  all paths are normailzed when getting fed into the args
     @Override
     public void addLibraryPath(String path)
     {
@@ -91,13 +106,29 @@ public class BundleConfiguration implements IBundleConfiguration
             return;
         libraryPaths.add(path);
     }
-    
+
+    @Override
+    public void addExternalLibraryPath(String path)
+    {
+        if (externalLibraryPaths.contains(path))
+            return;
+        externalLibraryPaths.add(path);
+    }
+
     @Override
     public void addBundlePath(String path)
     {
         if (bundlePaths.contains(path))
             return;
         bundlePaths.add(path);
+    }
+
+    @Override
+    public void addExternalBundlePath(String path)
+    {
+        if (externalBundlePaths.contains(path))
+            return;
+        externalBundlePaths.add(path);
     }
 
     public BundleConfigurationEntry addEntry(String name)
@@ -149,6 +180,12 @@ public class BundleConfiguration implements IBundleConfiguration
         }
 
         @Override
+        public Collection<String> getExternalLibraryPaths()
+        {
+            return configuration.getExternalLibraryPaths();
+        }
+
+        @Override
         public Collection<String> getSourcePaths()
         {
             return sourcePaths;
@@ -183,4 +220,5 @@ public class BundleConfiguration implements IBundleConfiguration
             includeSources.add(path);
         }
     }
+
 }
