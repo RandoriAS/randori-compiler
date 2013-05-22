@@ -54,7 +54,7 @@ import randori.compiler.common.VersionInfo;
 import randori.compiler.internal.driver.RandoriBackend;
 import randori.compiler.projects.IRandoriBundleProject;
 
-import com.google.common.io.Files;
+//import com.google.common.io.Files;
 
 /**
  * @author Michael Schmalle
@@ -70,7 +70,9 @@ public class RandoriBundleProject extends RandoriProject implements
 
     private File outputDir;
 
-    private File tempDir;
+   // private File tempDir;
+    
+    private File tempDir_;
 
     private IBundleConfiguration getBundleConfiguration()
     {
@@ -136,9 +138,11 @@ public class RandoriBundleProject extends RandoriProject implements
     {
         outputRBL = new File(getBundleConfiguration().getOutput());
         outputDir = outputRBL.getParentFile();
-
-        tempDir = Files.createTempDir();
-        tempDir.mkdirs();
+        
+        //tempDir = Files.createTempDir();
+        //tempDir.mkdirs();
+        tempDir_ = new File(outputDir, "___bundle___");
+        tempDir_.mkdirs();
 
         bundle = new Bundle(outputRBL);
 
@@ -212,10 +216,10 @@ public class RandoriBundleProject extends RandoriProject implements
     @Override
     protected void finish()
     {
-        super.finish();
+        //super.finish();
 
-        if (tempDir != null)
-            tempDir.deleteOnExit();
+        if (tempDir_ != null)
+            tempDir_.deleteOnExit();
     }
 
     private void compileRandori(IBundleLibrary library,
@@ -239,13 +243,13 @@ public class RandoriBundleProject extends RandoriProject implements
                 IBundleContainer.Type.JS).getCategory(
                 IBundleCategory.Type.MONOLITHIC);
 
-        category.addFile(new File(tempDir, name + ".js"), name + ".js");
+        category.addFile(new File(tempDir_, name + ".js"), name + ".js");
     }
 
     private void configureRandoriCompiler(IBundleLibrary library,
             IBundleConfigurationEntry entry, CompilerArguments arguments)
     {
-        arguments.setOutput(tempDir.getAbsolutePath());
+        arguments.setOutput(tempDir_.getAbsolutePath());
         arguments.setJsOutputAsFiles(false);
         arguments.setAppName(entry.getName());
 
@@ -273,7 +277,7 @@ public class RandoriBundleProject extends RandoriProject implements
     private void configureCOMPCCompiler(IBundleLibrary library,
             IBundleConfigurationEntry entry, CompilerArguments arguments)
     {
-        arguments.setOutput(tempDir + "/" + entry.getName() + ".swc");
+        arguments.setOutput(tempDir_ + "/" + entry.getName() + ".swc");
 
         // XXX Implement external-library-path
 
@@ -312,7 +316,7 @@ public class RandoriBundleProject extends RandoriProject implements
         int code = compc.mainNoExit(arguments.toArguments());
         getProblemQuery().addAll(compc.getProblems().getProblems());
 
-        library.addSWC(new SWC(new File(tempDir, entry.getName() + ".swc")));
+        library.addSWC(new SWC(new File(tempDir_, entry.getName() + ".swc")));
     }
 
     private void setVersionInfo(IBundle bundle)
