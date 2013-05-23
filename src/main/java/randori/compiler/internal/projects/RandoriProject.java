@@ -319,6 +319,7 @@ public abstract class RandoriProject extends FlexProject implements
             tempOutput = new File(output, "___temp___");
             try
             {
+                tempOutput.mkdirs();
                 swcs = BundleUtils.tempWriteSWCs(
                         new File(FilenameNormalization.normalize(bundle)),
                         tempOutput);

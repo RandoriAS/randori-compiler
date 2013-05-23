@@ -165,6 +165,7 @@ public class CompilerArguments
         output = "";
         clearLibraries();
         clearSourcePaths();
+        includes.clear();
     }
 
     public void clearSourcePaths()

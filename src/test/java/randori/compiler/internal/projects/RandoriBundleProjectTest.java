@@ -22,12 +22,10 @@ package randori.compiler.internal.projects;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.flex.compiler.internal.workspaces.Workspace;
 import org.apache.flex.utils.FilenameNormalization;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import randori.compiler.bundle.BundleConfiguration;
 import randori.compiler.bundle.IBundleConfigurationEntry;
@@ -36,7 +34,7 @@ import randori.compiler.internal.constants.TestConstants;
 /**
  * @author Michael Schmalle
  */
-public class RandoriBundleProjectTest
+public class RandoriBundleProjectTest extends RandoriTestCaseBase
 {
     File builtinSWC = new File(TestConstants.RandoriASFramework
             + "/randori-sdk/randori-framework/bin/swc/builtin.swc");
@@ -59,6 +57,7 @@ public class RandoriBundleProjectTest
     private Workspace workspace;
 
     private RandoriBundleProject project;
+    private final String hmssProjectPath = getTestDataPath() + "test/HMSS_RBL";
 
     @Before
     public void setUp() throws IOException
@@ -66,6 +65,9 @@ public class RandoriBundleProjectTest
         workspace = new Workspace();
         createSDKConfiguration();
         project = new RandoriBundleProject(workspace);
+
+        // Cleanup before tests to allow test output examination.
+        cleanupGenerated();
     }
 
     @After
@@ -87,7 +89,7 @@ public class RandoriBundleProjectTest
     @Test
     public void test_compile_with_rbl()
     {
-        String source = "C:/Users/Work/Documents/git-randori/randori-compiler/"
+        String source = TestConstants.RandoriASFramework + "/randori-compiler/"
                 + "src/test/resources/functional_compiler";
         String path = TestConstants.RandoriASFramework
                 + "/randori-compiler/temp/bundle/test-bundle.rbl";
@@ -133,5 +135,100 @@ public class RandoriBundleProjectTest
         IBundleConfigurationEntry guice = configuration
                 .addEntry("randori-guice-framework");
         guice.addSourcePath(randoriGuiceSrc);
+    }
+
+    /////////////////////////////////////////////////////////
+
+    private void cleanupGenerated()
+    {
+        try
+        {
+            final File generated = new File(hmssProjectPath + "/generated");
+            FileUtils.deleteDirectory(generated);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void compileCommonModule()
+    {
+        configuration = new BundleConfiguration("CommonModule", hmssProjectPath
+                + "/generated/libs");
+
+        final IBundleConfigurationEntry entry = configuration
+                .addEntry("CommonModule");
+        entry.addSourcePath(hmssProjectPath + "/CommonModule/src");
+
+        configuration.addExternalBundlePath(getTestDataPath()
+                + "/sdk/randori-sdk-0.2.3.rbl");
+
+        project.configure(configuration);
+        boolean success = project.compile(true, true);
+
+        Assert.assertTrue("CommonModule should compile", success);
+        Assert.assertFalse("No problems should be reported", project
+                .getProblemQuery().hasErrors());
+    }
+
+    @Test
+    public void compileLabModuleWithRblSource()
+    {
+        configuration = new BundleConfiguration("LabModule", hmssProjectPath
+                + "/generated/libs");
+
+        final IBundleConfigurationEntry entry = configuration
+                .addEntry("LabModule");
+        entry.addSourcePath(hmssProjectPath + "/LabModule/src");
+
+        configuration.addBundlePath(hmssProjectPath + "/CommonModule/src");
+        configuration.addExternalBundlePath(getTestDataPath()
+                + "/sdk/randori-sdk-0.2.3.rbl");
+
+        project.configure(configuration);
+        boolean success = project.compile(true, true);
+
+        Assert.assertTrue("LabModule should compile", success);
+        Assert.assertFalse("No problems should be reported", project
+                .getProblemQuery().hasErrors());
+    }
+
+    @Test
+    public void compileLabModuleWithRblFile()
+    {
+        configuration = new BundleConfiguration("LabModule", hmssProjectPath
+                + "/generated/libs");
+
+        final IBundleConfigurationEntry entry = configuration
+                .addEntry("LabModule");
+        entry.addSourcePath(hmssProjectPath + "/LabModule/src");
+
+        configuration.addExternalBundlePath(hmssProjectPath
+                + "/LabModule/libs/CommonModule.rbl");
+        configuration.addExternalBundlePath(getTestDataPath()
+                + "/sdk/randori-sdk-0.2.3.rbl");
+
+        project.configure(configuration);
+        boolean success = project.compile(true, true);
+
+        Assert.assertTrue("LabModule should compile", success);
+        Assert.assertFalse("No problems should be reported", project
+                .getProblemQuery().hasErrors());
+    }
+
+    @Ignore
+    @Test
+    public void compileHMSSWithRblSources()
+    {
+        //
+    }
+
+    @Ignore
+    @Test
+    public void compileHMSSWithRblFiles()
+    {
+        //
     }
 }

@@ -298,7 +298,7 @@ public class RandoriBundleProject extends RandoriProject implements
             arguments.addSourcepath(FilenameNormalization.normalize(path));
         }
 
-        for (String path : entry.getSourcePaths())
+        for (String path : entry.getIncludeSources())
         {
             arguments.addIncludedSources(FilenameNormalization.normalize(path));
         }
@@ -312,8 +312,9 @@ public class RandoriBundleProject extends RandoriProject implements
 
         COMPC compc = new COMPC();
 
+        final String[] args = arguments.toArguments();
         @SuppressWarnings("unused")
-        int code = compc.mainNoExit(arguments.toArguments());
+        int code = compc.mainNoExit(args);
         getProblemQuery().addAll(compc.getProblems().getProblems());
 
         library.addSWC(new SWC(new File(tempDir_, entry.getName() + ".swc")));
