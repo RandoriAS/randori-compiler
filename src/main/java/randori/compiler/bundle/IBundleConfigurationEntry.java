@@ -40,7 +40,11 @@ public interface IBundleConfigurationEntry
     File getJavaScript();
 
     String getJavaScriptName();
-
+       
+    void addLibraryPath(String path);
+    
+    void addExternalLibraryPath(String path);
+    
     void addSourcePath(String path);
 
     void addIncludeSources(String path);

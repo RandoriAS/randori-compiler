@@ -165,6 +165,7 @@ public class CompilerArguments
         output = "";
         clearLibraries();
         clearSourcePaths();
+        includes.clear();
     }
 
     public void clearSourcePaths()
@@ -209,11 +210,11 @@ public class CompilerArguments
 
         // XXX TEMP
         String sdk = getSDKPath();
-        if (!sdk.equals(""))
+        if (sdk != null && !sdk.equals(""))
             result.add("-sdk-path=" + sdk);
 
         String name = getAppName();
-        if (!name.equals(""))
+        if (name != null && !name.equals(""))
             result.add("-app-name=" + name);
 
         String base = getJsBasePath();
