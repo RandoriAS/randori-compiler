@@ -30,22 +30,27 @@ import java.util.Collection;
 public interface IBundleConfiguration
 {
     /**
-     * The output directory of the compiled {@link IBundle}.
+     * The output <code>.rbl</code> file of the compiled {@link IBundle}.
      */
     String getOutput();
 
     /**
-     * The {@link IBundle#getBundleFile()}'s name used when writting to disk on
+     * The {@link IBundle#getBundleFile()}'s name used when writing to disk on
      * the output path.
      */
     String getBundelName();
+
+    /**
+     * The path to the sdk root directory or the sdk <code>.rbl</code> file.
+     */
+    String getSDKPath();
 
     /**
      * Returns a collection of all <code>-library-path</code> compiler arguments
      * used for the bundle compiler.
      */
     Collection<String> getLibraryPaths();
-    
+
     Collection<String> getExternalLibraryPaths();
 
     /**

@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<bundle xmlns="http://www.randoriframework.com/bundle/manifest/1">
+    <versions>
+        <bundle version="1.0"/>
+        <randori version="0.2.2" build="1" minimumSupportedVersion="0"/>
+        <compiler name="randori" version="0.2.2" build="1"/>
+    </versions>
+    <libraries>
+        <library name="randori-framework">
+            <js path="randori-framework/js/monolithic/randori-guice-framework.js" type="monolithic"/>
+            <js path="randori-framework/js/monolithic/randori-framework.js" type="monolithic"/>
+            <bin path="randori-framework/bin/swc/builtin.swc" type="swc"/>
+            <bin path="randori-framework/bin/swc/JQuery.swc" type="swc"/>
+            <bin path="randori-framework/bin/swc/HTMLCoreLib.swc" type="swc"/>
+            <bin path="randori-framework/bin/swc/randori-guice-framework.swc" type="swc"/>
+            <bin path="randori-framework/bin/swc/randori-framework.swc" type="swc"/>
+        </library>
+    </libraries>
+</bundle>

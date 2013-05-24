@@ -32,8 +32,6 @@ import org.apache.flex.compiler.internal.workspaces.Workspace;
 import org.apache.flex.compiler.problems.ConfigurationProblem;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.problems.InternalCompilerProblem;
-import org.apache.flex.compiler.problems.UnableToBuildSWFProblem;
-import org.apache.flex.swc.ISWC;
 import org.apache.flex.utils.FilenameNormalization;
 
 import randori.compiler.bundle.IBundle;
@@ -42,6 +40,7 @@ import randori.compiler.driver.IRandoriApplication;
 import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.driver.IRandoriTarget;
 import randori.compiler.internal.driver.RandoriBackend;
+import randori.compiler.problems.UnableToBuildApplicationProblem;
 import randori.compiler.projects.IRandoriApplicationProject;
 
 /**
@@ -128,7 +127,7 @@ public class RandoriApplicationProject extends RandoriProject implements
 
         if (app == null)
         {
-            ICompilerProblem problem = new UnableToBuildSWFProblem(
+            ICompilerProblem problem = new UnableToBuildApplicationProblem(
                     getConfiguration().getOutput());
             getProblemQuery().add(problem);
         }
@@ -157,34 +156,10 @@ public class RandoriApplicationProject extends RandoriProject implements
     @Override
     protected void validateConfiguration() throws ConfigurationException
     {
-        ArrayList<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<File>();
 
-        // if the -sdk-path is set, get all libraries from that
-        String path = getTargetSettings().getSDKPath();
-        if (path != null && !path.isEmpty())
-        {
-            File dir = new File(FilenameNormalization.normalize(path));
-            if (dir.isDirectory())
-            {
-                addSWCsFromSDKPath(path, files);
-            }
-            else
-            {
-                if (dir.getName().endsWith(".rbl"))
-                {
-                    // sdk path is a bundle, add it to the -bundle-path
-                    getConfiguration().getBundlePath().add(
-                            dir.getAbsolutePath());
-                }
-            }
-        }
-
-        populateBundleSWCs(
-                files,
-                new File(FilenameNormalization.normalize(getConfiguration()
-                        .getOutput())));
-
-        setLibraries(files);
+        populateSDKBundleOrPath(files, getTargetSettings().getOutput());
+        mergeLibraries(files);
     }
 
     @Override
@@ -228,29 +203,6 @@ public class RandoriApplicationProject extends RandoriProject implements
     protected void finish()
     {
         super.finish();
-    }
-
-    private void addSWCsFromSDKPath(String path, Collection<File> files)
-    {
-        File dir = new File(FilenameNormalization.normalize(path));
-        if (dir.exists() && dir.isDirectory())
-        {
-            Collection<ISWC> swcs = null;
-            try
-            {
-                swcs = BundleUtils.getSWCsFromBundleDir(dir);
-            }
-            catch (IOException e)
-            {
-                // TODO (mschmalle) add Problem
-                e.printStackTrace();
-            }
-
-            for (ISWC swc : swcs)
-            {
-                files.add(swc.getSWCFile());
-            }
-        }
     }
 
     private File setupLibraryDirectory()
