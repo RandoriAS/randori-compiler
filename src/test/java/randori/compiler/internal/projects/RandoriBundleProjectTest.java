@@ -21,17 +21,20 @@ package randori.compiler.internal.projects;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.flex.compiler.internal.workspaces.Workspace;
-import org.apache.flex.swc.ISWC;
 import org.apache.flex.utils.FilenameNormalization;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import randori.compiler.bundle.BundleConfiguration;
 import randori.compiler.bundle.IBundle;
+import randori.compiler.bundle.IBundleCategory;
 import randori.compiler.bundle.IBundleConfigurationEntry;
+import randori.compiler.bundle.IBundleContainer;
 import randori.compiler.bundle.IBundleLibrary;
 import randori.compiler.bundle.io.BundleReader;
 import randori.compiler.clients.CompilerArguments;
@@ -70,7 +73,7 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
     public void setUp() throws IOException
     {
         workspace = new Workspace();
-        createSDKConfiguration();
+        //createSDKConfiguration();
         project = new RandoriBundleProject(workspace);
         applicationCompiler = new RandoriApplicationProject(new Workspace());
         // Cleanup before tests to allow test output examination.
@@ -88,6 +91,26 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
     @Test
     public void test_compile()
     {
+        String path = TestConstants.RandoriASFramework
+                + "/randori-compiler/temp/bundle/randori-sdk-test.rbl";
+
+        configuration = new BundleConfiguration("randori-framework", path);
+
+        // dependent compiled libraries
+        configuration.addLibraryPath(builtinSWC.getAbsolutePath());
+        configuration.addLibraryPath(jQuerySWC.getAbsolutePath());
+        configuration.addLibraryPath(htmlCoreLibSWC.getAbsolutePath());
+
+        IBundleConfigurationEntry randori = configuration
+                .addEntry("randori-framework");
+        randori.addSourcePath(randoriGuiceSrc);
+        randori.addSourcePath(randoriSrc);
+        randori.addIncludeSources(randoriSrc);
+
+        IBundleConfigurationEntry guice = configuration
+                .addEntry("randori-guice-framework");
+        guice.addSourcePath(randoriGuiceSrc);
+        
         project.configure(configuration);
         boolean success = project.compile(true, true);
         Assert.assertTrue(success);
@@ -120,46 +143,29 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
         config.setSDKPath(sdkRBL.getAbsolutePath());
 
         String libraryName = "test-library";
-        IBundleConfigurationEntry randori = config.addEntry(libraryName );
+        IBundleConfigurationEntry randori = config.addEntry(libraryName);
         randori.addSourcePath(source);
 
         project.configure(config);
         boolean success = project.compile(true, true);
-        
+
         Assert.assertTrue(success);
         Assert.assertTrue(target.exists());
-        
+
         // check the manifest that is only has 2 entries
         BundleReader reader = new BundleReader(outputFile);
         IBundle bundle = reader.getBundle();
         IBundleLibrary library = bundle.getLibrary(libraryName);
-        Collection<ISWC> swcs = library.getSWCS();
-        Assert.assertEquals(1, swcs.size());
-        
+        IBundleCategory swcs = library.getContainer(IBundleContainer.Type.BIN)
+                .getCategory(IBundleCategory.Type.SWC);
+        Assert.assertEquals(1, swcs.getEntries().size());
+
         Assert.assertTrue(FileUtils.deleteQuietly(target));
     }
 
     private void createSDKConfiguration() throws IOException
     {
-        String path = TestConstants.RandoriASFramework
-                + "/randori-compiler/temp/bundle/randori-sdk-0.2.3.rbl";
 
-        configuration = new BundleConfiguration("randori-framework", path);
-
-        // dependent compiled libraries
-        configuration.addLibraryPath(builtinSWC.getAbsolutePath());
-        configuration.addLibraryPath(jQuerySWC.getAbsolutePath());
-        configuration.addLibraryPath(htmlCoreLibSWC.getAbsolutePath());
-
-        IBundleConfigurationEntry randori = configuration
-                .addEntry("randori-framework");
-        randori.addSourcePath(randoriGuiceSrc);
-        randori.addSourcePath(randoriSrc);
-        randori.addIncludeSources(randoriSrc);
-
-        IBundleConfigurationEntry guice = configuration
-                .addEntry("randori-guice-framework");
-        guice.addSourcePath(randoriGuiceSrc);
     }
 
     /////////////////////////////////////////////////////////

@@ -100,7 +100,7 @@ public class RandoriBundleProject extends RandoriProject implements
         File outputDirectory = outputFile.getParentFile();
 
         ArrayList<File> files = new ArrayList<File>();
-        
+
         // Add libraries contained in the sdk if -sdk-path is set
         populateSDKBundleOrPath(files, outputDirectory);
         // temp, the populateSDKBundleOrPath() adds to the external in configuration
@@ -108,7 +108,7 @@ public class RandoriBundleProject extends RandoriProject implements
         {
             bundleConfiguration.addExternalLibraryPath(file.getAbsolutePath());
         }
-        
+
         files = new ArrayList<File>();
         Collection<String> bundles = configuration.getBundlePaths();
         // if -bundle-path is present, add all SWCs from the bundles
@@ -158,29 +158,33 @@ public class RandoriBundleProject extends RandoriProject implements
 
         setVersionInfo(bundle);
 
-        BundleLibrary library = new BundleLibrary(getBundleConfiguration()
-                .getBundelName());
-        // add the libraries to the bundle
-        bundle.addLibrary(library);
-
-        // TODO this has to be done based off of compiler args -js-classes-as-files
-        library.addContainer(Type.JS).addCategory(
-                IBundleCategory.Type.MONOLITHIC);
-
-        boolean success;
-
+        // LOOP through the entries and create libraries foreach
         for (IBundleConfigurationEntry entry : getBundleConfiguration()
                 .getEntries())
         {
-            // run the randori
-            success = compileRandori(library, entry);
-            if (!success)
-                return false;
+            BundleLibrary library = new BundleLibrary(entry.getName());
+            // add the libraries to the bundle
+            bundle.addLibrary(library);
 
-            // run the compc
-            success = compileSWC(library, entry);
-            if (!success)
-                return false;
+            // TODO this has to be done based off of compiler args -js-classes-as-files
+            library.addContainer(Type.JS).addCategory(
+                    IBundleCategory.Type.MONOLITHIC);
+
+            boolean success;
+
+            //for (IBundleConfigurationEntry entry : getBundleConfiguration()
+            //        .getEntries())
+            //{
+                // run the randori
+                success = compileRandori(library, entry);
+                if (!success)
+                    return false;
+
+                // run the compc
+                success = compileSWC(library, entry);
+                if (!success)
+                    return false;
+            //}
         }
 
         // write the bundle to disk
@@ -198,8 +202,6 @@ public class RandoriBundleProject extends RandoriProject implements
         {
             e.printStackTrace();
         }
-
-        //finish();
 
         return true;
     }
