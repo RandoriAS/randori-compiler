@@ -110,7 +110,7 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
         IBundleConfigurationEntry guice = configuration
                 .addEntry("randori-guice-framework");
         guice.addSourcePath(randoriGuiceSrc);
-        
+
         project.configure(configuration);
         boolean success = project.compile(true, true);
         Assert.assertTrue(success);
@@ -163,11 +163,6 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
         Assert.assertTrue(FileUtils.deleteQuietly(target));
     }
 
-    private void createSDKConfiguration() throws IOException
-    {
-
-    }
-
     /////////////////////////////////////////////////////////
 
     private void cleanupGenerated()
@@ -194,7 +189,7 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
         entry.addSourcePath(hmssProjectPath + "/CommonModule/src");
 
         configuration.addExternalBundlePath(getTestDataPath()
-                + "/sdk/randori-sdk-0.2.3.rbl");
+                + "/sdk/randori-sdk.rbl");
 
         project.configure(configuration);
         boolean success = project.compile(true, true);
@@ -231,16 +226,15 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
     public void compileLabModuleWithRblFile()
     {
         configuration = new BundleConfiguration("LabModule", hmssProjectPath
-                + "/generated/libs");
+                + "/generated/libs/LabModule.rbl");
 
         final IBundleConfigurationEntry entry = configuration
                 .addEntry("LabModule");
         entry.addSourcePath(hmssProjectPath + "/LabModule/src");
 
+        configuration.setSDKPath(getTestDataPath() + "/sdk/randori-sdk.rbl");
         configuration.addExternalBundlePath(hmssProjectPath
                 + "/LabModule/libs/CommonModule.rbl");
-        configuration.addExternalBundlePath(getTestDataPath()
-                + "/sdk/randori-sdk-0.2.3.rbl");
 
         project.configure(configuration);
         boolean success = project.compile(true, true);
@@ -250,7 +244,6 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
                 .getProblemQuery().hasErrors());
     }
 
-    //@Ignore
     @Test
     public void compileHMSSWithRblSources()
     {
@@ -265,7 +258,7 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
         arguments.addSourcepath(hmssProjectPath + "/CommonModule/src");
         arguments.addSourcepath(hmssProjectPath + "/LabModule/src");
 
-        arguments.setSDKPath(getTestDataPath() + "/sdk/randori-sdk-0.2.3.rbl");
+        arguments.setSDKPath(getTestDataPath() + "/sdk/randori-sdk.rbl");
 
         applicationCompiler.configure(arguments.toArguments());
         boolean success = applicationCompiler.compile(true, true);
@@ -275,7 +268,6 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
                 applicationCompiler.getProblemQuery().hasErrors());
     }
 
-    //@Ignore
     @Test
     public void compileHMSSWithRblFiles()
     {
@@ -290,7 +282,7 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
         //arguments.addBundlePath(hmssProjectPath + "/libs/CommonModule.rbl");
         arguments.addBundlePath(hmssProjectPath + "/libs/LabModule.rbl");
 
-        arguments.setSDKPath(getTestDataPath() + "/sdk/randori-sdk-0.2.3.rbl");
+        arguments.setSDKPath(getTestDataPath() + "/sdk/randori-sdk.rbl");
 
         applicationCompiler.configure(arguments.toArguments());
         boolean success = applicationCompiler.compile(true, true);

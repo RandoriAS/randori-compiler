@@ -52,7 +52,6 @@ import randori.compiler.bundle.io.BundleWriter;
 import randori.compiler.clients.CompilerArguments;
 import randori.compiler.clients.Randori;
 import randori.compiler.common.VersionInfo;
-import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.internal.driver.RandoriBackend;
 import randori.compiler.projects.IRandoriBundleProject;
 
@@ -65,10 +64,6 @@ public class RandoriBundleProject extends RandoriProject implements
     private IBundleConfiguration bundleConfiguration;
 
     private IMutableBundle bundle;
-
-    private File outputRBL;
-
-    private File outputDir;
 
     private File tempDir;
 
@@ -94,23 +89,38 @@ public class RandoriBundleProject extends RandoriProject implements
 
         initializeConfiguration(arguments.toArguments());
 
-        final IRandoriTargetSettings settings = getTargetSettings();
+        // if the -sdk-path is set, add the swcs as -external-library-path args
+        addSDKLibraries(bundleConfiguration);
 
-        File outputFile = settings.getOutput();
-        File outputDirectory = outputFile.getParentFile();
+        // if we have -bundle-path entries, add the swcs as -library-path args
+        addBundlePathLibraries(bundleConfiguration);
 
-        ArrayList<File> files = new ArrayList<File>();
+        // if we have -external-bundle-path entries, add the swcs as -external-library-path args
+        addExternalBundlePathLibraries(bundleConfiguration);
+
+        return true;
+    }
+
+    private void addSDKLibraries(IBundleConfiguration configuration)
+    {
+        List<File> files = new ArrayList<File>();
+        final File outputDirectory = getOutputDirectory();
 
         // Add libraries contained in the sdk if -sdk-path is set
         populateSDKBundleOrPath(files, outputDirectory);
         // temp, the populateSDKBundleOrPath() adds to the external in configuration
         for (File file : files)
         {
-            bundleConfiguration.addExternalLibraryPath(file.getAbsolutePath());
+            configuration.addExternalLibraryPath(file.getAbsolutePath());
         }
+    }
 
-        files = new ArrayList<File>();
+    private void addBundlePathLibraries(IBundleConfiguration configuration)
+    {
+        List<File> files = new ArrayList<File>();
         Collection<String> bundles = configuration.getBundlePaths();
+        File outputDirectory = getOutputDirectory();
+
         // if -bundle-path is present, add all SWCs from the bundles
         if (bundles.size() > 0)
         {
@@ -120,11 +130,17 @@ public class RandoriBundleProject extends RandoriProject implements
         // add the swcs for the .rbl archives onto the library path
         for (File file : files)
         {
-            bundleConfiguration.addLibraryPath(file.getAbsolutePath());
+            configuration.addLibraryPath(file.getAbsolutePath());
         }
+    }
 
-        files = new ArrayList<File>();
-        bundles = configuration.getExternalBundlePaths();
+    private void addExternalBundlePathLibraries(
+            IBundleConfiguration configuration)
+    {
+        ArrayList<File> files = new ArrayList<File>();
+        Collection<String> bundles = configuration.getExternalBundlePaths();
+        File outputDirectory = getOutputDirectory();
+
         // if -bundle-path is present, add all SWCs from the bundles
         if (bundles.size() > 0)
         {
@@ -134,10 +150,8 @@ public class RandoriBundleProject extends RandoriProject implements
         // add them as external so they don't get included int he rbl archive
         for (File file : files)
         {
-            bundleConfiguration.addExternalLibraryPath(file.getAbsolutePath());
+            configuration.addExternalLibraryPath(file.getAbsolutePath());
         }
-
-        return true;
     }
 
     @Override
@@ -148,13 +162,11 @@ public class RandoriBundleProject extends RandoriProject implements
     @Override
     protected boolean startCompile(boolean doBuild)
     {
-        outputRBL = new File(getBundleConfiguration().getOutput());
-        outputDir = outputRBL.getParentFile();
+        final File outputDirectory = getOutputDirectory();
+        bundle = new Bundle(getTargetSettings().getOutput());
 
-        tempDir = new File(outputDir, "___bundle___");
+        tempDir = new File(outputDirectory, "___bundle___");
         tempDir.mkdirs();
-
-        bundle = new Bundle(outputRBL);
 
         setVersionInfo(bundle);
 
@@ -172,26 +184,23 @@ public class RandoriBundleProject extends RandoriProject implements
 
             boolean success;
 
-            //for (IBundleConfigurationEntry entry : getBundleConfiguration()
-            //        .getEntries())
-            //{
-                // run the randori
-                success = compileRandori(library, entry);
-                if (!success)
-                    return false;
+            // run the randori
+            success = compileRandori(library, entry);
+            if (!success)
+                return false;
 
-                // run the compc
-                success = compileSWC(library, entry);
-                if (!success)
-                    return false;
-            //}
+            // run the compc
+            success = compileSWC(library, entry);
+            if (!success)
+                return false;
         }
 
         // write the bundle to disk
         BundleDirectoryWriter writer;
         try
         {
-            writer = new BundleDirectoryWriter(outputDir.getAbsolutePath());
+            writer = new BundleDirectoryWriter(
+                    outputDirectory.getAbsolutePath());
             writer.write(bundle);
         }
         catch (FileNotFoundException e)
@@ -209,14 +218,13 @@ public class RandoriBundleProject extends RandoriProject implements
     @Override
     protected boolean export()
     {
-        File bundleFile = new File(getBundleConfiguration().getOutput());
-        bundle.setBundleFile(bundleFile);
+        bundle.setBundleFile(getTargetSettings().getOutput());
 
-        // write the bundle to disk
+        // write the .rbl bundle to disk
         BundleWriter writer;
         try
         {
-            writer = new BundleWriter(bundle.getBundleFile().getAbsolutePath());
+            writer = new BundleWriter(bundle.getBundleFile());
             writer.write(bundle);
         }
         catch (FileNotFoundException e)
@@ -355,6 +363,11 @@ public class RandoriBundleProject extends RandoriProject implements
         library.addSWC(new SWC(new File(tempDir, entry.getName() + ".swc")));
 
         return true;
+    }
+
+    private File getOutputDirectory()
+    {
+        return getTargetSettings().getOutput().getParentFile();
     }
 
     private void setVersionInfo(IBundle bundle)

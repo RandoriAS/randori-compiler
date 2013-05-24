@@ -162,6 +162,10 @@ public class BundleConfiguration implements IBundleConfiguration
         private String name;
 
         private List<String> sourcePaths = new ArrayList<String>();
+        
+        private List<String> libraryPaths = new ArrayList<String>();
+        
+        private List<String> externalLibraryPaths = new ArrayList<String>();
 
         private List<String> includeSources = new ArrayList<String>();
 
@@ -230,6 +234,22 @@ public class BundleConfiguration implements IBundleConfiguration
             if (includeSources.contains(path))
                 return;
             includeSources.add(path);
+        }
+
+        @Override
+        public void addLibraryPath(String path)
+        {
+            if (libraryPaths.contains(path))
+                return;
+            libraryPaths.add(path);
+        }
+
+        @Override
+        public void addExternalLibraryPath(String path)
+        {
+            if (externalLibraryPaths.contains(path))
+                return;
+            externalLibraryPaths.add(path);
         }
     }
 

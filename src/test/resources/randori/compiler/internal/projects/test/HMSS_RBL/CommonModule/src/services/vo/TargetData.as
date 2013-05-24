@@ -16,21 +16,15 @@
  * 
  * @author Michael Labriola <labriola@digitalprimates.net>
  */
-package service.parser {
-import randori.service.parser.AbstractParser;
+package services.vo {
+	[JavaScript(export="false",name="Object",mode="json")]
+	public class TargetData {
+		public var name:String;
+		public var image:String;
+		public var lastKnownLocation:String;
+		public var status:String;
 
-public class GenericJsonParser extends AbstractParser {
-
-		public function parseResult(result:Object):Array {
-			//Here we are just going to parse the result into Json.
-			//We are adding some extra data just to show the concept that transforming here is totally allowed and legit
-			var json:Object = JSON.parse( result as String );
-			
-			return json as Array;
-		}
-		
-		public function GenericJsonParser() {
-			super();
+		public function TargetData() {
 		}
 	}
 }

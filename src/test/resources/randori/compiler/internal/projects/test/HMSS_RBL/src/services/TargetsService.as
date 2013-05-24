@@ -22,7 +22,7 @@ import randori.service.AbstractService;
 import randori.service.ServiceConfig;
 import randori.webkit.xml.XMLHttpRequest;
 
-import service.parser.GenericJsonParser;
+import services.parser.GenericJsonParser;
 
 public class TargetsService extends AbstractService {
 

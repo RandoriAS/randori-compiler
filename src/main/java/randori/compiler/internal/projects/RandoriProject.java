@@ -325,18 +325,18 @@ public abstract class RandoriProject extends FlexProject implements
         String path = getTargetSettings().getSDKPath();
         if (path != null && !path.isEmpty())
         {
-            File dir = new File(FilenameNormalization.normalize(path));
-            if (dir.isDirectory())
+            File sdk = new File(FilenameNormalization.normalize(path));
+            if (sdk.isDirectory())
             {
                 addSWCsFromSDKPath(path, files);
             }
             else
             {
-                if (dir.getName().endsWith(".rbl"))
+                if (sdk.getName().endsWith(".rbl"))
                 {
                     // sdk path is a bundle, add it to the -bundle-path
                     getConfiguration().getExternalBundlePath().add(
-                            dir.getAbsolutePath());
+                            sdk.getAbsolutePath());
                 }
             }
 

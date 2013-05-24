@@ -20,7 +20,7 @@ package mediator {
 import randori.behaviors.AbstractMediator;
 import randori.behaviors.SimpleList;
 
-import service.LabService;
+import services.LabService;
 
 public class LabMediator extends AbstractMediator {
 
@@ -31,10 +31,10 @@ public class LabMediator extends AbstractMediator {
     [View]
     public var targetList:SimpleList;
     [Inject]
-    public var service_:LabService;
+    public var labService:LabService;
 
     override protected function onRegister():void {
-        service_.get().then(handleResult);
+        labService.get().then(handleResult);
     }
 
     private function handleResult(result:Array):void {

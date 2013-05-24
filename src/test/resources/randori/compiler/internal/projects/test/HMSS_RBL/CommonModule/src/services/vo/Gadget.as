@@ -16,15 +16,14 @@
  * 
  * @author Michael Labriola <labriola@digitalprimates.net>
  */
-package service.vo {
+package services.vo {
 	[JavaScript(export="false",name="Object",mode="json")]
-	public class TargetData {
+	public class Gadget {
 		public var name:String;
 		public var image:String;
-		public var lastKnownLocation:String;
 		public var status:String;
 
-		public function TargetData() {
+		public function Gadget() {
 		}
 	}
 }

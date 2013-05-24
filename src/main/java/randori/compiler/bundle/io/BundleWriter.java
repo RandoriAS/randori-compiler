@@ -48,6 +48,20 @@ public class BundleWriter extends BundleWriterBase
 {
     private final ZipOutputStream zipOutputStream;
 
+    public BundleWriter(final File bundleFile) throws FileNotFoundException
+    {
+        File outputDirectory = bundleFile.getParentFile();
+        outputDirectory.mkdirs();
+
+        if (!outputDirectory.exists())
+            throw new FileNotFoundException("Output directory not found: "
+                    + outputDirectory.getAbsolutePath());
+
+        zipOutputStream = new ZipOutputStream(new BufferedOutputStream(
+                new FileOutputStream(bundleFile)));
+        zipOutputStream.setLevel(Deflater.NO_COMPRESSION);
+    }
+
     /**
      * Create a {@link IBundle}.
      * 
@@ -55,15 +69,7 @@ public class BundleWriter extends BundleWriterBase
      */
     public BundleWriter(final String fileName) throws FileNotFoundException
     {
-        // Ensure that the directory for the SWC exists.
-        File outputFile = new File(fileName);
-        File outputDirectory = new File(outputFile.getAbsoluteFile()
-                .getParent());
-        outputDirectory.mkdirs();
-
-        zipOutputStream = new ZipOutputStream(new BufferedOutputStream(
-                new FileOutputStream(fileName)));
-        zipOutputStream.setLevel(Deflater.NO_COMPRESSION);
+        this(new File(fileName));
     }
 
     @Override
