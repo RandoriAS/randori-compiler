@@ -160,6 +160,11 @@ public abstract class RandoriProject extends FlexProject implements
     @Override
     public boolean configure(String[] args)
     {
+        return initializeConfiguration(args);
+    }
+
+    protected boolean initializeConfiguration(String[] args)
+    {
         projectConfigurator = createConfigurator();
 
         try
@@ -255,13 +260,20 @@ public abstract class RandoriProject extends FlexProject implements
     protected abstract void validateConfiguration()
             throws ConfigurationException;
 
-    protected void populateBundleSWCs(List<File> files, File output)
+    protected void populateBundleSWCs(List<File> files, File outputDirectory)
     {
-        List<String> bundles = getConfiguration().getBundlePath();
+        List<String> bundles = getConfiguration().getExternalBundlePath();
         // if -bundle-path is present, add all SWCs from the bundles
         if (bundles.size() > 0)
         {
-            addSWCsFromBundles(bundles, files, output);
+            addSWCsFromBundles(bundles, files, outputDirectory);
+        }
+        
+        bundles = getConfiguration().getBundlePath();
+        // if -bundle-path is present, add all SWCs from the bundles
+        if (bundles.size() > 0)
+        {
+            addSWCsFromBundles(bundles, files, outputDirectory);
         }
 
         // if we do have new files, add the original libraries
@@ -306,8 +318,57 @@ public abstract class RandoriProject extends FlexProject implements
         }
     }
 
+    protected void populateSDKBundleOrPath(List<File> files,
+            File outputDirectory)
+    {
+        // if the -sdk-path is set, get all libraries from that
+        String path = getTargetSettings().getSDKPath();
+        if (path != null && !path.isEmpty())
+        {
+            File dir = new File(FilenameNormalization.normalize(path));
+            if (dir.isDirectory())
+            {
+                addSWCsFromSDKPath(path, files);
+            }
+            else
+            {
+                if (dir.getName().endsWith(".rbl"))
+                {
+                    // sdk path is a bundle, add it to the -bundle-path
+                    getConfiguration().getExternalBundlePath().add(
+                            dir.getAbsolutePath());
+                }
+            }
+
+            populateBundleSWCs(files, outputDirectory);
+        }
+    }
+
+    private void addSWCsFromSDKPath(String path, Collection<File> files)
+    {
+        File dir = new File(FilenameNormalization.normalize(path));
+        if (dir.exists() && dir.isDirectory())
+        {
+            Collection<ISWC> swcs = null;
+            try
+            {
+                swcs = BundleUtils.getSWCsFromBundleDir(dir);
+            }
+            catch (IOException e)
+            {
+                // TODO (mschmalle) add Problem
+                e.printStackTrace();
+            }
+
+            for (ISWC swc : swcs)
+            {
+                files.add(swc.getSWCFile());
+            }
+        }
+    }
+
     protected void addSWCsFromBundles(List<String> bundles, List<File> files,
-            File output)
+            File outputDirectory)
     {
         Collection<ISWC> result = new ArrayList<ISWC>();
 
@@ -316,7 +377,7 @@ public abstract class RandoriProject extends FlexProject implements
         {
             Collection<ISWC> swcs = null;
             // XXX Figure out what random dir name is best here
-            tempOutput = new File(output, "___temp___");
+            tempOutput = new File(outputDirectory, "___temp___");
             try
             {
                 tempOutput.mkdirs();
@@ -336,6 +397,18 @@ public abstract class RandoriProject extends FlexProject implements
         for (ISWC swc : result)
         {
             files.add(swc.getSWCFile());
+        }
+    }
+
+    protected void mergeLibraries(List<File> files)
+    {
+        if (files.size() > 0)
+        {
+            for (ISWC swc : getLibraries())
+            {
+                files.add(swc.getSWCFile());
+            }
+            setLibraries(files);
         }
     }
 }

@@ -45,6 +45,8 @@ public class BundleConfiguration implements IBundleConfiguration
 
     private Map<String, IBundleConfigurationEntry> entries = new HashMap<String, IBundleConfigurationEntry>();
 
+    private String sdkPath;
+
     @Override
     public String getOutput()
     {
@@ -137,6 +139,16 @@ public class BundleConfiguration implements IBundleConfiguration
                 name);
         entries.put(name, entry);
         return entry;
+    }
+
+    public void setSDKPath(String path)
+    {
+        sdkPath = path;
+    }
+
+    public String getSDKPath()
+    {
+        return sdkPath;
     }
 
     //--------------------------------------------------------------------------

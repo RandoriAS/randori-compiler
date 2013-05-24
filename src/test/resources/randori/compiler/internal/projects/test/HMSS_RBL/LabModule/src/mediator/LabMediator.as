@@ -31,10 +31,10 @@ public class LabMediator extends AbstractMediator {
     [View]
     public var targetList:SimpleList;
     [Inject]
-    public var service:LabService;
+    public var service_:LabService;
 
     override protected function onRegister():void {
-        service.get().then(handleResult);
+        service_.get().then(handleResult);
     }
 
     private function handleResult(result:Array):void {
