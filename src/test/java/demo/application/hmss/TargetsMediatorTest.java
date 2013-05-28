@@ -51,7 +51,7 @@ public class TargetsMediatorTest extends RandoriTestBase
                 + "\n\tthis.service.get().then($createStaticDelegate(this, this.handleResult));\n}");
     }
 
-    @Test
+    //@Test
     public void test_handleResult()
     {
         IFunctionNode node = findFunction("handleResult", classNode);
