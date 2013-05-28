@@ -23,7 +23,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.flex.swc.ISWC;
@@ -34,6 +36,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import randori.compiler.bundle.io.BundleUtils;
+import randori.compiler.internal.config.MergedFileSettings;
 
 /**
  * @author Michael Schmalle
@@ -69,6 +72,28 @@ public class RandoriCompilerArgsTest extends RandoriCompilerTestBase
         Assert.assertTrue(new File(generated, JS_PATH_CLASS_ONE_A).isFile());
         Assert.assertTrue(new File(generated, JS_PATH_SUB_CLASS_ONE_A).isFile());
         Assert.assertTrue(new File(generated, JS_PATH_CLASS_TWO_A).isFile());
+    }
+
+    @Test
+    public void test_js_merge_file()
+    {
+        getArgs().addSourcepath(basepathDir.getAbsolutePath());
+        getArgs().setJsBasePath("generated");
+        
+        List<String> qualifiedNames = new ArrayList<String>();
+        qualifiedNames.add("test.one.a.SubClassOneA");
+        qualifiedNames.add("test.one.ClassOneA");
+        MergedFileSettings settings = new MergedFileSettings("Foo.js",
+                qualifiedNames);
+        getArgs().addJsMergedFiles(settings);
+
+        qualifiedNames = new ArrayList<String>();
+        qualifiedNames.add("test.RootClass");
+        settings = new MergedFileSettings("Bar.js", qualifiedNames);
+        getArgs().addJsMergedFiles(settings);
+
+        compile();
+        assertOutFileLength(3);
     }
 
     @Test
@@ -135,7 +160,7 @@ public class RandoriCompilerArgsTest extends RandoriCompilerTestBase
         // automatically adds this sdk.rbl to the -bundle-path
         getArgs().setSDKPath(sdkRBL.getAbsolutePath());
         getArgs().setJsOutputAsFiles(true);
-        
+
         // since the sdk-path is valid, randori and guice get copied in out
         // so this is 4 gen plus 2 framework .js which gives us 6 output files
         compile();

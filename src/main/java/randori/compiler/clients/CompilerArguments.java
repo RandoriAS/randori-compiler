@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.apache.flex.utils.StringUtils;
 
+import randori.compiler.internal.config.MergedFileSettings;
+
 /**
  * @author Michael Schmalle
  */
@@ -48,6 +50,8 @@ public class CompilerArguments
     private String jsBasePath = "";
 
     private Boolean jsOutputAsFiles = null;
+
+    private List<MergedFileSettings> jsMergedFiles = new ArrayList<MergedFileSettings>();
 
     public void addBundlePath(String path)
     {
@@ -157,6 +161,11 @@ public class CompilerArguments
         this.jsOutputAsFiles = jsOutputAsFiles;
     }
 
+    public void addJsMergedFiles(MergedFileSettings setting)
+    {
+        jsMergedFiles.add(setting);
+    }
+
     public void clear()
     {
         jsBasePath = "";
@@ -166,6 +175,7 @@ public class CompilerArguments
         clearLibraries();
         clearSourcePaths();
         includes.clear();
+        jsMergedFiles.clear();
     }
 
     public void clearSourcePaths()
@@ -208,7 +218,22 @@ public class CompilerArguments
                     + StringUtils.join(includes.toArray(new String[] {}), ","));
         }
 
-        // XXX TEMP
+        if (jsMergedFiles.size() > 0)
+        {
+            final StringBuilder sb = new StringBuilder();
+            for (MergedFileSettings setting : jsMergedFiles)
+            {
+                sb.append("-js-merged-file=");
+                sb.append(setting.getFileName());
+                sb.append(",");
+                sb.append(StringUtils.join(
+                        setting.getQualifiedNames().toArray(new String[] {}),
+                        ","));
+                result.add(sb.toString());
+                sb.setLength(0);
+            }
+        }
+
         String sdk = getSDKPath();
         if (sdk != null && !sdk.equals(""))
             result.add("-sdk-path=" + sdk);

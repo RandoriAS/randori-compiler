@@ -253,4 +253,33 @@ public class RandoriConfiguration extends Configuration
         jsClassesAsFiles = value;
     }
 
+    //
+    // 'js-merged-file'
+    //
+
+    private final List<MergedFileSettings> jsMergedFile = new ArrayList<MergedFileSettings>();
+
+    public List<MergedFileSettings> getJsMergedFiles()
+    {
+        return jsMergedFile;
+    }
+
+    @Config(allowMultiple = true)
+    @Mapping("js-merged-file")
+    @InfiniteArguments
+    public void setJsMergedFile(ConfigurationValue cv, String[] list)
+            throws CannotOpen
+    {
+        int i = 0;
+        String fileName = list[0];
+
+        List<String> qualifiedNames = new ArrayList<String>();
+        for (i = 1; i < list.length; i++)
+        {
+            qualifiedNames.add(list[i]);
+        }
+
+        jsMergedFile.add(new MergedFileSettings(fileName, qualifiedNames));
+    }
+
 }

@@ -114,6 +114,12 @@ public class RandoriTargetSettings extends TargetSettings implements
     }
 
     @Override
+    public Collection<MergedFileSettings> getMergedFileSettings()
+    {
+        return configuration.getJsMergedFiles();
+    }
+
+    @Override
     public Collection<File> getBundlePaths()
     {
         if (bundlePaths == null)

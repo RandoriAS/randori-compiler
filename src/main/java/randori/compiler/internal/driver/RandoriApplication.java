@@ -30,8 +30,10 @@ import org.apache.flex.compiler.units.ICompilationUnit.UnitType;
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriApplication;
 import randori.compiler.driver.IRandoriBackend;
+import randori.compiler.internal.config.MergedFileSettings;
 import randori.compiler.internal.config.annotation.AnnotationValidator;
 import randori.compiler.internal.driver.model.ApplicationModel;
+import randori.compiler.internal.driver.model.MergeFileModel;
 import randori.compiler.internal.projects.RandoriApplicationProject;
 import randori.compiler.internal.utils.PluginUtils;
 import randori.compiler.internal.visitor.as.ASWalker;
@@ -85,11 +87,28 @@ public class RandoriApplication implements IRandoriApplication
     {
         this.problems = problems;
 
+        // now we need to make a collection of models that will render
+        // the monolithic merged files sorted
+        setupMergeModels();
+
+        // this sorts exluded-package and js-merged-file
         filter();
 
         generate(backend);
 
         return true;
+    }
+
+    private List<MergeFileModel> mergeFileModels = new ArrayList<MergeFileModel>();
+
+    private void setupMergeModels()
+    {
+        for (MergedFileSettings mergeFile : settings.getMergedFileSettings())
+        {
+            MergeFileModel model = new MergeFileModel(project, settings,
+                    mergeFile);
+            mergeFileModels.add(model);
+        }
     }
 
     @Override
@@ -158,12 +177,23 @@ public class RandoriApplication implements IRandoriApplication
     protected void filter()
     {
         application.filter(compilationUnits);
+
+        for (MergeFileModel model : mergeFileModels)
+        {
+            model.filter(compilationUnits);
+        }
     }
 
     protected void generate(IRandoriBackend backend)
     {
         application.generate(backend, settings.getOutput());
         problems.addAll(application.getProblems());
+
+        for (MergeFileModel model : mergeFileModels)
+        {
+            model.generate(backend, settings.getOutput());
+            problems.addAll(model.getProblems());
+        }
     }
 
 }

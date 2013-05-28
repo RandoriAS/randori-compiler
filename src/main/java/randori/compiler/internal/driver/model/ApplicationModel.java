@@ -34,6 +34,7 @@ import org.apache.flex.utils.FilenameNormalization;
 import randori.compiler.codegen.as.IASWriter;
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriBackend;
+import randori.compiler.internal.config.MergedFileSettings;
 import randori.compiler.internal.utils.FileUtils;
 import randori.compiler.projects.IRandoriApplicationProject;
 
@@ -61,12 +62,25 @@ public class ApplicationModel extends BaseCompilationSet
         if (node == null)
             return false;
 
+        final String qualifiedName = node.getQualifiedName();
+
         // -exclude-packages trumps all for now, if there are problems
         // with this the below logic can be altered
         for (String test : settings.getExcludePackages())
         {
-            if (node.getQualifiedName().startsWith(test))
+            if (qualifiedName.startsWith(test))
                 return false;
+        }
+
+        // check for files that are not in the main application
+        // using the -js-merged-file
+        for (MergedFileSettings mergedFile : settings.getMergedFileSettings())
+        {
+            for (String name : mergedFile.getQualifiedNames())
+            {
+                if (qualifiedName.equals(name))
+                    return false;
+            }
         }
 
         // no -include-sources everything gets included (-source-path)
