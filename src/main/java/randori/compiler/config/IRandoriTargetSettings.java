@@ -26,6 +26,7 @@ import org.apache.flex.compiler.targets.ITargetSettings;
 
 import randori.compiler.clients.Randori;
 import randori.compiler.driver.IRandoriApplication;
+import randori.compiler.internal.config.MergedFileSettings;
 
 /**
  * The {@link IRandoriTargetSettings} API creates a contract between the
@@ -87,6 +88,14 @@ public interface IRandoriTargetSettings extends ITargetSettings
      * <code>false</code>).
      */
     boolean getJsClassesAsFiles();
+
+    /**
+     * Returns a collection of <code>-js-merged-file</code> argument settings
+     * that were parsed from the configuration.
+     * 
+     * @return
+     */
+    Collection<MergedFileSettings> getMergedFileSettings();
 
     /**
      * Returns a collection of <code>.rbl</code> bundle archives that will be

@@ -56,7 +56,8 @@ public class IndexMediatorTest extends RandoriTestBase
                 + "$createStaticDelegate(this, this.menuItemSelected));\n\t"
                 + "this.menu.set_data(menuItems);\n}");
     }
-
+    
+    @Ignore
     @Test
     public void test_menuItemSelected()
     {
