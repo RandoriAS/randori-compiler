@@ -27,6 +27,8 @@ public class ClassB extends ClassA
     
     public var field2:int = 42;
     
+    public var field3:ClassB = null;
+    
     public static var onSelectHandler:Function;
     
     public function get type():* {
@@ -456,6 +458,13 @@ public class ClassB extends ClassA
         foo += 42;
         foo -= 42;
         foo &&= 42;
+    }
+    
+    public function explicit_this_rhs():void
+    {
+        var field3:ClassB = this.field3;
+        var accessor1:int = this.accessor1;
+        var field1:String = this.field1;
     }
 
 }

@@ -43,3 +43,6 @@ project.properties
 .buildpath
 
 TestConstants.java
+
+LabModule.rbl
+CommonModule.rbl
