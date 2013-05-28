@@ -34,12 +34,13 @@ public class ClassBTest extends FunctionalTestBase
     {
         IFunctionNode node = findFunction("ClassB", classNode);
         visitor.visitFunction(node);
-        assertOut("demo.foo.ClassB = function(param1, param2, param3) {\n\tthis.modela"
-                + " = null;\n\tthis.names = null;\n\tthis.thenContracts = null;\n\tthis."
-                + "field2 = 42;\n\tthis.field1 = \"Hello\";\n\tthis.j = null;\n\tif (arguments."
-                + "length < 3) {\n\t\tif (arguments.length < 2) {\n\t\t\tparam2 = "
-                + "42;\n\t\t}\n\t\tparam3 = 'foo';\n\t}\n\tdemo.foo.ClassA.call(this, "
-                + "param1);\n\tthis.field2 = param2;\n}");
+        assertOut("demo.foo.ClassB = function(param1, param2, param3) {"
+                + "\n\tthis.modela = null;\n\tthis.names = null;\n\tthis.thenContracts "
+                + "= null;\n\tthis.field3 = null;\n\tthis.field2 = 42;\n\tthis.field1 = "
+                + "\"Hello\";\n\tthis.j = null;\n\tif (arguments.length < 3) {\n\t\tif "
+                + "(arguments.length < 2) {\n\t\t\tparam2 = 42;\n\t\t}\n\t\tparam3 = "
+                + "'foo';\n\t}\n\tdemo.foo.ClassA.call(this, param1);\n\tthis.field2 ="
+                + " param2;\n}");
     }
 
     @Test
@@ -600,6 +601,16 @@ public class ClassBTest extends FunctionalTestBase
                 + "this.set_foo(this.get_foo() + 42));\n\t"
                 + "this.set_foo(this.get_foo() - 42));\n\t"
                 + "this.set_foo(this.get_foo() && 42));\n}");
+    }
+
+    @Test
+    public void explicit_this_rhs()
+    {
+        IFunctionNode node = findFunction("explicit_this_rhs", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.explicit_this_rhs = function() {"
+                + "\n\tvar field3 = this.field3;\n\tvar accessor1 = this.get_accessor1();"
+                + "\n\tvar field1 = this.field1;\n}");
     }
 
     @Test
