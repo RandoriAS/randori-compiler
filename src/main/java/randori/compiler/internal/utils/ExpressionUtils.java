@@ -19,6 +19,8 @@
 
 package randori.compiler.internal.utils;
 
+import org.apache.flex.abc.ABCConstants;
+import org.apache.flex.abc.semantics.Namespace;
 import org.apache.flex.compiler.common.DependencyType;
 import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IConstantDefinition;
@@ -532,12 +534,36 @@ public class ExpressionUtils
         return null;
     }
 
+    /*
+     * The constant value of the initial value, if one can be determined, 
+     * or null if it can't be determined. This will be a String, int, double, 
+     * boolean, or Namespace depending on what the initial value was. The 
+     * value could also be org.apache.flex.abc.ABCConstants.UNDEFINED_VALUE 
+     * if the initial value was the undefined constant value Callers will 
+     * need to use instanceof to see what type the value is.
+     */
+
     public static String toInitialValue(IVariableDefinition field,
             ICompilerProject project)
     {
         Object value = field.resolveInitialValue(project);
         if (value != null)
-            return value.toString();
+        {
+            if (value instanceof String)
+                return "\"" + value.toString() + "\"";
+            else if (value instanceof Integer)
+                return Integer.toString((Integer) value);
+            else if (value instanceof Double)
+                return Double.toString((Double) value);
+            else if (value instanceof Boolean)
+                return Boolean.toString((Boolean) value);
+            else if (value instanceof Namespace)
+                return value.toString();
+            else if (value == ABCConstants.UNDEFINED_VALUE)
+                return "undefined";
+            else if (value == ABCConstants.NULL_VALUE)
+                return "null";
+        }
         IReference reference = field.getTypeReference();
         if (reference == null)
             return "undefined";
