@@ -158,6 +158,15 @@ public class DefinitionUtils
         return null;
     }
 
+    public static IDefinitionNode findTopLevelNode(IPackageNode node)
+    {
+        ITypeNode tnode = findTypeNode(node);
+        if (tnode != null)
+            return tnode;
+        IFunctionNode fnode = findFunctionNode(node);
+        return fnode;
+    }
+
     public static final IFunctionNode findFunctionNode(IPackageNode node)
     {
         IScopedNode scope = node.getScopedNode();
@@ -170,7 +179,19 @@ public class DefinitionUtils
         return null;
     }
 
-    public static final ITypeNode findTypeNode(IASNode node)
+    public static final ITypeNode findTypeNode(IPackageNode node)
+    {
+        IScopedNode scope = node.getScopedNode();
+        for (int i = 0; i < scope.getChildCount(); i++)
+        {
+            IASNode child = scope.getChild(i);
+            if (child instanceof ITypeNode)
+                return (ITypeNode) child;
+        }
+        return null;
+    }
+
+    public static final ITypeNode findParentTypeNode(IASNode node)
     {
         IASNode parent = node.getParent();
         while (parent != null)
@@ -268,7 +289,7 @@ public class DefinitionUtils
         }
         return null;
     }
-    
+
     public static IClassDefinition getClassDefinition(IDefinition definition)
     {
         while (definition != null)
@@ -279,8 +300,9 @@ public class DefinitionUtils
         }
         return null;
     }
-    
-    public static IScopedDefinition getParentScopedDefinition(IDefinition definition)
+
+    public static IScopedDefinition getParentScopedDefinition(
+            IDefinition definition)
     {
         while (definition != null)
         {
@@ -290,7 +312,7 @@ public class DefinitionUtils
         }
         return null;
     }
-    
+
     public static String toSuperBaseName(IASNode node)
     {
         ITypeNode tnode = (ITypeNode) node.getAncestorOfType(ITypeNode.class);
@@ -494,6 +516,23 @@ public class DefinitionUtils
     {
         return node instanceof ILanguageIdentifierNode
                 && ((ILanguageIdentifierNode) node).getKind() == LanguageIdentifierKind.THIS;
+    }
+
+    public static IDefinition getTopLevelDefinition(ICompilationUnit unit)
+    {
+        IFileNode fileNode = null;
+        try
+        {
+            fileNode = (IFileNode) unit.getSyntaxTreeRequest().get().getAST();
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
+        IDefinition[] definitions = fileNode.getTopLevelDefinitions(false,
+                false);
+        return definitions[0];
     }
 
     public static IClassDefinition getClassDefinition(ICompilationUnit unit)

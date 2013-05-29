@@ -174,7 +174,8 @@ public class RandoriApplicationProject extends RandoriProject implements
             // if the compiler is trying to export with compile()
             // this is a failed compile, return false
             final ICompilerProblem problem = new ConfigurationProblem(null, -1,
-                    -1, -1, -1, "sdk-path " + file.getAbsolutePath()
+                    -1, -1, -1, "Application export failed; sdk-path "
+                            + file.getAbsolutePath()
                             + " is not a directory or valid bundle");
             getProblemQuery().add(problem);
             return false;

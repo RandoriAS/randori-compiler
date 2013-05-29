@@ -171,12 +171,12 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     public void emitPackageHeaderContents(IPackageDefinition definition)
     {
         IPackageNode node = definition.getNode();
-        ITypeNode tnode = findTypeNode(node);
+        ITypeNode tnode = DefinitionUtils.findTypeNode(node);
         if (tnode != null && !MetaDataUtils.isGlobal((IClassNode) tnode))
         {
             header.emit(definition);
         }
-        IFunctionNode fnode = findFunctionNode(node);
+        IFunctionNode fnode = DefinitionUtils.findFunctionNode(node);
         if (fnode != null)
         {
             Mode mode = MetaDataUtils.getMode(fnode.getDefinition());
@@ -191,14 +191,14 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     public void emitPackageContents(IPackageDefinition definition)
     {
         IPackageNode node = definition.getNode();
-        ITypeNode tnode = findTypeNode(node);
+        ITypeNode tnode = DefinitionUtils.findTypeNode(node);
         if (tnode != null)
         {
             writeNewline();
             getWalker().walk(tnode); // IClassNode | IInterfaceNode
         }
         // try the function
-        IFunctionNode fnode = findFunctionNode(node);
+        IFunctionNode fnode = DefinitionUtils.findFunctionNode(node);
         if (fnode != null)
         {
             writeNewline();
@@ -209,7 +209,8 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     @Override
     public void emitPackageFooter(IPackageDefinition definition)
     {
-        IFunctionNode fnode = findFunctionNode(definition.getNode());
+        IFunctionNode fnode = DefinitionUtils.findFunctionNode(definition
+                .getNode());
         if (fnode != null)
         {
             Mode mode = MetaDataUtils.getMode(fnode.getDefinition());
@@ -220,7 +221,8 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
             return;
         }
 
-        IClassNode node = (IClassNode) findTypeNode(definition.getNode());
+        IClassNode node = (IClassNode) DefinitionUtils.findTypeNode(definition
+                .getNode());
         if (node == null)
             return; // temp because of unit tests
 
@@ -507,7 +509,7 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
             else
             {
                 IClassNode typeNode = (IClassNode) DefinitionUtils
-                        .findTypeNode(inode.getParent());
+                        .findParentTypeNode(inode.getParent());
                 String qualifiedName = DefinitionUtils
                         .toBaseClassQualifiedName(typeNode.getDefinition(),
                                 getWalker().getProject());

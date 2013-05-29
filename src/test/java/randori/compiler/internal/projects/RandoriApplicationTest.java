@@ -94,6 +94,25 @@ public class RandoriApplicationTest extends RandoriCompilerTestBase
         FileUtils.deleteDirectory(outDir);
     }
 
+    @Test
+    public void test_export_with_different_name() throws IOException
+    {
+        getArgs().addSourcepath(basepathDir.getAbsolutePath());
+        getArgs().addSourcepath(basepathExtraDir.getAbsolutePath());
+        getArgs().setAppName("foo");
+        getArgs().setJsOutputAsFiles(true);
+
+        project.configure(getArgs().toArguments());
+        boolean success = project.compile(true, false);
+        Assert.assertTrue(success);
+        
+        // originally foo.bar.Baz & goo.baz.Bar
+        // test the Goo.js and baz/boo/Bar.js got created
+        // these files have a export=true and name attributes
+        Assert.assertTrue(new File(outDir, "Goo.js").exists());
+        Assert.assertTrue(new File(outDir, "baz/boo/Bar.js").exists());
+    }
+
     /**
      * Tests a basic Application compile with problem.
      */
@@ -124,7 +143,7 @@ public class RandoriApplicationTest extends RandoriCompilerTestBase
         // clear the library proves that builtin.swc is getting added automatically
         // from the -sdk-path
         getArgs().clearLibraries();
-        
+
         // with passing export= true, the compiler will copy
         // the libs from the sdk to the js-library-path
         getArgs().addSourcepath(basepathDir.getAbsolutePath());

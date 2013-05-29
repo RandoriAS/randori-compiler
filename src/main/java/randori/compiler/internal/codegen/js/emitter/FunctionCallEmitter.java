@@ -265,7 +265,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                     emitJson(node, newDefinition);
                     break;
                 default:
-                    String name = MetaDataUtils.getExportName(newDefinition);
+                    String name = MetaDataUtils.getExportQualifiedName(newDefinition);
                     if (name.equals("AudioContext"))
                     {
                         name = "webkit" + name;
@@ -438,7 +438,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
     private String toPrototype(ITypeDefinition definition)
     {
         // this 'would' be a IFunctionCallNode.getNameNode()
-        String name = MetaDataUtils.getExportName(definition);
+        String name = MetaDataUtils.getExportQualifiedName(definition);
         //return definition.getQualifiedName();
         return name;
     }
