@@ -31,6 +31,7 @@ import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.internal.definitions.AppliedVectorDefinition;
 import org.apache.flex.compiler.internal.definitions.ClassTraitsDefinition;
 import org.apache.flex.compiler.problems.ICompilerProblem;
+import org.apache.flex.compiler.projects.IASProject;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.ASTNodeID;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
@@ -50,11 +51,37 @@ public class RandoriUtils
         return ((ASEmitter) emitter).getProblems();
     }
 
+    /**
+     * Returns a qualified name based on the annotation <code>JavaScript</code>
+     * <code>name</code> attribute.
+     * 
+     * @param definition The definition.
+     * @param project The definition's {@link IASProject}.
+     */
+    public static String toQualifiedName(IDefinition definition,
+            ICompilerProject project)
+    {
+        return null;
+    }
+
+    /**
+     * Returns a package name based on the annotation <code>JavaScript</code>
+     * <code>name</code> attribute.
+     * 
+     * @param definition The definition.
+     * @param project The definition's {@link IASProject}.
+     */
+    public static String toPackageName(IDefinition definition,
+            ICompilerProject project)
+    {
+        return null;
+    }
+
     public static String toFieldPrefix(IVariableDefinition definition,
             ICompilerProject project)
     {
-        ITypeDefinition type = (ITypeDefinition) definition.getParent();
-        String qualifiedName = type.getQualifiedName();
+        final ITypeDefinition type = (ITypeDefinition) definition.getParent();
+        final String qualifiedName = MetaDataUtils.getExportQualifiedName(type);
         StringBuilder sb = new StringBuilder();
         sb.append(qualifiedName);
         sb.append(".");
@@ -65,9 +92,8 @@ public class RandoriUtils
     public static String toMethodPrefix(IFunctionDefinition definition,
             ICompilerProject project)
     {
-        ITypeDefinition type = (ITypeDefinition) definition.getParent();
-        // foo.bar.baz.A
-        String qualifiedName = type.getQualifiedName();
+        final ITypeDefinition type = (ITypeDefinition) definition.getParent();
+        final String qualifiedName = MetaDataUtils.getExportQualifiedName(type);
         StringBuilder sb = new StringBuilder();
         sb.append(qualifiedName);
 

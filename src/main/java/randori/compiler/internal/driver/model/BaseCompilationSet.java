@@ -248,9 +248,11 @@ public abstract class BaseCompilationSet
     {
         if (!accept(definition.getNode()))
             return;
-
+        
+        final String qualifiedName = MetaDataUtils.getExportQualifiedName(definition);
+        
         builder.append("\n// ====================================================\n");
-        builder.append("// " + definition.getQualifiedName() + "\n");
+        builder.append("// " + qualifiedName + "\n");
         builder.append("// ====================================================\n\n");
 
         IClassNode node = (IClassNode) definition.getNode();
@@ -270,11 +272,10 @@ public abstract class BaseCompilationSet
 
     protected void writeFunction(IFunctionDefinition definition)
     {
-        //if (!accept(definition.getNode()))
-        //    return;
+        final String qualifiedName = MetaDataUtils.getExportQualifiedName(definition);
 
         builder.append("\n// ====================================================\n");
-        builder.append("// " + definition.getQualifiedName() + "\n");
+        builder.append("// " + qualifiedName + "\n");
         builder.append("// ====================================================\n\n");
 
         IFunctionNode node = (IFunctionNode) definition.getNode();
@@ -380,8 +381,6 @@ public abstract class BaseCompilationSet
         }
 
         flush();
-
-        System.out.println("Finished");
     }
 
     /**

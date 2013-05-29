@@ -77,6 +77,10 @@ public class RandoriCompilerTestBase
             FilenameNormalization
                     .normalize("src/test/resources/functional_compiler"));
 
+    protected File basepathExtraDir = new File(
+            FilenameNormalization
+                    .normalize("src/test/resources/functional_compiler_extra"));
+
     protected File sdkDir = new File(
             FilenameNormalization.normalize(TestConstants.RandoriASFramework
                     + "/randori-sdk"));

@@ -126,7 +126,7 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
             {
                 // this takes care of 'Foo.bar()' and 'foo.bar.Baz.goo()' calls
                 String qualifiedName = MetaDataUtils
-                        .getExportName((ITypeDefinition) leftDef);
+                        .getExportQualifiedName((ITypeDefinition) leftDef);
                 write(qualifiedName);
             }
             else

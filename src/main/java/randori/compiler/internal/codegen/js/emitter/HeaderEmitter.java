@@ -23,6 +23,8 @@ import org.apache.flex.compiler.definitions.IPackageDefinition;
 
 import randori.compiler.codegen.js.ISubEmitter;
 import randori.compiler.internal.codegen.js.RandoriEmitter;
+import randori.compiler.internal.utils.DefinitionUtils;
+import randori.compiler.internal.utils.MetaDataUtils;
 
 /**
  * Handles the production of the specialized header Randori requires for package
@@ -42,13 +44,16 @@ public class HeaderEmitter extends BaseSubEmitter implements
     @Override
     public void emit(IPackageDefinition definition)
     {
-        String qualifiedName = definition.getQualifiedName();
+        String qualifiedName = MetaDataUtils
+                .getExportPackageName(DefinitionUtils.findTopLevelNode(
+                        definition.getNode()).getDefinition());
+        
         String[] split = qualifiedName.split("\\.");
         final int len = split.length;
         if (len == 1 && split[0].trim().length() == 0)
             return;
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < len; i++)
         {

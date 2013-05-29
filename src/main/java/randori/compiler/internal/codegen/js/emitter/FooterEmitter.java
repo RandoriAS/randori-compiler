@@ -84,9 +84,12 @@ public class FooterEmitter extends BaseSubEmitter implements
         if (baseClassName.equals("Object"))
             return;
 
+        final String qualifiedName = MetaDataUtils.getExportQualifiedName(node
+                .getDefinition());
+
         write(INHERIT_NAME);
         write("(");
-        write(node.getQualifiedName());
+        write(qualifiedName);
         write(", ");
 
         write(baseClassName);
@@ -94,12 +97,15 @@ public class FooterEmitter extends BaseSubEmitter implements
         writeNewline();
     }
 
-    void emitClassName(IClassNode tnode)
+    void emitClassName(IClassNode node)
     {
         // foo.bar.Baz.className = "foo.bar.Baz";
-        write(tnode.getQualifiedName());
+        final String qualifiedName = MetaDataUtils.getExportQualifiedName(node
+                .getDefinition());
+
+        write(qualifiedName);
         write(".className = ");
-        write("\"" + tnode.getQualifiedName() + "\"");
+        write("\"" + qualifiedName + "\"");
         writeNewline(";");
         writeNewline();
     }
@@ -110,7 +116,11 @@ public class FooterEmitter extends BaseSubEmitter implements
         //     var p;
         //     return  [];
         // };
-        write(tnode.getQualifiedName());
+
+        final String qualifiedName = MetaDataUtils.getExportQualifiedName(tnode
+                .getDefinition());
+
+        write(qualifiedName);
         writeNewline(".getClassDependencies = function(t) {", true);
         writeNewline("var p;");
 
@@ -122,7 +132,8 @@ public class FooterEmitter extends BaseSubEmitter implements
             writeNewline("p = [];");
             for (ITypeDefinition type : dependencies)
             {
-                writeNewline("p.push('" + type.getQualifiedName() + "');");
+                writeNewline("p.push('"
+                        + MetaDataUtils.getExportQualifiedName(type) + "');");
             }
             writeNewline("return p;", false);
         }
@@ -140,6 +151,9 @@ public class FooterEmitter extends BaseSubEmitter implements
         IClassDefinition definiton = node.getDefinition();
         IClassDefinition baseDefinition = definiton
                 .resolveBaseClass(getProject());
+
+        final String qualifiedName = MetaDataUtils.getExportQualifiedName(node
+                .getDefinition());
 
         boolean hasArgs = DefinitionUtils.hasConstructorParameters(definiton);
         boolean isValidBase = isValidBaseClasse(baseDefinition);
@@ -162,7 +176,7 @@ public class FooterEmitter extends BaseSubEmitter implements
             }
         }
 
-        write(node.getQualifiedName());
+        write(qualifiedName);
         writeNewline(".injectionPoints = function(t) {", true);
         writeNewline("var p;");
         writeNewline("switch (t) {", true);
@@ -183,7 +197,10 @@ public class FooterEmitter extends BaseSubEmitter implements
     {
         // native base class and no constructor injection
         // just return an empty array
-        write(definiton.getQualifiedName());
+        final String qualifiedName = MetaDataUtils
+                .getExportQualifiedName(definiton);
+
+        write(qualifiedName);
         writeNewline(".injectionPoints = function(t) {", true);
         writeNewline("return [];", false);
         writeNewline("};");
@@ -197,7 +214,7 @@ public class FooterEmitter extends BaseSubEmitter implements
         IClassDefinition definition = node.getDefinition();
         IFunctionDefinition constructor = definition.getConstructor();
         IParameterDefinition[] parameters = constructor.getParameters();
-        String qualifiedName = toBaseQualifiedName(definition);
+        String baseQualifiedName = toBaseQualifiedName(definition);
 
         writeNewline("case 0:", true);
 
@@ -205,7 +222,7 @@ public class FooterEmitter extends BaseSubEmitter implements
         int i = 0;
         if (constructor.isImplicit() || len == 0)
         {
-            write("p = " + qualifiedName + ".injectionPoints(t);");
+            write("p = " + baseQualifiedName + ".injectionPoints(t);");
         }
         else
         {
@@ -214,7 +231,7 @@ public class FooterEmitter extends BaseSubEmitter implements
             for (IParameterDefinition parameter : parameters)
             {
                 ITypeDefinition rtype = parameter.resolveType(getProject());
-                String exportName = MetaDataUtils.getExportName(rtype);
+                String exportName = MetaDataUtils.getExportQualifiedName(rtype);
                 write("p.push({n:'" + parameter.getBaseName() + "'");
                 write(",");
                 write(" t:'" + exportName + "'");
@@ -252,7 +269,7 @@ public class FooterEmitter extends BaseSubEmitter implements
 
             if (RandoriUtils.isValidInjectType(ownerType))
             {
-                String name = MetaDataUtils.getExportName(ownerType);
+                String name = MetaDataUtils.getExportQualifiedName(ownerType);
                 write(",");
                 write(" t:'" + name + "'");
             }
@@ -328,7 +345,10 @@ public class FooterEmitter extends BaseSubEmitter implements
             return;
 
         IClassDefinition definition = node.getDefinition();
+        // XXX BASE needs to have its export javascript name used
         String baseQualfiiedName = toBaseQualifiedName(definition);
+        //final String qualifiedName = MetaDataUtils
+        //       .getExportQualifiedName(definition);
 
         writeNewline("case 3:", true);
         emitInjectionHeader(baseQualfiiedName, isValidBase);
@@ -345,7 +365,7 @@ public class FooterEmitter extends BaseSubEmitter implements
             if (!MetaDataUtils.isNative(type))
             {
                 write(",");
-                write(" t:'" + type.getQualifiedName() + "'");
+                write(" t:'" + MetaDataUtils.getExportQualifiedName(type) + "'");
             }
 
             if (tag.getAttributeValue("required") != null
