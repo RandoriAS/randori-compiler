@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.tree.as.ITypeNode;
 import org.apache.flex.compiler.units.ICompilationUnit;
 import org.apache.flex.utils.FilenameNormalization;
@@ -35,7 +36,9 @@ import randori.compiler.codegen.as.IASWriter;
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.internal.config.MergedFileSettings;
+import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.internal.utils.FileUtils;
+import randori.compiler.internal.utils.MetaDataUtils;
 import randori.compiler.projects.IRandoriApplicationProject;
 
 /**
@@ -175,8 +178,13 @@ public class ApplicationModel extends BaseCompilationSet
 
         try
         {
-            outputClassFile = FileUtils.toOutputFile(unit.getQualifiedNames()
-                    .get(0), outputFolder, "js");
+            IDefinition definition = DefinitionUtils
+                    .getTopLevelDefinition(unit);
+            final String qualifiedName = MetaDataUtils
+                    .getExportQualifiedName(definition);
+
+            outputClassFile = FileUtils.toOutputFile(qualifiedName,
+                    outputFolder, "js");
 
             System.out.println("Compiling file: " + outputClassFile);
 
@@ -187,10 +195,6 @@ public class ApplicationModel extends BaseCompilationSet
 
             writer.writeTo(out);
             out.flush();
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
         }
         catch (FileNotFoundException e)
         {

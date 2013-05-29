@@ -92,6 +92,7 @@ import org.apache.flex.compiler.tree.metadata.IMetaTagNode;
 import randori.compiler.codegen.IEmitter;
 import randori.compiler.codegen.as.IASEmitter;
 import randori.compiler.internal.utils.ASNodeUtils;
+import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.visitor.as.IASBlockWalker;
 
 /**
@@ -289,7 +290,7 @@ public class ASEmitter implements IASEmitter, IEmitter
     public void emitPackageContents(IPackageDefinition definition)
     {
         IPackageNode node = definition.getNode();
-        ITypeNode tnode = findTypeNode(node);
+        ITypeNode tnode = DefinitionUtils.findTypeNode(node);
         if (tnode != null)
         {
             indentPush();
@@ -1102,30 +1103,6 @@ public class ASEmitter implements IASEmitter, IEmitter
     //--------------------------------------------------------------------------
     // Utility
     //--------------------------------------------------------------------------
-
-    protected ITypeNode findTypeNode(IPackageNode node)
-    {
-        IScopedNode scope = node.getScopedNode();
-        for (int i = 0; i < scope.getChildCount(); i++)
-        {
-            IASNode child = scope.getChild(i);
-            if (child instanceof ITypeNode)
-                return (ITypeNode) child;
-        }
-        return null;
-    }
-
-    protected IFunctionNode findFunctionNode(IPackageNode node)
-    {
-        IScopedNode scope = node.getScopedNode();
-        for (int i = 0; i < scope.getChildCount(); i++)
-        {
-            IASNode child = scope.getChild(i);
-            if (child instanceof IFunctionNode)
-                return (IFunctionNode) child;
-        }
-        return null;
-    }
 
     protected ITypeDefinition findType(Collection<IDefinition> definitions)
     {

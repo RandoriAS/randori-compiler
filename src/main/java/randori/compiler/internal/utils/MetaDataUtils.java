@@ -319,7 +319,22 @@ public class MetaDataUtils
         return name;
     }
 
-    public static String getExportName(ITypeDefinition definition)
+    /**
+     * Returns an exported package name for a top level {@link ITypeDefinition}
+     * or {@link IFunctionDefinition}.
+     * 
+     * @param definition The type or function.
+     */
+    public static String getExportPackageName(IDefinition definition)
+    {
+        String qualifiedName = getExportQualifiedName(definition);
+        final int index = qualifiedName.lastIndexOf(".");
+        if (index == -1)
+            return "";
+        return qualifiedName.substring(0, index);
+    }
+
+    public static String getExportQualifiedName(IDefinition definition)
     {
         if (definition instanceof AppliedVectorDefinition)
             return NativeType.Array.getValue();
