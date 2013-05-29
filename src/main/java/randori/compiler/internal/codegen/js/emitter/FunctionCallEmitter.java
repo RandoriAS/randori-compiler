@@ -19,6 +19,8 @@
 
 package randori.compiler.internal.codegen.js.emitter;
 
+import java.util.List;
+
 import org.apache.flex.compiler.constants.IASKeywordConstants;
 import org.apache.flex.compiler.definitions.IAccessorDefinition;
 import org.apache.flex.compiler.definitions.IClassDefinition;
@@ -41,6 +43,7 @@ import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
+import randori.compiler.internal.codegen.js.utils.GenericEmitUtils;
 import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.internal.utils.ExpressionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
@@ -82,7 +85,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         else if (definition instanceof IClassDefinition)
         {
             // cast Foo(bar); just walk the value in parens
-            walkArguments(node);
+            walkParameters(node);
             return;
         }
         else if (fnode.getNameNode() instanceof IMemberAccessExpressionNode)
@@ -102,7 +105,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                 write("this");
                 if (node.getArgumentNodes().length > 0)
                     write(",");
-                walkArguments(node);
+                walkParameters(node);
                 write(")");
                 return;
             }
@@ -113,7 +116,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         getWalker().walk(node.getNameNode());
 
         write("(");
-        walkArguments(node);
+        walkParameters(node);
         write(")");
     }
 
@@ -137,7 +140,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                 getWalker().walk(node.getNameNode());
                 write(")");
                 write("(");
-                walkArguments(node);
+                walkParameters(node);
                 write(")");
 
                 return;
@@ -152,7 +155,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                 // XXX change this to walk
                 write(vdef.getBaseName());
                 write("(");
-                walkArguments(node);
+                walkParameters(node);
                 write(")");
                 return;
             }
@@ -199,7 +202,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
             else if (baseName.equals("Array"))
             {
                 write("[");
-                walkArguments(node);
+                walkParameters(node);
                 write("]");
                 return;
             }
@@ -265,7 +268,8 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                     emitJson(node, newDefinition);
                     break;
                 default:
-                    String name = MetaDataUtils.getExportQualifiedName(newDefinition);
+                    String name = MetaDataUtils
+                            .getExportQualifiedName(newDefinition);
                     if (name.equals("AudioContext"))
                     {
                         name = "webkit" + name;
@@ -274,7 +278,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                     write(" ");
                     write(name);
                     write("(");
-                    walkArguments(node);
+                    walkParameters(node);
                     write(")");
                     break;
                 }
@@ -299,7 +303,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         //emitter.getWalker().walk(node.getNameNode());
 
         write("(");
-        walkArguments(node);
+        walkParameters(node);
         write(")");
     }
 
@@ -350,8 +354,116 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         write(" ");
 
         write("(");
-        walkArguments(node);
+        walkParameters(node);
         write(")");
+    }
+
+    protected void walkParameters(IFunctionCallNode node)
+    {
+        getModel().setInArguments(true);
+
+        // we will loop through the actual parameters of the method
+        // IDefinition, this way we can see if a default argument
+        // needs to be inserted as a placeholder for a missing argument
+
+        IFunctionDefinition functionDefinition = null;
+        IDefinition definition = node.resolveCalledExpression(getProject());
+        if (definition instanceof IClassDefinition)
+        {
+            functionDefinition = ((IClassDefinition) definition)
+                    .getConstructor();
+            if (hasRest(functionDefinition))
+            {
+                walkArguments(node);
+                return;
+            }
+        }
+        else if (definition instanceof IFunctionDefinition)
+        {
+            ITypeDefinition returnType = ((IFunctionDefinition) definition)
+                    .resolveReturnType(getProject());
+
+            functionDefinition = (IFunctionDefinition) definition;
+
+            if (returnType.getBaseName().equals("Function")
+                    || returnType.getBaseName().equals("Object")
+                    || returnType.getBaseName().equals("*"))
+            {
+                // if this is a Function function call, we cannot know what
+                // the paramters are, so just emit the arguments present
+                walkArguments(node);
+                return;
+            }
+        }
+        else
+        {
+            walkArguments(node);
+            return;
+        }
+
+        FunctionCallNode fnode = (FunctionCallNode) node;
+        IExpressionNode[] arguments = node.getArgumentNodes();
+        int argLen = arguments.length;
+        // only add 'this' to a constructor super() call, not a super.foo() call
+        if (ExpressionUtils.injectThisArgument(fnode, false))
+        {
+            write("this");
+            if (argLen > 0)
+                writeToken(",");
+        }
+
+        // 1. check for a IFunctionDefinition
+        if (functionDefinition != null)
+        {
+            List<IParameterDefinition> parameters = GenericEmitUtils
+                    .getParameters(node, functionDefinition, getProject());
+
+            int paramLen = parameters.size();
+            for (int i = 0; i < paramLen; i++)
+            {
+                IParameterDefinition parameter = parameters.get(i);
+                if (i < argLen)
+                {
+                    IExpressionNode expression = arguments[i];
+                    // use the argument
+                    if (expression.getNodeID() == ASTNodeID.IdentifierID)
+                    {
+                        // test for Functions to be wrapped with createDelegate()
+                        emitArgumentIdentifier((IIdentifierNode) expression);
+                    }
+                    else
+                    {
+                        getWalker().walk(expression);
+                    }
+                }
+                else
+                {
+                    // use the default parameter
+                    if (parameter.hasDefaultValue())
+                    {
+                        String value = ExpressionUtils.toInitialValue(
+                                parameter, getProject());
+                        write(value);
+                    }
+                    else
+                    {
+                        // XXX throw error, is this invalid?
+                    }
+                }
+
+                // XXX This might not work here
+                if (i < paramLen - 1)
+                {
+                    writeToken(",");
+                }
+                else if (i == paramLen - 1)
+                {
+                    emitExtra(node);
+                }
+            }
+        }
+
+        getModel().setInArguments(false);
     }
 
     protected void walkArguments(IFunctionCallNode node)
@@ -405,9 +517,9 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         IDefinition definition = node.getNameNode().resolve(getProject());
         if (definition != null)
         {
-            if (definition.getBaseName().equals("parseInt")
-                    && node.getArgumentNodes().length == 1)
-                write(", null");
+            //if (definition.getBaseName().equals("parseInt")
+            //        && node.getArgumentNodes().length == 1)
+            //    write(", null");
         }
     }
 
@@ -439,7 +551,17 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
     {
         // this 'would' be a IFunctionCallNode.getNameNode()
         String name = MetaDataUtils.getExportQualifiedName(definition);
-        //return definition.getQualifiedName();
         return name;
+    }
+
+    public boolean hasRest(IFunctionDefinition definition)
+    {
+        for (IParameterDefinition parameter : definition.getParameters())
+        {
+            if (parameter.isRest())
+                return true;
+        }
+
+        return false;
     }
 }

@@ -1,3 +1,22 @@
+/***
+ * Copyright 2013 Teoti Graphix, LLC.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * 
+ * @author Michael Schmalle <mschmalle@teotigraphix.com>
+ */
+
 package randori.compiler.internal.codegen.js.utils;
 
 import java.util.ArrayList;
@@ -6,17 +25,105 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.flex.compiler.constants.IASKeywordConstants;
+import org.apache.flex.compiler.definitions.IFunctionDefinition;
+import org.apache.flex.compiler.definitions.IParameterDefinition;
+import org.apache.flex.compiler.projects.ICompilerProject;
+import org.apache.flex.compiler.tree.as.IExpressionNode;
+import org.apache.flex.compiler.tree.as.IFunctionCallNode;
 import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.apache.flex.compiler.tree.as.IParameterNode;
 
 import randori.compiler.codegen.as.IASEmitter;
 import randori.compiler.internal.utils.DefinitionUtils;
+import randori.compiler.internal.utils.ExpressionUtils;
 
 /**
  * @author Michael Schmalle
  */
 public class GenericEmitUtils
 {
+    public static final List<IParameterDefinition> getParameters(
+            IFunctionCallNode node, IFunctionDefinition definition,
+            ICompilerProject project)
+    {
+        IExpressionNode[] arguments = node.getArgumentNodes();
+        IParameterDefinition[] parameters = definition.getParameters();
+
+        // we are using these for argument render so
+        // we only include the parameters that have null or undefined
+        // IF they do not have a corresponding argument OR they are at
+        // the end of the signature with no other defaults other than
+        // null or undefined following them
+
+        // 1. get the parameters in reverse order
+        List<ParameterInfo> infos = new ArrayList<ParameterInfo>();
+        int i = 0;
+        for (IParameterDefinition parameter : parameters)
+        {
+            IExpressionNode argument = null;
+            if (i < arguments.length)
+                argument = arguments[i];
+            infos.add(new ParameterInfo(parameter, argument));
+            i++;
+        }
+
+        Collections.reverse(infos);
+
+        boolean skipParameter = true;
+        List<IParameterDefinition> definitions = new ArrayList<IParameterDefinition>();
+        for (ParameterInfo info : infos)
+        {
+            if (info.hasArgument())
+            {
+                definitions.add(info.parameter);
+            }
+            else
+            {
+                // if there is no argument, that means we are trying a default value
+                if (info.parameter.hasDefaultValue())
+                {
+                    String value = ExpressionUtils.toInitialValue(
+                            info.parameter, project);
+                    if (skipParameter)
+                    {
+                        if (value.equals("undefined") || value.equals("null"))
+                        {
+                            skipParameter = true; //
+                        }
+                        else
+                        {
+                            skipParameter = false;
+                        }
+                    }
+                }
+                if (!skipParameter)
+                    definitions.add(info.parameter);
+            }
+        }
+
+        Collections.reverse(definitions);
+
+        return definitions;
+    }
+
+    static class ParameterInfo
+    {
+        private IParameterDefinition parameter;
+
+        private IExpressionNode argument;
+
+        ParameterInfo(IParameterDefinition parameter, IExpressionNode argument)
+        {
+            this.parameter = parameter;
+            this.argument = argument;
+        }
+
+        boolean hasArgument()
+        {
+            return argument != null;
+        }
+    }
+
     public static final void emitDefaultParameterCodeBlock(IFunctionNode node,
             IASEmitter emitter)
     {
