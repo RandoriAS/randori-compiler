@@ -36,7 +36,6 @@ import org.apache.flex.compiler.tree.as.IVariableNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
-import randori.compiler.internal.codegen.js.utils.GenericEmitUtils;
 import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
 import randori.compiler.internal.utils.RandoriUtils;
