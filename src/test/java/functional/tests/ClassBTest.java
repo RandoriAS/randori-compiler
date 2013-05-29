@@ -35,12 +35,10 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("ClassB", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB = function(param1, param2, param3) {"
-                + "\n\tthis.modela = null;\n\tthis.names = null;\n\tthis.thenContracts "
-                + "= null;\n\tthis.field3 = null;\n\tthis.field2 = 42;\n\tthis.field1 = "
-                + "\"Hello\";\n\tthis.j = null;\n\tif (arguments.length < 3) {\n\t\tif "
-                + "(arguments.length < 2) {\n\t\t\tparam2 = 42;\n\t\t}\n\t\tparam3 = "
-                + "'foo';\n\t}\n\tdemo.foo.ClassA.call(this, param1);\n\tthis.field2 ="
-                + " param2;\n}");
+                + "\n\tthis.modela = null;\n\tthis.names = null;\n\tthis.thenContracts"
+                + " = null;\n\tthis.field3 = null;\n\tthis.field2 = 42;\n\tthis.field1"
+                + " = \"Hello\";\n\tthis.j = null;\n\tdemo.foo.ClassA.call(this, param1);"
+                + "\n\tthis.field2 = param2;\n}");
     }
 
     @Test
@@ -179,9 +177,8 @@ public class ClassBTest extends FunctionalTestBase
     {
         IFunctionNode node = findFunction("default_parameters", classNode);
         visitor.visitFunction(node);
-        assertOut("demo.foo.ClassB.prototype.default_parameters = function(foo, bar, baz) {"
-                + "\n\tif (arguments.length < 3) {\n\t\tif (arguments.length < 2) {"
-                + "\n\t\t\tbar = \"42\";\n\t\t}\n\t\tbaz = 0.42;\n\t}\n\tvar a = baz;\n}");
+        assertOut("demo.foo.ClassB.prototype.default_parameters = "
+                + "function(foo, bar, baz) {\n\tvar a = baz;\n}");
     }
 
     @Test
@@ -542,7 +539,7 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("parseInt_radix", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.parseInt_radix = function() "
-                + "{\n\tparseInt(\"42\", null);\n\tparseInt(\"42\", 10);\n}");
+                + "{\n\tparseInt(\"42\", 0);\n\tparseInt(\"42\", 10);\n}");
     }
 
     @Test

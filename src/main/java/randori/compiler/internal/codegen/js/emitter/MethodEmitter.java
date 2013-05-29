@@ -142,7 +142,7 @@ public class MethodEmitter extends BaseSubEmitter implements
             }
         }
 
-        GenericEmitUtils.emitDefaultParameterCodeBlock(node, getEmitter());
+        // XXX GenericEmitUtils.emitDefaultParameterCodeBlock(node, getEmitter());
 
         String code = MetaDataUtils.findJavaScriptCodeTag(node);
         if (code != null)
