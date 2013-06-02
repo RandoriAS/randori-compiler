@@ -44,8 +44,13 @@ public interface IBundleContainer
         /**
          * A actionscript source code container.
          */
-        AS("as");
+        AS("as"),
 
+        /**
+         * A actionscript document container.
+         */
+        ASDOC("asdoc");
+        
         private String value;
 
         Type(String value)

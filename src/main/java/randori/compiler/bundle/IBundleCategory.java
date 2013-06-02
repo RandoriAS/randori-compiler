@@ -55,7 +55,9 @@ public interface IBundleCategory
         /**
          * A monolithic minimized source code category.
          */
-        MONOLITHIC_MINIFIED("monolithic_minified");
+        MONOLITHIC_MINIFIED("monolithic_minified"),
+        
+        HTML("html");
 
         private String value;
 
