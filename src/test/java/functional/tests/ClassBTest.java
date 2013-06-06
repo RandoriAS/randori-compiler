@@ -615,10 +615,19 @@ public class ClassBTest extends FunctionalTestBase
     {
         IFunctionNode node = findFunction("goo", classNode);
         visitor.visitFunction(node);
-        assertOut("demo.foo.ClassB.prototype.goo = function(value) {\n\tdemo.foo"
+        assertOut("demo.foo.ClassB.prototype.get_goo = function(value) {\n\tdemo.foo"
                 + ".ClassA.prototype.set_goo(this, value);\n\tvar o = demo.foo."
                 + "ClassA.prototype.get_goo(this);\n\tdemo.foo.ClassA.prototype."
                 + "set_goo(this, demo.foo.ClassA.prototype.get_goo(this));\n}");
+    }
+
+    @Test
+    public void override_and_use_foo()
+    {
+        IFunctionNode node = findFunction("override_and_use_foo", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.override_and_use_foo = "
+                + "function(value) {\n\to = this.get_foo();\n}");
     }
 
     @Test
