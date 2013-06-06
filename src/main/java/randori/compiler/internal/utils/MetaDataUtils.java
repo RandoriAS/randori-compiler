@@ -237,6 +237,7 @@ public class MetaDataUtils
         if (tag != null)
         {
             // only if the tag has export="false" will we return true
+            // used when figuring out if get/set are appended to accessors
             String value = tag.getAttributeValue(ATT_EXPORT);
             if (value != null && value.equals(VALUE_FALSE))
                 return true;

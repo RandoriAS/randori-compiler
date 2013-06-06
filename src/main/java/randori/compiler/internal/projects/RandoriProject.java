@@ -45,6 +45,7 @@ import org.apache.flex.utils.FilenameNormalization;
 
 import randori.compiler.access.IASProjectAccess;
 import randori.compiler.bundle.io.BundleUtils;
+import randori.compiler.common.VersionInfo;
 import randori.compiler.config.IRandoriTargetSettings;
 import randori.compiler.config.annotation.IAnnotationManager;
 import randori.compiler.driver.IRandoriBackend;
@@ -229,6 +230,7 @@ public abstract class RandoriProject extends FlexProject implements
     @Override
     public boolean compile(boolean doBuild, boolean doExport)
     {
+        System.out.println("Randori Compiler v" + VersionInfo.RANDORI_COMPILER_VERSION);
         boolean success = startCompile(doBuild);
         if (!success)
             return false;
