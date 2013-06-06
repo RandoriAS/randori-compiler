@@ -207,8 +207,9 @@ public class ApplicationModel extends BaseCompilationSet
         catch (RuntimeException e)
         {
             // XXX HACK not sure how to "not" create this file with the stream
-            System.err.println("Compiling file failed "
+            System.err.println("Compiling file failed  "
                     + outputClassFile.getName());
+            e.printStackTrace();
             throw e;
         }
         finally

@@ -627,7 +627,18 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("override_and_use_foo", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.override_and_use_foo = "
-                + "function(value) {\n\to = this.get_foo();\n}");
+                + "function(value) {\n\tvar o = this.get_foo();\n}");
+    }
+
+    @Test
+    public void static_accessor_to_setter()
+    {
+        IFunctionNode node = findFunction("static_accessor_to_setter",
+                classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.static_accessor_to_setter = function(value) {"
+                + "\n\tvar o = demo.foo.support.AnotherStaticClass.get_current().get_stage()."
+                + "set_width(42);\n}");
     }
 
     @Test

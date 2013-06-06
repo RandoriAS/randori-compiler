@@ -1,6 +1,7 @@
 package demo.foo
 {
 
+import demo.foo.support.AnotherStaticClass;
 import demo.foo.support.MapTypeIdExportFalse;
 import demo.foo.support.MapTypeIdExportTrue;
 import demo.foo.support.MenuItem2;
@@ -481,7 +482,13 @@ public class ClassB extends ClassA
     // issue89 overridding an accessor ruins calls to it
     override public function override_and_use_foo(value:Object):void
     {
-        o = foo;
+        var o:Object = foo;
     }
+    
+    override public function static_accessor_to_setter(value:Object):void
+    {
+        var o:Object = AnotherStaticClass.current.stage.width = 42;
+    }
+    
 }
 }
