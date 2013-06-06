@@ -616,9 +616,9 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("goo", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.get_goo = function(value) {\n\tdemo.foo"
-                + ".ClassA.prototype.set_goo(this, value);\n\tvar o = demo.foo."
-                + "ClassA.prototype.get_goo(this);\n\tdemo.foo.ClassA.prototype."
-                + "set_goo(this, demo.foo.ClassA.prototype.get_goo(this));\n}");
+                + ".ClassA.prototype.set_goo.call(this, value);\n\tvar o = demo.foo."
+                + "ClassA.prototype.get_goo.call(this);\n\tdemo.foo.ClassA.prototype."
+                + "set_goo.call(this, demo.foo.ClassA.prototype.get_goo.call(this));\n}");
     }
 
     @Test

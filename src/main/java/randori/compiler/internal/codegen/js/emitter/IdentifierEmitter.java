@@ -182,12 +182,15 @@ public class IdentifierEmitter extends BaseSubEmitter implements
             if (getModel().isInAssignment()
                     && ExpressionUtils.isRight(getModel().getAssign(), node))
             {
-                write("set_" + name);
+                if (getModel().isCall())
+                    write("set_" + name + ".call");
+                else
+                    write("set_" + name);
             }
             else
             {
                 if (getModel().isCall())
-                    write("get_" + name + "(this)");
+                    write("get_" + name + ".call(this)");
                 else
                     write("get_" + name + "()");
                 getModel().setCall(false);
