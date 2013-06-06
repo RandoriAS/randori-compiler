@@ -186,7 +186,11 @@ public class IdentifierEmitter extends BaseSubEmitter implements
             }
             else
             {
-                write("get_" + name + "()");
+                if (getModel().isCall())
+                    write("get_" + name + "(this)");
+                else
+                    write("get_" + name + "()");
+                getModel().setCall(false);
             }
         }
         else
