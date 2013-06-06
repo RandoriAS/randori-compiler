@@ -213,6 +213,9 @@ public class DefinitionUtils
     {
         IClassNode tnode = (IClassNode) node
                 .getAncestorOfType(IClassNode.class);
+        // the comp unit is a package level function
+        if (tnode == null)
+            return null;
         return tnode.getDefinition();
     }
 
@@ -532,7 +535,25 @@ public class DefinitionUtils
 
         IDefinition[] definitions = fileNode.getTopLevelDefinitions(false,
                 false);
+
+        // this allows 'internal' classes to be generated
+        if (definitions.length == 0)
+            return getTypeNodeFromFile(fileNode).getDefinition();
+
         return definitions[0];
+    }
+
+    public static ITypeNode getTypeNodeFromFile(IFileNode node)
+    {
+        IPackageNode pnode = (IPackageNode) node.getChild(0);
+        IScopedNode scopedNode = pnode.getScopedNode();
+        for (int i = 0; i < scopedNode.getChildCount(); i++)
+        {
+            IASNode child = scopedNode.getChild(i);
+            if (child instanceof ITypeNode)
+                return (ITypeNode) child;
+        }
+        return null;
     }
 
     public static IClassDefinition getClassDefinition(ICompilationUnit unit)

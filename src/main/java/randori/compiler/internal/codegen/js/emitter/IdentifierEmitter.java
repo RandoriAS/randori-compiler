@@ -186,6 +186,8 @@ public class IdentifierEmitter extends BaseSubEmitter implements
                     write("set_" + name + ".call");
                 else
                     write("set_" + name);
+                // we do not set setCall(false) since the binary value will pick it up
+                // and add 'this' to the arguments
             }
             else
             {
