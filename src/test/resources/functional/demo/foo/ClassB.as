@@ -466,6 +466,12 @@ public class ClassB extends ClassA
         var accessor1:int = this.accessor1;
         var field1:String = this.field1;
     }
-
+    
+    override public function goo(value:Object):void
+    {
+        super.goo = value;
+        var o:Object = super.goo;
+        super.goo = super.goo;
+    }
 }
 }

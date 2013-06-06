@@ -130,4 +130,8 @@ public interface ISessionModel
     IBinaryOperatorNode getAssign();
     
     void setAssign(IBinaryOperatorNode node);
+
+    void setCall(boolean value);
+    
+    boolean isCall();
 }

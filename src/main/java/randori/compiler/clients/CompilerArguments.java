@@ -166,6 +166,52 @@ public class CompilerArguments
         jsMergedFiles.add(setting);
     }
 
+    //--------------------------------------------------------------------------
+    // Doc
+    //--------------------------------------------------------------------------
+
+    private List<String> docMembers = new ArrayList<String>();
+
+    private List<String> docNamespace = new ArrayList<String>();
+
+    private String mainTitle;
+
+    public String getMainTitle()
+    {
+        return mainTitle;
+    }
+
+    public void setMainTitle(String value)
+    {
+        mainTitle = value;
+    }
+
+    private String footer;
+
+    public String getFooter()
+    {
+        return footer;
+    }
+
+    public void setFooter(String value)
+    {
+        footer = value;
+    }
+
+    public void addDocMember(String member)
+    {
+        if (docMembers.contains(member))
+            return;
+        docMembers.add(member);
+    }
+
+    public void addDocNamespace(String namespace)
+    {
+        if (docNamespace.contains(namespace))
+            return;
+        docNamespace.add(namespace);
+    }
+
     public void clear()
     {
         jsBasePath = "";
@@ -258,7 +304,34 @@ public class CompilerArguments
 
         result.add("-output=" + getOutput());
 
+        addArguments(result);
+
         return result.toArray(new String[] {});
+    }
+
+    protected void addArguments(List<String> arguments)
+    {
+        String mainTitle = getMainTitle();
+        if (mainTitle != null && !mainTitle.equals(""))
+            arguments.add("-main-title=" + mainTitle);
+
+        if (footer != null && !footer.equals(""))
+            arguments.add("-footer=" + footer);
+
+        if (docMembers.size() > 0)
+        {
+            arguments
+                    .add("-doc-member="
+                            + StringUtils.join(
+                                    docMembers.toArray(new String[] {}), ","));
+        }
+
+        if (docNamespace.size() > 0)
+        {
+            arguments.add("-doc-namespace="
+                    + StringUtils.join(docNamespace.toArray(new String[] {}),
+                            ","));
+        }
     }
 
     public static class CompilerArgument

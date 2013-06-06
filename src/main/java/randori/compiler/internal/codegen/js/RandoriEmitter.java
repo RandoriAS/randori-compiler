@@ -23,6 +23,7 @@ import java.io.FilterWriter;
 import java.util.List;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.flex.compiler.definitions.IAccessorDefinition;
 import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
@@ -67,6 +68,7 @@ import randori.compiler.internal.codegen.js.emitter.MethodEmitter;
 import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
 import randori.compiler.internal.utils.MetaDataUtils.MetaData.Mode;
+import randori.compiler.internal.utils.RandoriUtils;
 
 /**
  * The base ship...
@@ -504,15 +506,25 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
             IIdentifierNode inode = (IIdentifierNode) node;
             if (inode.getParent() instanceof IMemberAccessExpressionNode)
             {
-                // emitFunctionCall() takes care of super.foo()
+                IMemberAccessExpressionNode mnode = (IMemberAccessExpressionNode) inode
+                        .getParent();
+                IDefinition rightDef = mnode.getRightOperandNode().resolve(
+                        getWalker().getProject());
+                // takes care of super.get_foo() accessor
+                if (rightDef instanceof IAccessorDefinition)
+                {
+                    String qualifiedName = RandoriUtils
+                            .toSuperAccessQualifiedName(inode, getWalker()
+                                    .getProject());
+                    write(qualifiedName + ".prototype");
+                    getModel().setCall(true);
+                }
             }
             else
             {
-                IClassNode typeNode = (IClassNode) DefinitionUtils
-                        .findParentTypeNode(inode.getParent());
-                String qualifiedName = DefinitionUtils
-                        .toBaseClassQualifiedName(typeNode.getDefinition(),
-                                getWalker().getProject());
+                // takes care of super.foo() function call
+                String qualifiedName = RandoriUtils.toSuperAccessQualifiedName(
+                        inode, getWalker().getProject());
                 write(qualifiedName + ".call");
             }
         }

@@ -23,6 +23,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.flex.utils.FilenameNormalization;
+
 import randori.compiler.asdoc.access.IASProjectAccess;
 import randori.compiler.asdoc.config.IDocConfiguration;
 import randori.compiler.asdoc.internal.access.MemberType;
@@ -69,7 +71,7 @@ public class DocConfiguration implements IDocConfiguration
     public List<File> getOutputs()
     {
         List<File> result = new ArrayList<File>();
-        result.add(new File("C:/Users/Work/Desktop/asdocs"));
+        result.add(new File(configuration.getOutput()));
         return result;
     }
 
@@ -77,8 +79,8 @@ public class DocConfiguration implements IDocConfiguration
     public List<File> getTemplateBases()
     {
         List<File> result = new ArrayList<File>();
-        result.add(new File(
-                "C:/Users/Work/Documents/projects/apache/AFDocApplication/src/org/apache/flex/jasdoc/internal/template/asdoc/tpl"));
+        String path = FilenameNormalization.normalize("src/main/java/randori/compiler/asdoc/internal/template/asdoc/tpl");
+        result.add(new File(path));
         return result;
     }
 

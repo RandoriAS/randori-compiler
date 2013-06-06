@@ -27,6 +27,10 @@ public class ClassA
     {
     }
     
+    public function set goo(value:Object):void
+    {
+    }
+    
     public function get data():String
     {
         return null;

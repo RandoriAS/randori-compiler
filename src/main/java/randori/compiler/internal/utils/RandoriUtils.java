@@ -34,6 +34,8 @@ import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.projects.IASProject;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.ASTNodeID;
+import org.apache.flex.compiler.tree.as.IASNode;
+import org.apache.flex.compiler.tree.as.IClassNode;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
 import org.apache.flex.compiler.tree.as.IIdentifierNode;
 import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
@@ -62,6 +64,25 @@ public class RandoriUtils
             ICompilerProject project)
     {
         return null;
+    }
+
+    /**
+     * Returns the superclass access for a <code>super</code> call.
+     * <p>
+     * IE <code>super.(other expression)</code> will return
+     * <code>foo.bar.BaseClass</code>.
+     * 
+     * @param node
+     * @param project
+     */
+    public static String toSuperAccessQualifiedName(IASNode node,
+            ICompilerProject project)
+    {
+        IClassNode typeNode = (IClassNode) DefinitionUtils
+                .findParentTypeNode(node.getParent());
+        String qualifiedName = DefinitionUtils.toBaseClassQualifiedName(
+                typeNode.getDefinition(), project);
+        return qualifiedName;
     }
 
     /**
