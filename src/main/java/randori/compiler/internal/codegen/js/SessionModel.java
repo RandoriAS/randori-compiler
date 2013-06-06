@@ -206,5 +206,19 @@ public class SessionModel implements ISessionModel
                 viewInjectTags.add(tag);
         }
     }
+    
+    private boolean isCall;
+    
+    @Override
+    public void setCall(boolean value)
+    {
+        isCall = value;
+    }
+
+    @Override
+    public boolean isCall()
+    {
+        return isCall;
+    }
 
 }

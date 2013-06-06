@@ -611,6 +611,17 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void super_accessor_call()
+    {
+        IFunctionNode node = findFunction("goo", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.goo = function(value) {\n\tdemo.foo"
+                + ".ClassA.prototype.set_goo(this, value);\n\tvar o = demo.foo."
+                + "ClassA.prototype.get_goo(this);\n\tdemo.foo.ClassA.prototype."
+                + "set_goo(this, demo.foo.ClassA.prototype.get_goo(this));\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);

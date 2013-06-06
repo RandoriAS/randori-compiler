@@ -57,6 +57,13 @@ public class ASParserASDocDelegate implements IASParserASDocDelegate
     public IASDocComment afterDefinition(
             IDocumentableDefinitionNode definitionNode)
     {
+        // this is the only way we can tell if this might be a license header
+        if (mAsDocToken != null && mAsDocToken.getColumn() == 0
+                && mAsDocToken.getLine() == 0)
+        {
+            mAsDocToken = null;
+        }
+
         IASDocComment comment = new ASDocComment((ASToken) mAsDocToken,
                 definitionNode);
         mAsDocToken = null;

@@ -21,6 +21,8 @@ package randori.compiler.asdoc.internal.template.asdoc;
 
 import java.util.List;
 
+import org.apache.flex.compiler.definitions.ITypeDefinition;
+
 import randori.compiler.asdoc.config.IDocConfiguration;
 import randori.compiler.asdoc.internal.template.asdoc.data.NavigationVO;
 import randori.compiler.asdoc.internal.template.asdoc.data.PrimaryLink;
@@ -159,8 +161,8 @@ public class TitleBarTemplate extends ASDocTemplateRenderer
 
         set("mainTitle", getConfiguration().getMainTitle());
 
-        set("logoAlt", "Teoti Graphix, LLC");
-        set("logoTitle", "Teoti Graphix, LLC");
+        set("logoAlt", getConfiguration().getMainTitle());
+        set("logoTitle", getConfiguration().getMainTitle());
         set("logoSrc", getConfiguration().getLogo());
 
         String url = getRestoreFramesURL();
@@ -190,41 +192,51 @@ public class TitleBarTemplate extends ASDocTemplateRenderer
                 return sb.toString();
             }
         }
-        /*
-                if (getElement() == null) {
-                    return "";
-                }
 
-                if (getElement() instanceof IASType) {
-                    IASType element = (IASType) getElement();
+        String title = getTitle();
+        if (title == null) // hack
+            return "";
 
-                    String packagePath = element.getPackageName().replace('.', '/');
-                    String elementPath = element.getQName().getQualifiedName()
-                            .replace('.', '/')
-                            + ".html";
+        if (title.startsWith("All Classes"))
+        {
+            return "index.html?class-summary.html&all-classes.html";
+        }
+        else if (title.startsWith("All Packages"))
+        {
+            return "index.html?package-summary.html&all-classes.html";
+        }
 
-                    sb.append(getBasePath());
-                    sb.append("index.html");
-                    sb.append("?");
-                    sb.append(elementPath);
-                    sb.append("&");
-                    sb.append(packagePath);
-                    sb.append("/class-list.html");
-                } else if (getElement() instanceof IASPackage) {
-                    IASPackage element = (IASPackage) getElement();
+        // package
+        if (getDefinition() == null)
+        {
+            String packagePath = title.replace('.', '/');
 
-                    String packagePath = element.getName().replace('.', '/');
+            sb.append(getBasePath());
+            sb.append("index.html");
+            sb.append("?");
+            sb.append(packagePath);
+            sb.append("/package-detail.html");
+            sb.append("&");
+            sb.append(packagePath);
+            sb.append("/class-list.html");
+        }
+        else
+        {
+            ITypeDefinition element = (ITypeDefinition) getDefinition();
 
-                    sb.append(getBasePath());
-                    sb.append("index.html");
-                    sb.append("?");
-                    sb.append(packagePath);
-                    sb.append("/package-detail.html");
-                    sb.append("&");
-                    sb.append(packagePath);
-                    sb.append("/class-list.html");
-                }
-        */
+            String packagePath = element.getPackageName().replace('.', '/');
+            String elementPath = element.getQualifiedName().replace('.', '/')
+                    + ".html";
+
+            sb.append(getBasePath());
+            sb.append("index.html");
+            sb.append("?");
+            sb.append(elementPath);
+            sb.append("&");
+            sb.append(packagePath);
+            sb.append("/class-list.html");
+        }
+
         return sb.toString();
     }
 }

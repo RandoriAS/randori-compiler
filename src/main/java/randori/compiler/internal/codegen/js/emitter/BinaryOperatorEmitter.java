@@ -111,7 +111,11 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
                 && getModel().isInAssignment()
                 && leftDefinition instanceof IAccessorDefinition)
         {
-            write("(");
+            if (getModel().isCall())
+                write("(this, ");
+            else
+                write("(");
+            getModel().setCall(false);
         }
         else
         {
