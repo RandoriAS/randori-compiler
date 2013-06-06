@@ -467,11 +467,21 @@ public class ClassB extends ClassA
         var field1:String = this.field1;
     }
     
-    override public function goo(value:Object):void
+    override public function get goo(value:Object):void
     {
         super.goo = value;
         var o:Object = super.goo;
         super.goo = super.goo;
+    }
+    
+    override public function get foo(value:Object):void
+    {
+    }
+    
+    // issue89 overridding an accessor ruins calls to it
+    override public function override_and_use_foo(value:Object):void
+    {
+        o = foo;
     }
 }
 }
