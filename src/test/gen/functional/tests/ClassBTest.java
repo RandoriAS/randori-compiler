@@ -661,6 +661,33 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void namespace_static_access()
+    {
+        IFunctionNode node = findFunction("namespace_static_access", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.namespace_static_access = function() {"
+                + "\n\tdemo.foo.ClassB.staticInternalTest();\n}");
+    }
+
+    @Test
+    public void static_private_access()
+    {
+        IFunctionNode node = findFunction("static_private_access", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.static_private_access = function() {"
+                + "\n\tdemo.foo.ClassB.init();\n}");
+    }
+
+    @Test
+    public void instanceof_qualified()
+    {
+        IFunctionNode node = findFunction("instanceof_qualified", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.instanceof_qualified = function() {"
+                + "\n\tvar o;\n\tif (o instanceof demo.foo.ClassA)\n\t\treturn;\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
