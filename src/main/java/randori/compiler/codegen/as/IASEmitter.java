@@ -114,7 +114,7 @@ public interface IASEmitter extends IEmitter
      * @param node The {@link IInterfaceNode} class.
      */
     void emitInterface(IInterfaceNode node);
-    
+
     /**
      * Emit a toplevel package function.
      * 
@@ -310,7 +310,7 @@ public interface IASEmitter extends IEmitter
      * @param node The anonymous {@link IFunctionObjectNode}.
      */
     void emitFunctionObject(IFunctionObjectNode node);
-    
+
     void emitNamedFunction(IFunctionNode node);
 
     /**
@@ -388,8 +388,5 @@ public interface IASEmitter extends IEmitter
      * @param node The node to stringify.
      */
     String toNodeString(IExpressionNode node);
-
-
-
 
 }

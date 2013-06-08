@@ -72,18 +72,26 @@ public class ASNodeUtils
         return null;
     }
 
+    /**
+     * Returns whether the node has explicit parenthesis parsed in the source
+     * code.
+     * 
+     * @param node
+     */
     public static boolean hasParenOpen(IBinaryOperatorNode node)
     {
         return node.hasParenthesis();
-        //return node.getParent() instanceof IBinaryOperatorNode
-        //        && !ASNodeUtils.isString(node.getRightOperandNode());
     }
 
+    /**
+     * Returns whether the node has explicit parenthesis parsed in the source
+     * code.
+     * 
+     * @param node
+     */
     public static boolean hasParenClose(IBinaryOperatorNode node)
     {
         return node.hasParenthesis();
-        //return node.getParent() instanceof IBinaryOperatorNode
-        //        && !ASNodeUtils.isString(node.getRightOperandNode());
     }
 
     public static boolean isString(IExpressionNode node)

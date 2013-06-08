@@ -19,6 +19,8 @@
 
 package randori.compiler.codegen.js;
 
+import org.apache.flex.compiler.tree.as.ITypeNode;
+
 /**
  * The {@link IRandoriEmitter} interface allows abstraction between the base
  * JavaScript and the randori specific source code production.
@@ -36,4 +38,14 @@ public interface IRandoriEmitter extends IJSEmitter
      */
     ISessionModel getModel();
 
+    /**
+     * Returns a qualified name for a class that is produced using the
+     * <code>JavaScript</code> annotation export rules.
+     * <p>
+     * Note; All emitters must use this method to correctly resolve class names.
+     * 
+     * @param node The {@link ITypeNode} for which to return a resolved
+     * qualified name.
+     */
+    String toQualifiedNameFromType(ITypeNode node);
 }
