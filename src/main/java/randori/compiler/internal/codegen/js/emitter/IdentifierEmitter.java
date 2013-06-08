@@ -223,7 +223,7 @@ public class IdentifierEmitter extends BaseSubEmitter implements
     private void emitIdentifierFunction(IIdentifierNode node,
             IFunctionDefinition definition)
     {
-        String name = MetaDataUtils.getFunctionName(definition);
+        String name = MetaDataUtils.getFunctionBaseName(definition);
         write(name);
     }
 

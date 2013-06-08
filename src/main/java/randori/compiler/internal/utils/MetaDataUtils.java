@@ -297,7 +297,7 @@ public class MetaDataUtils
         return name;
     }
 
-    public static String getFunctionName(IFunctionDefinition definition)
+    public static String getFunctionBaseName(IFunctionDefinition definition)
     {
         String name = definition.getBaseName();
         IMetaTag tag = definition.getMetaTagByName(MetaData.JavaScriptMethod
@@ -580,6 +580,14 @@ public class MetaDataUtils
             return rawValue;
 
         return tag.getAttributeValue(ATT_VALUE);
+    }
+
+    public static boolean hasJavaScriptName(IDefinition definition)
+    {
+        IMetaTag tag = findJavaScriptTag(definition);
+        if (tag == null)
+            return false;
+        return tag.getAttribute(ATT_NAME) != null;
     }
 
 }

@@ -506,5 +506,29 @@ public class ClassB extends ClassA
         var line:String = "";
         line = line.replace(REGEXP, "");
     }
+    
+    public function namespace_static_access():void 
+    {
+        ClassB.bug_internal::staticInternalTest();
+    }
+    
+    bug_internal static function staticInternalTest():String
+    {
+        return "hi";
+    }
+    
+    static private function init():void { }
+    
+    public function static_private_access():void 
+    {
+        init();
+    }
+    
+    public function instanceof_qualified():void 
+    {
+        var o:Object;
+        if (o is ClassA)
+            return;
+    }
 }
 }

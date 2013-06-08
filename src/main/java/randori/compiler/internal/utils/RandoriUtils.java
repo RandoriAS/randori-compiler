@@ -145,7 +145,7 @@ public class RandoriUtils
             }
             else
             {
-                name = MetaDataUtils.getFunctionName(definition);
+                name = MetaDataUtils.getFunctionBaseName(definition);
             }
             sb.append(name);
         }
