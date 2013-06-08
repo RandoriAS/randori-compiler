@@ -688,6 +688,15 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void static_dependency()
+    {
+        IFunctionNode node = findFunction("static_dependency", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.static_dependency = function() {"
+                + "\n\tthis.method1(demo.foo.ClassA.CONSTANT);\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
