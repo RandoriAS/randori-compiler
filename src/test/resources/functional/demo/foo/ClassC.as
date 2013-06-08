@@ -1,5 +1,6 @@
 package demo.foo
 {
+import demo.foo.support.IA;
 
 public class ClassC implements IA
 {

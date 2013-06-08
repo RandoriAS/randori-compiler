@@ -22,6 +22,12 @@ import randori.webkit.page.Window;
 
 public class ClassB extends ClassA
 {
+    protected static const REGEXP:RegExp = /^\s+|\s+$/g;
+    
+    private static const SAMPLEMAP:Object = new Object();
+    
+    private static const D2:String = "a2d";
+    
     private var thenContracts:Array;
     
     public var field1:String = "Hello";
@@ -490,5 +496,15 @@ public class ClassB extends ClassA
         var o:Object = AnotherStaticClass.current.stage.width = 42;
     }
     
+    public function private_static_var_access():void
+    {
+        SAMPLEMAP[D2] = new ClassA(D2);
+    }
+    
+    public function regexp_literal_access():void
+    {
+        var line:String = "";
+        line = line.replace(REGEXP, "");
+    }
 }
 }

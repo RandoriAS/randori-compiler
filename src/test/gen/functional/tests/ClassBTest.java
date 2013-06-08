@@ -642,6 +642,25 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void private_static_var_access()
+    {
+        IFunctionNode node = findFunction("private_static_var_access",
+                classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.private_static_var_access = function() {"
+                + "\n\tdemo.foo.ClassB.SAMPLEMAP[\"a2d\"] = new demo.foo.ClassA(\"a2d\");\n}");
+    }
+
+    @Test
+    public void regexp_literal_access()
+    {
+        IFunctionNode node = findFunction("regexp_literal_access", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.regexp_literal_access = function() {"
+                + "\n\tvar line = \"\";\n\tline = line.replace(/^\\s+|\\s+$/g, \"\");\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
