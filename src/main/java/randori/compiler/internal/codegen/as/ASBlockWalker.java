@@ -19,6 +19,7 @@
 
 package randori.compiler.internal.codegen.as;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.flex.compiler.definitions.IPackageDefinition;
@@ -187,6 +188,27 @@ public class ASBlockWalker implements IASNodeVisitor, IASBlockWalker
         {
 
         }
+
+        List<IClassNode> innerClasses = getAllInnerClasses(node);
+        for (IClassNode cnode : innerClasses)
+        {
+            visitClass(cnode);
+        }
+    }
+
+    private List<IClassNode> getAllInnerClasses(IFileNode node)
+    {
+        List<IClassNode> result = new ArrayList<IClassNode>();
+        final int len = node.getChildCount();
+        for (int i = 0; i < len; i++)
+        {
+            IASNode child = node.getChild(i);
+            if (child instanceof IClassNode)
+            {
+                result.add((IClassNode) child);
+            }
+        }
+        return result;
     }
 
     @Override

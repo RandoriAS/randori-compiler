@@ -20,6 +20,7 @@
 package randori.compiler.internal.codegen.js.emitter;
 
 import org.apache.flex.compiler.definitions.IVariableDefinition;
+import org.apache.flex.compiler.tree.as.IEmbedNode;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
 import org.apache.flex.compiler.tree.as.IVariableNode;
 
@@ -56,6 +57,9 @@ public class FieldEmitter extends BaseSubEmitter implements
 
     private void emitAssignedValue(IExpressionNode node)
     {
+        if (node instanceof IEmbedNode)
+            return; // TODO what is Embed node going to do
+        
         if (node == null)
             return;
 
