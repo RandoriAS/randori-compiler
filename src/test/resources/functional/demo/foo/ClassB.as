@@ -530,5 +530,10 @@ public class ClassB extends ClassA
         if (o is ClassA)
             return;
     }
+    
+    public function static_dependency():void 
+    {
+        method1(ClassA.CONSTANT);
+    }
 }
 }

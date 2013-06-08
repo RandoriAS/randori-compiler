@@ -444,6 +444,17 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                     }
                     else
                     {
+                        if (expression instanceof IMemberAccessExpressionNode)
+                        {
+                            IMemberAccessExpressionNode m = (IMemberAccessExpressionNode) expression;
+                            ITypeDefinition type = m.getLeftOperandNode()
+                                    .resolveType(getProject());
+                            if (type != null)
+                            {
+                                getModel().addDependency(type);
+                            }
+                        }
+
                         getWalker().walk(expression);
                     }
                 }
