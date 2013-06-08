@@ -28,6 +28,7 @@ import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IPackageDefinition;
+import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.internal.tree.as.FunctionNode;
 import org.apache.flex.compiler.internal.tree.as.FunctionObjectNode;
 import org.apache.flex.compiler.problems.ICompilerProblem;
@@ -570,5 +571,16 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     public void emitMethodScope(IFunctionNode node)
     {
         emitMethodScope(node.getScopedNode());
+    }
+
+    @Override
+    public String toQualifiedNameFromType(ITypeNode node)
+    {
+        //IClassNode typeNode = (IClassNode) DefinitionUtils
+        //        .findParentTypeNode(definition.getNode().getParent());
+        String qualifiedName = DefinitionUtils.toBaseClassQualifiedName(
+                (ITypeDefinition) node.getDefinition(), getWalker()
+                        .getProject());
+        return qualifiedName;
     }
 }

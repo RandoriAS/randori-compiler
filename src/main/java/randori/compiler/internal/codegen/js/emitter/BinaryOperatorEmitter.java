@@ -21,7 +21,6 @@ package randori.compiler.internal.codegen.js.emitter;
 
 import org.apache.flex.compiler.definitions.IAccessorDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
-import org.apache.flex.compiler.internal.tree.as.BinaryOperatorAssignmentNode;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.ASTNodeID;
 import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
@@ -30,6 +29,7 @@ import org.apache.flex.compiler.tree.as.IExpressionNode;
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
 import randori.compiler.internal.utils.ASNodeUtils;
+import randori.compiler.internal.utils.ExpressionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
 
 /**
@@ -46,55 +46,21 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
         super(emitter);
     }
 
-    private boolean isCompoundAssignment(IBinaryOperatorNode node,
-            IDefinition lhsDefinition)
-    {
-        if (!(lhsDefinition instanceof IAccessorDefinition))
-            return false;
-
-        switch (node.getNodeID())
-        {
-        case Op_LeftShiftAssignID:
-        case Op_RightShiftAssignID:
-        case Op_UnsignedRightShiftAssignID:
-        case Op_MultiplyAssignID:
-        case Op_DivideAssignID:
-        case Op_ModuloAssignID:
-        case Op_BitwiseAndAssignID:
-        case Op_BitwiseXorAssignID:
-
-        case Op_BitwiseOrAssignID:
-        case Op_AddAssignID:
-        case Op_SubtractAssignID:
-        case Op_LogicalAndAssignID:
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public void emit(IBinaryOperatorNode node)
     {
         ICompilerProject project = getEmitter().getWalker().getProject();
 
         IExpressionNode left = node.getLeftOperandNode();
-        IDefinition leftDefinition = left.resolve(project);
+        IDefinition lhsDefinition = left.resolve(project);
 
         IExpressionNode right = node.getRightOperandNode();
-        //IDefinition rightDefinition = right.resolve(project);
+        //IDefinition rhsDefinition = right.resolve(project);
 
-        // compund statements
-        if (isCompoundAssignment(node, leftDefinition))
+        // Compound statements
+        if (ExpressionUtils.isCompoundAssignment(node, lhsDefinition))
         {
-            IAccessorDefinition accessor = (IAccessorDefinition) leftDefinition;
-            String name = accessor.getBaseName();
-            write("this.set_" + name + "(");
-            write("this.get_" + name + "()");
-            write(" ");
-            write(node.getOperator().getOperatorText().replace("=", ""));
-            write(" ");
-            getWalker().walk(right);
-            write("))");
+            emitCompoundAssignment(node, lhsDefinition, right);
             return;
         }
 
@@ -102,14 +68,14 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
             write("(");
 
         // if on the left side with '=' , we are in setter mode
-        getModel().setInAssignment(isInAssignment(node));
+        getModel().setInAssignment(ExpressionUtils.isInAssignment(node));
         getModel().setAssign(node);
 
         getEmitter().getWalker().walk(left);
 
-        if (!MetaDataUtils.isNative(leftDefinition)
+        if (!MetaDataUtils.isNative(lhsDefinition)
                 && getModel().isInAssignment()
-                && leftDefinition instanceof IAccessorDefinition)
+                && lhsDefinition instanceof IAccessorDefinition)
         {
             if (getModel().isCall())
                 write("(this, ");
@@ -131,21 +97,28 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
 
         getEmitter().getWalker().walk(right);
 
-        if (!MetaDataUtils.isNative(leftDefinition) && wasAssignment
-                && leftDefinition instanceof IAccessorDefinition)
+        if (!MetaDataUtils.isNative(lhsDefinition) && wasAssignment
+                && lhsDefinition instanceof IAccessorDefinition)
         {
-            writeIfNotNative(")", leftDefinition);
+            writeIfNotNative(")", lhsDefinition);
         }
 
         if (ASNodeUtils.hasParenClose(node))
             write(")");
     }
 
-    private boolean isInAssignment(IBinaryOperatorNode node)
+    private void emitCompoundAssignment(IBinaryOperatorNode node,
+            IDefinition left, IExpressionNode right)
     {
-        if (node instanceof BinaryOperatorAssignmentNode)
-            return true;
-        return false;
+        IAccessorDefinition accessor = (IAccessorDefinition) left;
+        String name = accessor.getBaseName();
+        write("this.set_" + name + "(");
+        write("this.get_" + name + "()");
+        write(" ");
+        write(node.getOperator().getOperatorText().replace("=", ""));
+        write(" ");
+        getWalker().walk(right);
+        write("))");
     }
 
 }

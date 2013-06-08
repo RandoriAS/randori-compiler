@@ -22,6 +22,7 @@ package randori.compiler.internal.utils;
 import org.apache.flex.abc.ABCConstants;
 import org.apache.flex.abc.semantics.Namespace;
 import org.apache.flex.compiler.common.DependencyType;
+import org.apache.flex.compiler.definitions.IAccessorDefinition;
 import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
@@ -572,6 +573,50 @@ public class ExpressionUtils
                 || reference.getName().equals("Number"))
             return "0";
         return "null";
+    }
+
+    /**
+     * Returns whether the node constitues an assignment.
+     * 
+     * @param node
+     */
+    public static boolean isInAssignment(IBinaryOperatorNode node)
+    {
+        if (node instanceof BinaryOperatorAssignmentNode)
+            return true;
+        return false;
+    }
+
+    /**
+     * Returns whether the node is a compound expression.
+     * 
+     * @param node
+     * @param lhsDefinition
+     */
+    public static boolean isCompoundAssignment(IBinaryOperatorNode node,
+            IDefinition lhsDefinition)
+    {
+        if (!(lhsDefinition instanceof IAccessorDefinition))
+            return false;
+
+        switch (node.getNodeID())
+        {
+        case Op_LeftShiftAssignID:
+        case Op_RightShiftAssignID:
+        case Op_UnsignedRightShiftAssignID:
+        case Op_MultiplyAssignID:
+        case Op_DivideAssignID:
+        case Op_ModuloAssignID:
+        case Op_BitwiseAndAssignID:
+        case Op_BitwiseXorAssignID:
+
+        case Op_BitwiseOrAssignID:
+        case Op_AddAssignID:
+        case Op_SubtractAssignID:
+        case Op_LogicalAndAssignID:
+            return true;
+        }
+        return false;
     }
 
 }

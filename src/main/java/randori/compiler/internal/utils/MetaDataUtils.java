@@ -21,19 +21,25 @@ package randori.compiler.internal.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
 import org.apache.flex.compiler.definitions.IAccessorDefinition;
 import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
+import org.apache.flex.compiler.definitions.IPackageDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.internal.definitions.AppliedVectorDefinition;
 import org.apache.flex.compiler.internal.definitions.ClassTraitsDefinition;
+import org.apache.flex.compiler.internal.scopes.ASFileScope;
+import org.apache.flex.compiler.internal.scopes.SWCFileScopeProvider.SWCFileScope;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.as.IClassNode;
 import org.apache.flex.compiler.tree.as.IDefinitionNode;
 import org.apache.flex.compiler.tree.as.IFunctionNode;
+import org.apache.flex.compiler.tree.as.IPackageNode;
+import org.apache.flex.compiler.tree.as.ITypeNode;
 import org.apache.flex.compiler.tree.metadata.IMetaTagNode;
 
 import randori.compiler.internal.utils.MetaDataUtils.MetaData.Mode;
@@ -335,8 +341,31 @@ public class MetaDataUtils
         return qualifiedName.substring(0, index);
     }
 
+    /**
+     * Transforms the {@link IDefinition#getQualifiedName()} to a randori
+     * specific name using the <code>JavaScript</code> annotation.
+     * <p>
+     * This method will also transform inner classes using the pattern
+     * (PackagePublicClass)$(InnerClass).
+     * 
+     * @param definition The {@link IDefinition} for which to return a
+     * transformed qualified name.
+     */
     public static String getExportQualifiedName(IDefinition definition)
     {
+        if (definition.getContainingScope() instanceof ASFileScope
+                && !(definition.getContainingScope() instanceof SWCFileScope))
+        {
+            // we are an inner class
+            String name = definition.getBaseName();
+            ASFileScope scope = (ASFileScope) definition.getContainingScope();
+            Collection<IDefinition> definitions = scope
+                    .getAllLocalDefinitions();
+            ITypeDefinition type = findPublicTypeDefinition(definitions);
+            String qname = getExportQualifiedName(type);
+            return qname + "$" + name;
+        }
+
         if (definition instanceof AppliedVectorDefinition)
             return NativeType.Array.getValue();
         if (definition.getBaseName().equals(NativeType.unit.getValue()))
@@ -359,6 +388,22 @@ public class MetaDataUtils
         }
 
         return value;
+    }
+
+    private static ITypeDefinition findPublicTypeDefinition(
+            Collection<IDefinition> definitions)
+    {
+        for (IDefinition definition : definitions)
+        {
+            if (definition instanceof IPackageDefinition)
+            {
+                IPackageDefinition pdefinition = (IPackageDefinition) definition;
+                IPackageNode node = pdefinition.getNode();
+                ITypeNode tnode = DefinitionUtils.findTypeNode(node);
+                return (ITypeDefinition) tnode.getDefinition();
+            }
+        }
+        return null;
     }
 
     public static String findJavaScriptCodeTag(IMetaTagNode node)
