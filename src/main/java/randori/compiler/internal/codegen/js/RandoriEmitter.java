@@ -20,7 +20,6 @@
 package randori.compiler.internal.codegen.js;
 
 import java.io.FilterWriter;
-import java.lang.instrument.ClassDefinition;
 import java.util.List;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -31,8 +30,6 @@ import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IPackageDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
-import org.apache.flex.compiler.internal.definitions.ClassTraitsDefinition;
-import org.apache.flex.compiler.internal.semantics.SemanticUtils.MultiDefinitionType;
 import org.apache.flex.compiler.internal.tree.as.FunctionNode;
 import org.apache.flex.compiler.internal.tree.as.FunctionObjectNode;
 import org.apache.flex.compiler.internal.tree.as.NamespaceAccessExpressionNode;
