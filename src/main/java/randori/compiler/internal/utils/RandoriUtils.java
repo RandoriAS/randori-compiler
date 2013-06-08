@@ -22,6 +22,7 @@ package randori.compiler.internal.utils;
 import java.util.List;
 
 import org.apache.flex.compiler.definitions.IAccessorDefinition;
+import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
@@ -30,6 +31,7 @@ import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.internal.definitions.AppliedVectorDefinition;
 import org.apache.flex.compiler.internal.definitions.ClassTraitsDefinition;
+import org.apache.flex.compiler.internal.tree.as.RegExpLiteralNode;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.projects.IASProject;
 import org.apache.flex.compiler.projects.ICompilerProject;
@@ -63,7 +65,11 @@ public class RandoriUtils
     public static String toQualifiedName(IDefinition definition,
             ICompilerProject project)
     {
-        return null;
+        IClassNode typeNode = (IClassNode) DefinitionUtils
+                .findParentTypeNode(definition.getNode().getParent());
+        String qualifiedName = DefinitionUtils.toBaseClassQualifiedName(
+                typeNode.getDefinition(), project);
+        return qualifiedName;
     }
 
     /**
@@ -264,5 +270,53 @@ public class RandoriUtils
             return false;
 
         return true;
+    }
+
+    public static String returnInitialConstantValue(
+            IConstantDefinition definition, ICompilerProject project)
+    {
+        String result = null;
+        IClassDefinition parent = (IClassDefinition) definition.getParent();
+
+        Object value = definition.resolveInitialValue(project);
+        // XXX temp until this method is unit tested
+        IExpressionNode valueNode = definition.getVariableNode()
+                .getAssignedValueNode();
+        if (valueNode instanceof RegExpLiteralNode)
+        {
+            //            return StringEscapeUtils
+            //                    .escapeEcmaScript(((RegExpLiteralNode) valueNode)
+            //                            .getValue(true));
+            return ((RegExpLiteralNode) valueNode).getValue(true);
+        }
+
+        if (value != null)
+        {
+            if (value instanceof String)
+                result = "\"" + value + "\"";
+            else
+                result = value.toString();
+        }
+        //        }
+
+        if (result == null && MetaDataUtils.isClassExport(parent))
+        {
+            result = parent.getQualifiedName() + "." + definition.getBaseName();
+        }
+
+        if (result == null)
+        {
+            throw new RuntimeException(
+                    "DefinitionUtils.returnInitialConstantValue(); invalid constant value");
+        }
+
+        return result;
+
+        //        IExpressionNode valueNode = definition.getVariableNode().getAssignedValueNode();
+        //        if (valueNode != null)
+        //            return emitter.toNodeString(valueNode);
+        //        else
+        //            return ExpressionUtils.toInitialValue(definition, emitter
+        //                    .getWalker().getProject());
     }
 }

@@ -33,9 +33,11 @@ import org.apache.flex.compiler.tree.as.IParameterNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
+import randori.compiler.internal.utils.DefinitionNameUtils;
 import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.internal.utils.ExpressionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
+import randori.compiler.internal.utils.RandoriUtils;
 
 /**
  * Handles the production of the {@link IIdentifierNode}.
@@ -159,9 +161,23 @@ public class IdentifierEmitter extends BaseSubEmitter implements
             write("undefined");
             return;
         }
-        Object value = definition.resolveInitialValue(getProject());
+
+        String value = RandoriUtils.returnInitialConstantValue(definition,
+                getProject());
         if (value != null)
-            write(value.toString());
+        {
+            write(value);
+            return;
+        }
+
+        if (!getModel().isInAssignment())
+        {
+            // not in assignment, output the full name
+            String name = DefinitionNameUtils.toExportQualifiedName(definition,
+                    getProject());
+            write(name);
+            return;
+        }
     }
 
     private void emitIdentifierAccessor(IIdentifierNode node,
