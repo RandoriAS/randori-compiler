@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.flex.compiler.definitions.IAccessorDefinition;
+import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
@@ -31,6 +32,7 @@ import org.apache.flex.compiler.definitions.IPackageDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.internal.tree.as.FunctionNode;
 import org.apache.flex.compiler.internal.tree.as.FunctionObjectNode;
+import org.apache.flex.compiler.internal.tree.as.NamespaceAccessExpressionNode;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.tree.ASTNodeID;
 import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
@@ -461,7 +463,16 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     {
         getWalker().walk(node.getLeftOperandNode());
         write(" instanceof ");
-        getWalker().walk(node.getRightOperandNode());
+        IDefinition definition = node.getRightOperandNode().resolve(
+                getWalker().getProject());
+        if (definition instanceof IClassDefinition)
+        {
+            write(MetaDataUtils.getExportQualifiedName(definition));
+        }
+        else
+        {
+            getWalker().walk(node.getRightOperandNode());
+        }
     }
 
     @Override
@@ -486,6 +497,14 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     public void emitIdentifier(IIdentifierNode node)
     {
         identifier.emit(node);
+    }
+
+    @Override
+    public void emitNamespaceAccessExpression(NamespaceAccessExpressionNode node)
+    {
+        //getWalker().walk(node.getLeftOperandNode());
+        //write(node.getOperator().getOperatorText());
+        getWalker().walk(node.getRightOperandNode());
     }
 
     @Override

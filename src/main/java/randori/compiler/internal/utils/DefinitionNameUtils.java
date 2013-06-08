@@ -20,6 +20,7 @@
 package randori.compiler.internal.utils;
 
 import org.apache.flex.compiler.definitions.IDefinition;
+import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.projects.IASProject;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.as.IClassNode;
@@ -45,6 +46,15 @@ public class DefinitionNameUtils
                 .findParentTypeNode(definition.getNode().getParent());
         String qualifiedName = MetaDataUtils.getExportQualifiedName(typeNode
                 .getDefinition());
-        return qualifiedName + "." + definition.getBaseName();
+        String baseName = definition.getBaseName();
+        if (definition instanceof IFunctionDefinition)
+        {
+            baseName = MetaDataUtils
+                    .getFunctionBaseName((IFunctionDefinition) definition);
+            if (MetaDataUtils.hasJavaScriptName(definition)
+                    || MetaDataUtils.isGlobal(typeNode))
+                return baseName;
+        }
+        return qualifiedName + "." + baseName;
     }
 }

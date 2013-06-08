@@ -44,6 +44,7 @@ import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
 import randori.compiler.internal.codegen.js.utils.GenericEmitUtils;
+import randori.compiler.internal.utils.DefinitionNameUtils;
 import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.internal.utils.ExpressionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
@@ -111,9 +112,19 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
             }
         }
 
-        // this injects super transform, new transform
-        // super() to 'foo.bar.Baz.call'
-        getWalker().walk(node.getNameNode());
+        if (definition != null && definition.getNode() != null
+                && definition.isStatic())
+        {
+            String name = DefinitionNameUtils.toExportQualifiedName(definition,
+                    getProject());
+            write(name);
+        }
+        else
+        {
+            // this injects super transform, new transform
+            // super() to 'foo.bar.Baz.call'
+            getWalker().walk(node.getNameNode());
+        }
 
         write("(");
         walkParameters(node);
