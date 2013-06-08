@@ -49,7 +49,7 @@ public class QualifiedNamesTest extends FunctionalTestBase
                 + "set_property(demo.foo.ClassA.CONSTANT);\n}");
     }
 
-    //@Test
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);

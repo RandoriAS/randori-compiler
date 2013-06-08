@@ -2,6 +2,9 @@ package demo.foo
 {
 public class QualifiedNames
 {
+    [Embed(source="source")]
+    public static const EMBED_ME:Class;
+        
     public function QualifiedNames()
     {
     }
