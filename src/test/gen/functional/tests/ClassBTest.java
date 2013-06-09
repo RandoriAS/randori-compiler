@@ -708,6 +708,15 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void is_explicit_parens()
+    {
+        IFunctionNode node = findFunction("if_explicit_parens", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.if_explicit_parens = function() {"
+                + "\n\tif (!(this instanceof demo.foo.ClassA))\n\t\treturn;\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);

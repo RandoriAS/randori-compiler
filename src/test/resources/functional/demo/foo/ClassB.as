@@ -544,5 +544,12 @@ public class ClassB extends ClassA
     {
         _stageInstance.width = 42;
     }
+    
+    public function if_explicit_parens():void 
+    {
+        if (!(this is ClassA))
+            return;
+    }
+
 }
 }
