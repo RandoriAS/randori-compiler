@@ -50,6 +50,13 @@ public class ASAfterNodeStrategy implements IASNodeStrategy
     @Override
     public void handle(IASNode node)
     {
+        // TODO figure out before after parens
+        //        if (node instanceof IExpressionNode)
+        //        {
+        //            if (ASNodeUtils.hasParenClose((IExpressionNode) node))
+        //                emitter.write(")");
+        //        }
+
         if (node.getNodeID() == ASTNodeID.BlockID)
         {
             IContainerNode container = (IContainerNode) node;

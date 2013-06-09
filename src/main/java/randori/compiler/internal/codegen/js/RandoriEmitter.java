@@ -68,6 +68,7 @@ import randori.compiler.internal.codegen.js.emitter.HeaderEmitter;
 import randori.compiler.internal.codegen.js.emitter.IdentifierEmitter;
 import randori.compiler.internal.codegen.js.emitter.MemberAccessExpressionEmitter;
 import randori.compiler.internal.codegen.js.emitter.MethodEmitter;
+import randori.compiler.internal.utils.ASNodeUtils;
 import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
 import randori.compiler.internal.utils.MetaDataUtils.MetaData.Mode;
@@ -461,6 +462,8 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     @Override
     public void emitIsOperator(IBinaryOperatorNode node)
     {
+        if (ASNodeUtils.hasParenOpen(node))
+            write("(");
         getWalker().walk(node.getLeftOperandNode());
         write(" instanceof ");
         IDefinition definition = node.getRightOperandNode().resolve(
@@ -473,6 +476,8 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
         {
             getWalker().walk(node.getRightOperandNode());
         }
+        if (ASNodeUtils.hasParenClose(node))
+            write(")");
     }
 
     @Override
