@@ -24,6 +24,7 @@ import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
+import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.as.IContainerNode;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
@@ -122,14 +123,30 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
         // and the operator
         if (!getModel().skipOperator())
         {
-            // if the left def is a class and the
+            // trans 'Foo.bar()' and 'foo.bar.Baz.goo()' calls
             if (leftDef instanceof IClassDefinition && rightDef != null
                     && rightDef.isStatic())
             {
-                // this takes care of 'Foo.bar()' and 'foo.bar.Baz.goo()' calls
                 String qualifiedName = MetaDataUtils
                         .getExportQualifiedName((ITypeDefinition) leftDef);
                 write(qualifiedName);
+            }
+            // trans '_staticVar.foo' to 'my.package._staticVar.foo'
+            else if (leftDef instanceof IVariableDefinition
+                    && !(leftDef instanceof IAccessorDefinition)
+                    && leftDef.isStatic())
+            {
+                IVariableDefinition definition = (IVariableDefinition) right
+                        .resolve(project);
+                IClassDefinition parent = (IClassDefinition) definition
+                        .getParent();
+                // append the parent's qualified name on the static variable
+                if (MetaDataUtils.isClassExport(parent))
+                {
+                    write(parent.getQualifiedName());
+                    write(".");
+                }
+                getWalker().walk(left);
             }
             else
             {

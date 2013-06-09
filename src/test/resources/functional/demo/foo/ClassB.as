@@ -7,6 +7,7 @@ import demo.foo.support.MapTypeIdExportTrue;
 import demo.foo.support.MenuItem2;
 import demo.foo.support.PolyFill;
 import demo.foo.support.StaticClass;
+import demo.foo.support.SupportClassA;
 
 import randori.async.Promise;
 import randori.behaviors.AbstractMediator;
@@ -27,6 +28,8 @@ public class ClassB extends ClassA
     private static const SAMPLEMAP:Object = new Object();
     
     private static const D2:String = "a2d";
+    
+    private static var _stageInstance:SupportClassA;
     
     private var thenContracts:Array;
     
@@ -535,6 +538,11 @@ public class ClassB extends ClassA
     {
         method1(ClassA.CONSTANT);
         var o:Object = AnotherStaticClass.MODE;
+    }
+    
+    public function private_static_var_instance_access():void 
+    {
+        _stageInstance.width = 42;
     }
 }
 }
