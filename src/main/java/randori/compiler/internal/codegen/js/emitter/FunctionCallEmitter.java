@@ -50,6 +50,7 @@ import randori.compiler.internal.utils.ExpressionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
 import randori.compiler.internal.utils.MetaDataUtils.MetaData;
 import randori.compiler.internal.utils.MetaDataUtils.MetaData.Mode;
+import randori.compiler.internal.utils.RandoriUtils;
 import randori.compiler.problems.CannotCallPrivateConstructorProblem;
 
 /**
@@ -444,16 +445,8 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                     }
                     else
                     {
-                        if (expression instanceof IMemberAccessExpressionNode)
-                        {
-                            IMemberAccessExpressionNode m = (IMemberAccessExpressionNode) expression;
-                            ITypeDefinition type = m.getLeftOperandNode()
-                                    .resolveType(getProject());
-                            if (type != null)
-                            {
-                                getModel().addDependency(type);
-                            }
-                        }
+                        RandoriUtils.addMemberExpressionDependency(expression,
+                                getModel(), getProject());
 
                         getWalker().walk(expression);
                     }

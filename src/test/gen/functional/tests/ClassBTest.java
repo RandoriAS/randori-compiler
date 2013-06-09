@@ -35,10 +35,10 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("ClassB", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB = function(param1, param2, param3) {"
-                + "\n\tthis.modela = null;\n\tthis.names = null;\n\tthis.thenContracts"
-                + " = null;\n\tthis.field3 = null;\n\tthis.field2 = 42;\n\tthis.field1"
-                + " = \"Hello\";\n\tthis.j = null;\n\tdemo.foo.ClassA.call(this, param1);"
-                + "\n\tthis.field2 = param2;\n}");
+                + "\n\tthis.modela = null;\n\tthis._stageInstance = null;\n\t"
+                + "this.names = null;\n\tthis.thenContracts = null;\n\tthis.field3 "
+                + "= null;\n\tthis.field2 = 42;\n\tthis.field1 = \"Hello\";\n\tthis.j "
+                + "= null;\n\tdemo.foo.ClassA.call(this, param1);\n\tthis.field2 = param2;\n}");
     }
 
     @Test
@@ -693,7 +693,27 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("static_dependency", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.static_dependency = function() {"
-                + "\n\tthis.method1(demo.foo.ClassA.CONSTANT);\n}");
+                + "\n\tthis.method1(demo.foo.ClassA.CONSTANT);\n\tvar o = "
+                + "demo.foo.support.AnotherStaticClass.MODE;\n}");
+    }
+
+    @Test
+    public void private_static_var_instance_access()
+    {
+        IFunctionNode node = findFunction("private_static_var_instance_access",
+                classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.private_static_var_instance_access = function() {"
+                + "\n\tdemo.foo.support.SupportClassA._stageInstance.set_width(42);\n}");
+    }
+
+    @Test
+    public void is_explicit_parens()
+    {
+        IFunctionNode node = findFunction("if_explicit_parens", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.if_explicit_parens = function() {"
+                + "\n\tif (!(this instanceof demo.foo.ClassA))\n\t\treturn;\n}");
     }
 
     @Test

@@ -46,6 +46,13 @@ public class ASBeforeNodeStrategy implements IASNodeStrategy
     @Override
     public void handle(IASNode node)
     {
+        // TODO figure out before after parens
+        //        if (node instanceof IExpressionNode)
+        //        {
+        //            if (ASNodeUtils.hasParenOpen((IExpressionNode) node))
+        //                emitter.write("(");
+        //        }
+
         if (node.getNodeID() == ASTNodeID.BlockID)
         {
             IASNode parent = node.getParent();

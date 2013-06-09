@@ -43,6 +43,7 @@ import org.apache.flex.compiler.tree.as.IIdentifierNode;
 import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
 
 import randori.compiler.codegen.as.IASEmitter;
+import randori.compiler.codegen.js.ISessionModel;
 import randori.compiler.internal.codegen.as.ASEmitter;
 
 /**
@@ -318,5 +319,20 @@ public class RandoriUtils
         //        else
         //            return ExpressionUtils.toInitialValue(definition, emitter
         //                    .getWalker().getProject());
+    }
+
+    public static void addMemberExpressionDependency(
+            IExpressionNode expression, ISessionModel model,
+            ICompilerProject project)
+    {
+        if (expression instanceof IMemberAccessExpressionNode)
+        {
+            IMemberAccessExpressionNode m = (IMemberAccessExpressionNode) expression;
+            ITypeDefinition type = m.getLeftOperandNode().resolveType(project);
+            if (type != null)
+            {
+                model.addDependency(type);
+            }
+        }
     }
 }
