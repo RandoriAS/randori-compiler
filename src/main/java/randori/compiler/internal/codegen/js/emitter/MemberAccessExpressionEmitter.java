@@ -113,9 +113,11 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
             String value = DefinitionUtils.returnInitialConstantValue(
                     definition, getProject());
             write(value);
+            RandoriUtils.addMemberExpressionDependency(node, getModel(),
+                    getProject());
             return;
         }
-        
+
         // this is Randori specific, where we skip things like 'Window' for now
         // and the operator
         if (!getModel().skipOperator())

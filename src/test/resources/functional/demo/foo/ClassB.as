@@ -534,6 +534,7 @@ public class ClassB extends ClassA
     public function static_dependency():void 
     {
         method1(ClassA.CONSTANT);
+        var o:Object = AnotherStaticClass.MODE;
     }
 }
 }
