@@ -136,8 +136,7 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
                     && !(leftDef instanceof IAccessorDefinition)
                     && leftDef.isStatic())
             {
-                IVariableDefinition definition = (IVariableDefinition) right
-                        .resolve(project);
+                IDefinition definition = (IDefinition) right.resolve(project);
                 IClassDefinition parent = (IClassDefinition) definition
                         .getParent();
                 // append the parent's qualified name on the static variable
