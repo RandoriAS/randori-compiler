@@ -29,6 +29,8 @@ public class ClassB extends ClassA
     
     private static const D2:String = "a2d";
     
+    private static var sAncestors:Vector.<Event> = new <Event>[];
+    
     private static var _stageInstance:SupportClassA;
     
     private var thenContracts:Array;
@@ -550,6 +552,10 @@ public class ClassB extends ClassA
         if (!(this is ClassA))
             return;
     }
-
+    
+    public function static_var_access():void 
+    {
+        sAncestors.indexOf(accessor1);
+    }
 }
 }
