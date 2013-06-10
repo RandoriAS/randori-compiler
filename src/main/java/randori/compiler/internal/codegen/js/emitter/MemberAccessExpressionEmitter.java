@@ -23,6 +23,7 @@ import org.apache.flex.compiler.definitions.IAccessorDefinition;
 import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
+import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.projects.ICompilerProject;
@@ -136,8 +137,9 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
                     && !(leftDef instanceof IAccessorDefinition)
                     && leftDef.isStatic())
             {
-                IDefinition definition = (IDefinition) right.resolve(project);
-                IClassDefinition parent = (IClassDefinition) definition
+                //IDefinition definition = (IDefinition) right.resolve(project);
+
+                IClassDefinition parent = (IClassDefinition) leftDef
                         .getParent();
                 // append the parent's qualified name on the static variable
                 if (MetaDataUtils.isClassExport(parent))
@@ -145,6 +147,7 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
                     write(parent.getQualifiedName());
                     write(".");
                 }
+
                 getWalker().walk(left);
             }
             else
