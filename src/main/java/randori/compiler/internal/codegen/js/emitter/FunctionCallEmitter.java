@@ -159,13 +159,10 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
             }
             else
             {
-                // XXX HACK FIX ERROR; this is a problem when the call resolves
-                // to a variable or accessor type, I know how to fix
-                //System.err.println("ERROR emitNewStatement()");
                 write("new");
                 write(" ");
-                // XXX change this to walk
-                write(vdef.getBaseName());
+                getEmitter().getWalker().walk(
+                        vdef.getVariableNode().getNameExpressionNode());
                 write("(");
                 walkParameters(node);
                 write(")");
