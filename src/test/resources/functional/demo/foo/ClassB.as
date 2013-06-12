@@ -570,5 +570,11 @@ public class ClassB extends ClassA
         var classesa:Array = ["SomeClassA", StaticClass]; // has JavaScript(name)
         var classesb:Array = ["SomeClassB", AnotherStaticClass, tempClass];
     }
+    
+    public function compound_assign_parens():void 
+    {
+        var obj:Object = {x:2};
+        this.accessor1 += obj.x;
+    }
 }
 }
