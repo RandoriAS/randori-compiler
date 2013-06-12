@@ -312,6 +312,21 @@ public class MetaDataUtils
         return name;
     }
 
+    public static String getPackageFunctionExportName(IFunctionDefinition definition)
+    {
+        String name = definition.getQualifiedName();
+        IMetaTag tag = definition.getMetaTagByName(MetaData.JavaScriptMethod
+                .getName());
+        if (tag == null)
+            return name;
+
+        String value = tag.getAttributeValue(ATT_NAME);
+        if (value != null)
+            return value;
+
+        return name;
+    }
+
     public static String getClassExportName(ClassTraitsDefinition definition)
     {
         String name = definition.getQualifiedName();
