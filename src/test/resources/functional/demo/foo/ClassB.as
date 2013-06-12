@@ -576,5 +576,10 @@ public class ClassB extends ClassA
         var obj:Object = {x:2};
         this.accessor1 += obj.x;
     }
+    
+    public function package_function_call():void 
+    {
+        MyFunction();
+    }
 }
 }
