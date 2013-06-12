@@ -120,7 +120,9 @@ public class IdentifierEmitter extends BaseSubEmitter implements
                 }
             }
         }
-        write(node.getName());
+        String name = MetaDataUtils.getExportQualifiedName(definition);
+        write(name);
+        //write(node.getName());
     }
 
     private void emitIdentifierVariable(IIdentifierNode node,
