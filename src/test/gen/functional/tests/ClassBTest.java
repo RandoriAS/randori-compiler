@@ -737,6 +737,17 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void type_array_liternal_element()
+    {
+        IFunctionNode node = findFunction("type_array_liternal_element",
+                classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.type_array_liternal_element = function() {"
+                + "\n\tvar classesa = [\"SomeClassA\", my.name.is.Mike];\n\tvar classesb = "
+                + "[\"SomeClassB\", demo.foo.support.AnotherStaticClass, this.tempClass];\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);

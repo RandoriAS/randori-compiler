@@ -564,5 +564,11 @@ public class ClassB extends ClassA
     {
         this.foo = new tempClass();
     }
+    
+    public function type_array_liternal_element():void 
+    {
+        var classesa:Array = ["SomeClassA", StaticClass]; // has JavaScript(name)
+        var classesb:Array = ["SomeClassB", AnotherStaticClass, tempClass];
+    }
 }
 }
