@@ -757,6 +757,15 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void package_function_call()
+    {
+        IFunctionNode node = findFunction("package_function_call", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.package_function_call = function() {"
+                + "\n\tdemo.foo.MyFunction();\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
