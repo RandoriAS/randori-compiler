@@ -118,7 +118,7 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
         write(node.getOperator().getOperatorText().replace("=", ""));
         write(" ");
         getWalker().walk(right);
-        write("))");
+        write(")");
     }
 
 }

@@ -33,6 +33,8 @@ public class ClassB extends ClassA
     
     private static var _stageInstance:SupportClassA;
     
+    public var tempClass:Class;
+    
     private var thenContracts:Array;
     
     public var field1:String = "Hello";
@@ -556,6 +558,23 @@ public class ClassB extends ClassA
     public function static_var_access():void 
     {
         sAncestors.indexOf(accessor1);
+    }
+    
+    public function instance_var_class_instantiation():void 
+    {
+        this.foo = new tempClass();
+    }
+    
+    public function type_array_liternal_element():void 
+    {
+        var classesa:Array = ["SomeClassA", StaticClass]; // has JavaScript(name)
+        var classesb:Array = ["SomeClassB", AnotherStaticClass, tempClass];
+    }
+    
+    public function compound_assign_parens():void 
+    {
+        var obj:Object = {x:2};
+        this.accessor1 += obj.x;
     }
 }
 }

@@ -35,11 +35,11 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("ClassB", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB = function(param1, param2, param3) {"
-                + "\n\tthis.modela = null;\n\tthis.sAncestors = [];\n\tthis."
-                + "_stageInstance = null;\n\tthis.names = null;\n\tthis.thenContracts = "
-                + "null;\n\tthis.field3 = null;\n\tthis.field2 = 42;\n\tthis.field1 = "
-                + "\"Hello\";\n\tthis.j = null;\n\tdemo.foo.ClassA.call(this, param1);"
-                + "\n\tthis.field2 = param2;\n}");
+                + "\n\tthis.modela = null;\n\tthis.sAncestors = [];\n\tthis.tempClass = "
+                + "null;\n\tthis._stageInstance = null;\n\tthis.thenContracts = null;\n\t"
+                + "this.field3 = null;\n\tthis.field2 = 42;\n\tthis.field1 = \"Hello\";"
+                + "\n\tthis.j = null;\n\tthis.names = null;\n\tdemo.foo.ClassA.call("
+                + "this, param1);\n\tthis.field2 = param2;\n}");
     }
 
     @Test
@@ -587,18 +587,18 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("compound_assignment", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.compound_assignment = function() {\n\t"
-                + "this.set_foo(this.get_foo() << 42));\n\t"
-                + "this.set_foo(this.get_foo() >> 42));\n\t"
-                + "this.set_foo(this.get_foo() >>> 42));\n\t"
-                + "this.set_foo(this.get_foo() * 42));\n\t"
-                + "this.set_foo(this.get_foo() / 42));\n\t"
-                + "this.set_foo(this.get_foo() % 42));\n\t"
-                + "this.set_foo(this.get_foo() & 42));\n\t"
-                + "this.set_foo(this.get_foo() ^ 42));\n\t"
-                + "this.set_foo(this.get_foo() | 42));\n\t"
-                + "this.set_foo(this.get_foo() + 42));\n\t"
-                + "this.set_foo(this.get_foo() - 42));\n\t"
-                + "this.set_foo(this.get_foo() && 42));\n}");
+                + "this.set_foo(this.get_foo() << 42);\n\t"
+                + "this.set_foo(this.get_foo() >> 42);\n\t"
+                + "this.set_foo(this.get_foo() >>> 42);\n\t"
+                + "this.set_foo(this.get_foo() * 42);\n\t"
+                + "this.set_foo(this.get_foo() / 42);\n\t"
+                + "this.set_foo(this.get_foo() % 42);\n\t"
+                + "this.set_foo(this.get_foo() & 42);\n\t"
+                + "this.set_foo(this.get_foo() ^ 42);\n\t"
+                + "this.set_foo(this.get_foo() | 42);\n\t"
+                + "this.set_foo(this.get_foo() + 42);\n\t"
+                + "this.set_foo(this.get_foo() - 42);\n\t"
+                + "this.set_foo(this.get_foo() && 42);\n}");
     }
 
     @Test
@@ -724,6 +724,36 @@ public class ClassBTest extends FunctionalTestBase
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.static_var_access = function() {"
                 + "\n\tdemo.foo.ClassB.sAncestors.indexOf(this.get_accessor1(), 0);\n}");
+    }
+
+    @Test
+    public void instance_var_class_instantiation()
+    {
+        IFunctionNode node = findFunction("instance_var_class_instantiation",
+                classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.instance_var_class_instantiation = function() {"
+                + "\n\tthis.set_foo(new this.tempClass());\n}");
+    }
+
+    @Test
+    public void type_array_liternal_element()
+    {
+        IFunctionNode node = findFunction("type_array_liternal_element",
+                classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.type_array_liternal_element = function() {"
+                + "\n\tvar classesa = [\"SomeClassA\", my.name.is.Mike];\n\tvar classesb = "
+                + "[\"SomeClassB\", demo.foo.support.AnotherStaticClass, this.tempClass];\n}");
+    }
+
+    @Test
+    public void compound_assign_parens()
+    {
+        IFunctionNode node = findFunction("compound_assign_parens", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.compound_assign_parens = function() {"
+                + "\n\tvar obj = {x:2};\n\tthis.set_accessor1(this.get_accessor1() + obj.x);\n}");
     }
 
     @Test
