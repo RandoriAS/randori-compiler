@@ -37,6 +37,8 @@ import randori.compiler.driver.IBackend;
 import randori.compiler.driver.IRandoriBackend;
 import randori.compiler.internal.driver.RandoriBackend;
 import randori.compiler.internal.projects.RandoriApplicationProject;
+import randori.compiler.internal.projects.RandoriBundleProject;
+import randori.compiler.internal.projects.RandoriProject;
 
 /**
  * @author Michael Schmalle
@@ -50,9 +52,11 @@ public class Randori
         return workspace;
     }
 
-    private RandoriApplicationProject project;
+    private RandoriProject project;
 
     private ProblemQuery problems;
+
+    private IBackend backend;
 
     /**
      * @param args
@@ -167,9 +171,8 @@ public class Randori
 
     public Randori(IBackend backend)
     {
+        this.backend = backend;
         workspace = new Workspace();
-        project = new RandoriApplicationProject(workspace,
-                (IRandoriBackend) backend);
         problems = new ProblemQuery();
     }
 
@@ -181,13 +184,29 @@ public class Randori
      */
     protected boolean configure(final String[] args)
     {
+        // hack, output cannot be null
+        String output = getRawOutput(args);
+        if (output.endsWith(".rbl"))
+        {
+            project = new RandoriBundleProject(workspace,
+                    (IRandoriBackend) backend);
+        }
+        else
+        {
+            project = new RandoriApplicationProject(workspace,
+                    (IRandoriBackend) backend);
+        }
         return project.configure(args);
     }
+
+    protected boolean exportEnabled = false;
 
     protected boolean compile()
     {
         final String path = project.getTargetSettings().getSDKPath();
-        return project.compile(true, path != null && !path.isEmpty());
+        exportEnabled = (path != null && !path.isEmpty())
+                || (project instanceof RandoriBundleProject);
+        return project.compile(true, exportEnabled);
     }
 
     /**
@@ -205,6 +224,18 @@ public class Randori
             workspace.endIdleState(Collections
                     .<ICompilerProject, Set<ICompilationUnit>> emptyMap());
         }
+    }
+
+    private String getRawOutput(String[] args)
+    {
+        for (String arg : args)
+        {
+            if (arg.startsWith("-output"))
+            {
+                return arg;
+            }
+        }
+        return null;
     }
 
     static enum ExitCode

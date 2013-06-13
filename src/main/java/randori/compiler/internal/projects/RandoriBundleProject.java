@@ -37,6 +37,7 @@ import org.apache.flex.swc.SWC;
 import org.apache.flex.utils.FilenameNormalization;
 
 import randori.compiler.bundle.Bundle;
+import randori.compiler.bundle.BundleConfiguration;
 import randori.compiler.bundle.BundleLibrary;
 import randori.compiler.bundle.IBundle;
 import randori.compiler.bundle.IBundleCategory;
@@ -52,6 +53,8 @@ import randori.compiler.bundle.io.BundleWriter;
 import randori.compiler.clients.CompilerArguments;
 import randori.compiler.clients.Randori;
 import randori.compiler.common.VersionInfo;
+import randori.compiler.driver.IRandoriBackend;
+import randori.compiler.internal.config.PathCollection;
 import randori.compiler.internal.driver.RandoriBackend;
 import randori.compiler.projects.IRandoriBundleProject;
 
@@ -72,10 +75,79 @@ public class RandoriBundleProject extends RandoriProject implements
         return bundleConfiguration;
     }
 
-    public RandoriBundleProject(Workspace workspace)
+    public RandoriBundleProject(Workspace workspace, IRandoriBackend backend)
     {
-        super(workspace, IASDocBundleDelegate.NIL_DELEGATE,
-                new RandoriBackend());
+        super(workspace, IASDocBundleDelegate.NIL_DELEGATE, backend);
+    }
+
+    @Override
+    public boolean configure(String[] args)
+    {
+        boolean result = super.configure(args);
+        if (!result)
+            return false;
+
+        String bundleName = getConfiguration().getAppName();
+        String output = getConfiguration().getOutput();
+        BundleConfiguration bundleConfig = new BundleConfiguration(bundleName,
+                output);
+
+        bundleConfig.setJsOutputAsFiles(getConfiguration()
+                .getJsClassesAsFiles());
+        // add global -library-path
+        for (String path : getConfiguration().getCompilerLibraryPath())
+        {
+            bundleConfig.addLibraryPath(path);
+        }
+
+        for (String path : getConfiguration().getCompilerExternalLibraryPath())
+        {
+            bundleConfig.addExternalLibraryPath(path);
+        }
+
+        List<String> libraries = getConfiguration().getBundleLibraries();
+        for (String libraryName : libraries)
+        {
+            IBundleConfigurationEntry entry = bundleConfig
+                    .addEntry(libraryName);
+            PathCollection collection = null;
+
+            // -bundle-library-path
+            collection = getConfiguration().getBundleLibraryPaths().get(
+                    libraryName);
+            if (collection != null)
+            {
+                for (String path : collection.getPaths())
+                {
+                    entry.addLibraryPath(path);
+                }
+            }
+
+            // -bundle-source-path
+            collection = getConfiguration().getBundleSourcePaths().get(
+                    libraryName);
+            if (collection != null)
+            {
+                for (String path : collection.getPaths())
+                {
+                    entry.addSourcePath(path);
+                }
+            }
+
+            // -bundle-include-sources
+            collection = getConfiguration().getBundleIncludeSources().get(
+                    libraryName);
+            if (collection != null)
+            {
+                for (String path : collection.getPaths())
+                {
+                    entry.addIncludeSources(path);
+                }
+            }
+        }
+
+        result = configure(bundleConfig);
+        return result;
     }
 
     @Override
@@ -297,6 +369,12 @@ public class RandoriBundleProject extends RandoriProject implements
             arguments.addLibraryPath(FilenameNormalization.normalize(path));
         }
 
+        // added for commandline bundle compiler
+        for (String path : entry.getLibraryPaths())
+        {
+            arguments.addLibraryPath(FilenameNormalization.normalize(path));
+        }
+
         for (String path : getBundleConfiguration().getExternalLibraryPaths())
         {
             arguments.addLibraryPath(FilenameNormalization.normalize(path));
@@ -330,6 +408,14 @@ public class RandoriBundleProject extends RandoriProject implements
         for (String path : entry.getExternalLibraryPaths())
         {
             arguments.addLibraryPath(FilenameNormalization.normalize(path));
+        }
+
+        // added for commandline bundle compiler
+        for (String path : entry.getLibraryPaths())
+        {
+            arguments.addLibraryPath(FilenameNormalization.normalize(path));
+            library.addSWC(new SWC(new File(FilenameNormalization
+                    .normalize(path))));
         }
 
         for (String path : entry.getSourcePaths())
