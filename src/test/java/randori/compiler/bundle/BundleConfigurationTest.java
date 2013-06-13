@@ -130,10 +130,9 @@ public class BundleConfigurationTest
                 "randori-framework", path);
 
         // dependent compiled libraries
-        configuration.addLibraryPath(builtinSWC.getAbsolutePath());
-        configuration.addLibraryPath(jQuerySWC.getAbsolutePath());
-        configuration.addLibraryPath(htmlCoreLibSWC.getAbsolutePath());
-        configuration.setJsOutputAsFiles(false);
+        configuration.addExternalLibraryPath(builtinSWC.getAbsolutePath());
+        configuration.addExternalLibraryPath(jQuerySWC.getAbsolutePath());
+        configuration.addExternalLibraryPath(htmlCoreLibSWC.getAbsolutePath());
 
         IBundleConfigurationEntry randori = configuration
                 .addEntry("randori-framework");
@@ -144,22 +143,31 @@ public class BundleConfigurationTest
         IBundleConfigurationEntry guice = configuration
                 .addEntry("randori-guice-framework");
         guice.addSourcePath(randoriGuiceSrc);
+        guice.addLibraryPath(builtinSWC.getAbsolutePath());
+        guice.addLibraryPath(jQuerySWC.getAbsolutePath());
+        guice.addLibraryPath(htmlCoreLibSWC.getAbsolutePath());
 
         String string = configuration.toString();
         Assert.assertEquals(
-                "-library-path=C:\\Users\\Work\\Documents\\git-randori\\randori-sdk"
-                        + "\\randori-framework\\bin\\swc\\builtin.swc -library-path=C:\\Users\\Work\\"
-                        + "Documents\\git-randori\\randori-sdk\\randori-framework\\bin\\swc\\JQuery.swc "
-                        + "-library-path=C:\\Users\\Work\\Documents\\git-randori\\randori-sdk\\"
-                        + "randori-framework\\bin\\swc\\HTMLCoreLib.swc -bundle-libraries=randori-"
-                        + "guice-framework,randori-framework -js-classes-as-files=false -output="
-                        + "C:/Users/Work/Documents/git-randori/randori-compiler/temp/bundle/randori-sdk"
-                        + "-test.rbl -bundle-source-path=randori-guice-framework,C:/Users/Work/Documents"
-                        + "/git-randori/randori-guice-framework/src -bundle-source-path=randori-framework,"
-                        + "C:/Users/Work/Documents/git-randori/randori-guice-framework/src -bundle-source-"
-                        + "path=randori-framework,C:/Users/Work/Documents/git-randori/randori-framework/src"
-                        + " -bundle-include-sources=randori-framework,C:/Users/Work/Documents/git-randori/"
-                        + "randori-framework/src", string);
+                "-external-library-path=C:\\Users\\Work\\Documents\\git-randori\\randori-sdk"
+                        + "\\randori-framework\\bin\\swc\\builtin.swc -external-library-path=C:\\"
+                        + "Users\\Work\\Documents\\git-randori\\randori-sdk\\randori-framework\\"
+                        + "bin\\swc\\JQuery.swc -external-library-path=C:\\Users\\Work\\Documents"
+                        + "\\git-randori\\randori-sdk\\randori-framework\\bin\\swc\\HTMLCoreLib.swc"
+                        + " -bundle-libraries=randori-guice-framework,randori-framework -output="
+                        + "C:/Users/Work/Documents/git-randori/randori-compiler/temp/bundle/randori"
+                        + "-sdk-test.rbl -bundle-source-path=randori-guice-framework,C:/Users/Work/"
+                        + "Documents/git-randori/randori-guice-framework/src -bundle-library-path="
+                        + "randori-guice-framework,C:\\Users\\Work\\Documents\\git-randori\\randori-"
+                        + "sdk\\randori-framework\\bin\\swc\\builtin.swc -bundle-library-path=randori"
+                        + "-guice-framework,C:\\Users\\Work\\Documents\\git-randori\\randori-sdk\\"
+                        + "randori-framework\\bin\\swc\\JQuery.swc -bundle-library-path=randori-guice"
+                        + "-framework,C:\\Users\\Work\\Documents\\git-randori\\randori-sdk\\randori"
+                        + "-framework\\bin\\swc\\HTMLCoreLib.swc -bundle-source-path=randori-framework,"
+                        + "C:/Users/Work/Documents/git-randori/randori-guice-framework/src -bundle-"
+                        + "source-path=randori-framework,C:/Users/Work/Documents/git-randori/randori"
+                        + "-framework/src -bundle-include-sources=randori-framework,C:/Users/Work/"
+                        + "Documents/git-randori/randori-framework/src", string);
 
         // now from arguments to the BundleConfiguration instance
 

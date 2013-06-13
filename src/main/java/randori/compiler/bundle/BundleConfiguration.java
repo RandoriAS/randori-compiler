@@ -191,13 +191,19 @@ public class BundleConfiguration implements IBundleConfiguration
         @Override
         public Collection<String> getLibraryPaths()
         {
-            return configuration.getLibraryPaths();
+            List<String> result = new ArrayList<String>();
+            result.addAll(libraryPaths);
+            result.addAll(configuration.getLibraryPaths());
+            return result;
         }
 
         @Override
         public Collection<String> getExternalLibraryPaths()
         {
-            return configuration.getExternalLibraryPaths();
+            List<String> result = new ArrayList<String>();
+            result.addAll(externalLibraryPaths);
+            result.addAll(configuration.getExternalLibraryPaths());
+            return result;
         }
 
         @Override
@@ -261,6 +267,11 @@ public class BundleConfiguration implements IBundleConfiguration
             result.add("-library-path=" + arg);
         }
 
+        for (String arg : externalLibraryPaths)
+        {
+            result.add("-external-library-path=" + arg);
+        }
+
         List<String> libraries = getLibraries();
         if (libraries.size() > 0)
         {
@@ -287,6 +298,13 @@ public class BundleConfiguration implements IBundleConfiguration
             for (String path : entry.getSourcePaths())
             {
                 result.add("-bundle-source-path=" + entry.getName() + ","
+                        + path);
+            }
+
+            // -bundle-library-path
+            for (String path : entry.getLibraryPaths())
+            {
+                result.add("-bundle-library-path=" + entry.getName() + ","
                         + path);
             }
 

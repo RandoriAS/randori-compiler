@@ -312,6 +312,35 @@ public class RandoriConfiguration extends Configuration
     }
 
     //
+    // 'bundle-library-path'
+    //
+
+    private final Map<String, PathCollection> bundleLibraryPaths = new HashMap<String, PathCollection>();
+
+    public Map<String, PathCollection> getBundleLibraryPaths()
+    {
+        return bundleLibraryPaths;
+    }
+
+    @Config(allowMultiple = true)
+    @Mapping("bundle-library-path")
+    @InfiniteArguments
+    public void setBundleLibraryPaths(ConfigurationValue cv, String[] list)
+            throws CannotOpen
+    {
+        String libraryName = list[0];
+        String path = list[1];
+
+        PathCollection info = bundleLibraryPaths.get(libraryName);
+        if (info == null)
+        {
+            info = new PathCollection(libraryName);
+            bundleLibraryPaths.put(libraryName, info);
+        }
+        info.addPath(path);
+    }
+
+    //
     // 'bundle-source-path'
     //
 

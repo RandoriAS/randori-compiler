@@ -100,6 +100,11 @@ public class RandoriBundleProject extends RandoriProject implements
             bundleConfig.addLibraryPath(path);
         }
 
+        for (String path : getConfiguration().getCompilerExternalLibraryPath())
+        {
+            bundleConfig.addExternalLibraryPath(path);
+        }
+
         List<String> libraries = getConfiguration().getBundleLibraries();
         for (String libraryName : libraries)
         {
@@ -107,12 +112,26 @@ public class RandoriBundleProject extends RandoriProject implements
                     .addEntry(libraryName);
             PathCollection collection = null;
 
+            // -bundle-library-path
+            collection = getConfiguration().getBundleLibraryPaths().get(
+                    libraryName);
+            if (collection != null)
+            {
+                for (String path : collection.getPaths())
+                {
+                    entry.addLibraryPath(path);
+                }
+            }
+
             // -bundle-source-path
             collection = getConfiguration().getBundleSourcePaths().get(
                     libraryName);
-            for (String path : collection.getPaths())
+            if (collection != null)
             {
-                entry.addSourcePath(path);
+                for (String path : collection.getPaths())
+                {
+                    entry.addSourcePath(path);
+                }
             }
 
             // -bundle-include-sources
@@ -350,6 +369,12 @@ public class RandoriBundleProject extends RandoriProject implements
             arguments.addLibraryPath(FilenameNormalization.normalize(path));
         }
 
+        // added for commandline bundle compiler
+        for (String path : entry.getLibraryPaths())
+        {
+            arguments.addLibraryPath(FilenameNormalization.normalize(path));
+        }
+
         for (String path : getBundleConfiguration().getExternalLibraryPaths())
         {
             arguments.addLibraryPath(FilenameNormalization.normalize(path));
@@ -383,6 +408,14 @@ public class RandoriBundleProject extends RandoriProject implements
         for (String path : entry.getExternalLibraryPaths())
         {
             arguments.addLibraryPath(FilenameNormalization.normalize(path));
+        }
+
+        // added for commandline bundle compiler
+        for (String path : entry.getLibraryPaths())
+        {
+            arguments.addLibraryPath(FilenameNormalization.normalize(path));
+            library.addSWC(new SWC(new File(FilenameNormalization
+                    .normalize(path))));
         }
 
         for (String path : entry.getSourcePaths())
