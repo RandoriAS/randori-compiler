@@ -19,12 +19,13 @@
 
 package randori.compiler.bundle;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.flex.utils.StringUtils;
 
 /**
  * @author Michael Schmalle
@@ -46,6 +47,8 @@ public class BundleConfiguration implements IBundleConfiguration
     private Map<String, IBundleConfigurationEntry> entries = new HashMap<String, IBundleConfigurationEntry>();
 
     private String sdkPath;
+
+    private Boolean jsOutputAsFiles = null;
 
     @Override
     public String getOutput()
@@ -141,14 +144,24 @@ public class BundleConfiguration implements IBundleConfiguration
         return entry;
     }
 
-    public void setSDKPath(String path)
+    public void setSDKPath(String value)
     {
-        sdkPath = path;
+        sdkPath = value;
     }
 
     public String getSDKPath()
     {
         return sdkPath;
+    }
+
+    public Boolean isJsOutputAsFiles()
+    {
+        return jsOutputAsFiles;
+    }
+
+    public void setJsOutputAsFiles(Boolean value)
+    {
+        jsOutputAsFiles = value;
     }
 
     //--------------------------------------------------------------------------
@@ -162,14 +175,12 @@ public class BundleConfiguration implements IBundleConfiguration
         private String name;
 
         private List<String> sourcePaths = new ArrayList<String>();
-        
+
         private List<String> libraryPaths = new ArrayList<String>();
-        
+
         private List<String> externalLibraryPaths = new ArrayList<String>();
 
         private List<String> includeSources = new ArrayList<String>();
-
-        private File javaScript;
 
         @Override
         public String getName()
@@ -178,27 +189,21 @@ public class BundleConfiguration implements IBundleConfiguration
         }
 
         @Override
-        public File getJavaScript()
-        {
-            return javaScript;
-        }
-
-        @Override
-        public String getJavaScriptName()
-        {
-            return name + ".js";
-        }
-
-        @Override
         public Collection<String> getLibraryPaths()
         {
-            return configuration.getLibraryPaths();
+            List<String> result = new ArrayList<String>();
+            result.addAll(libraryPaths);
+            result.addAll(configuration.getLibraryPaths());
+            return result;
         }
 
         @Override
         public Collection<String> getExternalLibraryPaths()
         {
-            return configuration.getExternalLibraryPaths();
+            List<String> result = new ArrayList<String>();
+            result.addAll(externalLibraryPaths);
+            result.addAll(configuration.getExternalLibraryPaths());
+            return result;
         }
 
         @Override
@@ -251,6 +256,89 @@ public class BundleConfiguration implements IBundleConfiguration
                 return;
             externalLibraryPaths.add(path);
         }
+    }
+
+    public String[] toArguments()
+    {
+        List<String> result = new ArrayList<String>();
+
+        for (String arg : libraryPaths)
+        {
+            result.add("-library-path=" + arg);
+        }
+
+        for (String arg : externalLibraryPaths)
+        {
+            result.add("-external-library-path=" + arg);
+        }
+
+        List<String> libraries = getLibraries();
+        if (libraries.size() > 0)
+        {
+            result.add("-bundle-libraries="
+                    + StringUtils.join(libraries.toArray(new String[] {}), ","));
+        }
+
+        if (isJsOutputAsFiles() != null)
+        {
+            result.add("-js-classes-as-files="
+                    + (isJsOutputAsFiles() ? "true" : "false"));
+        }
+
+        String sdk = getSDKPath();
+        if (sdk != null && !sdk.equals(""))
+            result.add("-sdk-path=" + sdk);
+
+        result.add("-output=" + getOutput());
+
+        // Entry specific
+        for (IBundleConfigurationEntry entry : getEntries())
+        {
+            // -bundle-source-path
+            for (String path : entry.getSourcePaths())
+            {
+                result.add("-bundle-source-path=" + entry.getName() + ","
+                        + path);
+            }
+
+            // -bundle-library-path
+            for (String path : entry.getLibraryPaths())
+            {
+                result.add("-bundle-library-path=" + entry.getName() + ","
+                        + path);
+            }
+
+            // -bundle-include-sources
+            for (String path : entry.getIncludeSources())
+            {
+                result.add("-bundle-include-sources=" + entry.getName() + ","
+                        + path);
+            }
+        }
+
+        return result.toArray(new String[] {});
+    }
+
+    private List<String> getLibraries()
+    {
+        List<String> result = new ArrayList<String>();
+        for (IBundleConfigurationEntry entry : getEntries())
+        {
+            result.add(entry.getName());
+        }
+        return result;
+    }
+
+    @Override
+    public String toString()
+    {
+        return StringUtils.join(toArguments(), " ");
+    }
+
+    public static IBundleConfiguration create(String[] arguments)
+    {
+        //BundleConfiguration configuration = new BundleConfiguration();
+        return null;
     }
 
 }

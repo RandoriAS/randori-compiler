@@ -19,7 +19,6 @@
 
 package randori.compiler.bundle;
 
-import java.io.File;
 import java.util.Collection;
 
 /**
@@ -27,26 +26,62 @@ import java.util.Collection;
  */
 public interface IBundleConfigurationEntry
 {
+    /**
+     * Returns the name of the bundle library.
+     * <p>
+     * A {@link IBundle} is composed of libraries held within, this is the name
+     * of a single library.
+     */
     String getName();
 
+    /**
+     * Returns the <code>-bundle-library-path</code> arguments for the library.
+     */
     Collection<String> getLibraryPaths();
-    
+
+    /**
+     * Returns the <code>-bundle-external-library-path</code> arguments for the
+     * library.
+     */
     Collection<String> getExternalLibraryPaths();
 
+    /**
+     * Returns the <code>-bundle-source-path</code> arguments for the library.
+     */
     Collection<String> getSourcePaths();
 
+    /**
+     * Returns the <code>-bundle-include-sources</code> arguments for the
+     * library.
+     */
     Collection<String> getIncludeSources();
 
-    File getJavaScript();
-
-    String getJavaScriptName();
-       
+    /**
+     * Adds a library path to the library configuration.
+     * 
+     * @param path The library path.
+     */
     void addLibraryPath(String path);
-    
+
+    /**
+     * Adds an external library path to the library configuration.
+     * 
+     * @param path The external library path.
+     */
     void addExternalLibraryPath(String path);
-    
+
+    /**
+     * Adds a source path to the library configuration.
+     * 
+     * @param path The source path.
+     */
     void addSourcePath(String path);
 
+    /**
+     * Adds a include sources path to the library configuration.
+     * 
+     * @param path The include sources path.
+     */
     void addIncludeSources(String path);
 
 }

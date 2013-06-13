@@ -38,7 +38,9 @@ import randori.compiler.bundle.IBundleContainer;
 import randori.compiler.bundle.IBundleLibrary;
 import randori.compiler.bundle.io.BundleReader;
 import randori.compiler.clients.CompilerArguments;
+import randori.compiler.clients.Randori;
 import randori.compiler.internal.constants.TestConstants;
+import randori.compiler.internal.driver.RandoriBackend;
 
 /**
  * @author Michael Schmalle
@@ -74,7 +76,7 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
     {
         workspace = new Workspace();
         //createSDKConfiguration();
-        project = new RandoriBundleProject(workspace);
+        project = new RandoriBundleProject(workspace, new RandoriBackend());
         applicationCompiler = new RandoriApplicationProject(new Workspace());
         // Cleanup before tests to allow test output examination.
         cleanupGenerated();
@@ -86,6 +88,41 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
         configuration = null;
         workspace = null;
         project = null;
+    }
+
+    @Test
+    public void test_cormmandline_compiler()
+    {
+        String path = TestConstants.RandoriASFramework
+                + "/randori-compiler/temp/bundle/randori-sdk-commandline.rbl";
+
+        configuration = new BundleConfiguration("randori-framework", path);
+
+        // dependent compiled libraries
+        configuration.addExternalLibraryPath(builtinSWC.getAbsolutePath());
+        configuration.addExternalLibraryPath(jQuerySWC.getAbsolutePath());
+        configuration.addExternalLibraryPath(htmlCoreLibSWC.getAbsolutePath());
+
+        IBundleConfigurationEntry randori = configuration
+                .addEntry("randori-framework");
+        randori.addSourcePath(randoriGuiceSrc);
+        randori.addSourcePath(randoriSrc);
+        randori.addIncludeSources(randoriSrc);
+
+        IBundleConfigurationEntry guice = configuration
+                .addEntry("randori-guice-framework");
+        guice.addSourcePath(randoriGuiceSrc);
+        guice.addLibraryPath(builtinSWC.getAbsolutePath());
+        guice.addLibraryPath(jQuerySWC.getAbsolutePath());
+        guice.addLibraryPath(htmlCoreLibSWC.getAbsolutePath());
+
+        String[] args = configuration.toArguments();
+        int code = Randori.staticMainNoExit(args, null);
+        Assert.assertEquals(0, code);
+        File sdkFile = new File(path);
+        Assert.assertTrue(sdkFile.exists());
+        FileUtils.deleteQuietly(sdkFile);
+        Assert.assertTrue(!sdkFile.exists());
     }
 
     @Test
