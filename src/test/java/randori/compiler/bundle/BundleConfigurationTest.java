@@ -19,6 +19,7 @@
 
 package randori.compiler.bundle;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.junit.After;
@@ -26,12 +27,26 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import randori.compiler.internal.constants.TestConstants;
+
 /**
  * @author Michael Schmalle
  */
 public class BundleConfigurationTest
 {
     private BundleConfiguration config;
+
+    File builtinSWC = new File(TestConstants.RandoriASFramework
+            + "/randori-sdk/randori-framework/bin/swc/builtin.swc");
+    File htmlCoreLibSWC = new File(TestConstants.RandoriASFramework
+            + "/randori-sdk/randori-framework/bin/swc/HTMLCoreLib.swc");
+    File jQuerySWC = new File(TestConstants.RandoriASFramework
+            + "/randori-sdk/randori-framework/bin/swc/JQuery.swc");
+
+    String randoriSrc = TestConstants.RandoriASFramework
+            + "/randori-framework/src";
+    String randoriGuiceSrc = TestConstants.RandoriASFramework
+            + "/randori-guice-framework/src";
 
     @Before
     public void setUp() throws IOException
@@ -103,5 +118,52 @@ public class BundleConfigurationTest
         IBundleConfigurationEntry foo = config.addEntry("Foo");
         // foo entry inherits the librarys
         Assert.assertEquals(3, foo.getLibraryPaths().size());
+    }
+
+    @Test
+    public void test_toArguments()
+    {
+        String path = TestConstants.RandoriASFramework
+                + "/randori-compiler/temp/bundle/randori-sdk-test.rbl";
+
+        BundleConfiguration configuration = new BundleConfiguration(
+                "randori-framework", path);
+
+        // dependent compiled libraries
+        configuration.addLibraryPath(builtinSWC.getAbsolutePath());
+        configuration.addLibraryPath(jQuerySWC.getAbsolutePath());
+        configuration.addLibraryPath(htmlCoreLibSWC.getAbsolutePath());
+        configuration.setJsOutputAsFiles(false);
+
+        IBundleConfigurationEntry randori = configuration
+                .addEntry("randori-framework");
+        randori.addSourcePath(randoriGuiceSrc);
+        randori.addSourcePath(randoriSrc);
+        randori.addIncludeSources(randoriSrc);
+
+        IBundleConfigurationEntry guice = configuration
+                .addEntry("randori-guice-framework");
+        guice.addSourcePath(randoriGuiceSrc);
+
+        String string = configuration.toString();
+        Assert.assertEquals(
+                "-library-path=C:\\Users\\Work\\Documents\\git-randori\\randori-sdk"
+                        + "\\randori-framework\\bin\\swc\\builtin.swc -library-path=C:\\Users\\Work\\"
+                        + "Documents\\git-randori\\randori-sdk\\randori-framework\\bin\\swc\\JQuery.swc "
+                        + "-library-path=C:\\Users\\Work\\Documents\\git-randori\\randori-sdk\\"
+                        + "randori-framework\\bin\\swc\\HTMLCoreLib.swc -bundle-libraries=randori-"
+                        + "guice-framework,randori-framework -js-classes-as-files=false -output="
+                        + "C:/Users/Work/Documents/git-randori/randori-compiler/temp/bundle/randori-sdk"
+                        + "-test.rbl -bundle-source-path=randori-guice-framework,C:/Users/Work/Documents"
+                        + "/git-randori/randori-guice-framework/src -bundle-source-path=randori-framework,"
+                        + "C:/Users/Work/Documents/git-randori/randori-guice-framework/src -bundle-source-"
+                        + "path=randori-framework,C:/Users/Work/Documents/git-randori/randori-framework/src"
+                        + " -bundle-include-sources=randori-framework,C:/Users/Work/Documents/git-randori/"
+                        + "randori-framework/src", string);
+
+        // now from arguments to the BundleConfiguration instance
+
+        //BundleConfiguration.create(configuration.toArguments());
+
     }
 }

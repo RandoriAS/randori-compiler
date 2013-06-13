@@ -38,7 +38,9 @@ import randori.compiler.bundle.IBundleContainer;
 import randori.compiler.bundle.IBundleLibrary;
 import randori.compiler.bundle.io.BundleReader;
 import randori.compiler.clients.CompilerArguments;
+import randori.compiler.clients.Randori;
 import randori.compiler.internal.constants.TestConstants;
+import randori.compiler.internal.driver.RandoriBackend;
 
 /**
  * @author Michael Schmalle
@@ -74,7 +76,7 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
     {
         workspace = new Workspace();
         //createSDKConfiguration();
-        project = new RandoriBundleProject(workspace);
+        project = new RandoriBundleProject(workspace, new RandoriBackend());
         applicationCompiler = new RandoriApplicationProject(new Workspace());
         // Cleanup before tests to allow test output examination.
         cleanupGenerated();
@@ -86,6 +88,33 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
         configuration = null;
         workspace = null;
         project = null;
+    }
+
+    @Test
+    public void test_commandline_compiler()
+    {
+        String path = TestConstants.RandoriASFramework
+                + "/randori-compiler/temp/bundle/randori-sdk-test.rbl";
+
+        configuration = new BundleConfiguration("randori-framework", path);
+
+        // dependent compiled libraries
+        configuration.addLibraryPath(builtinSWC.getAbsolutePath());
+        configuration.addLibraryPath(jQuerySWC.getAbsolutePath());
+        configuration.addLibraryPath(htmlCoreLibSWC.getAbsolutePath());
+
+        IBundleConfigurationEntry randori = configuration
+                .addEntry("randori-framework");
+        randori.addSourcePath(randoriGuiceSrc);
+        randori.addSourcePath(randoriSrc);
+        randori.addIncludeSources(randoriSrc);
+
+        IBundleConfigurationEntry guice = configuration
+                .addEntry("randori-guice-framework");
+        guice.addSourcePath(randoriGuiceSrc);
+
+        int code = Randori.staticMainNoExit(configuration.toArguments(), null);
+        Assert.assertEquals(0, code);
     }
 
     @Test

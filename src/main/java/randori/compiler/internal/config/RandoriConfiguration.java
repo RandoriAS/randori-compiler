@@ -21,7 +21,9 @@ package randori.compiler.internal.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.flex.compiler.config.Configuration;
 import org.apache.flex.compiler.config.ConfigurationValue;
@@ -280,6 +282,91 @@ public class RandoriConfiguration extends Configuration
         }
 
         jsMergedFile.add(new MergedFileSettings(fileName, qualifiedNames));
+    }
+
+    //--------------------------------------------------------------------------
+    // BundleProject configuration
+    //--------------------------------------------------------------------------
+
+    //
+    // 'bundle-libraries'
+    //
+
+    private final List<String> bundleLibraries = new ArrayList<String>();
+
+    public List<String> getBundleLibraries()
+    {
+        return bundleLibraries;
+    }
+
+    @Config(allowMultiple = false)
+    @Mapping("bundle-libraries")
+    @InfiniteArguments
+    public void setBundleLibraries(ConfigurationValue cv, String[] list)
+            throws CannotOpen
+    {
+        for (String library : list)
+        {
+            bundleLibraries.add(library);
+        }
+    }
+
+    //
+    // 'bundle-source-path'
+    //
+
+    private final Map<String, PathCollection> bundleSourcePaths = new HashMap<String, PathCollection>();
+
+    public Map<String, PathCollection> getBundleSourcePaths()
+    {
+        return bundleSourcePaths;
+    }
+
+    @Config(allowMultiple = true)
+    @Mapping("bundle-source-path")
+    @InfiniteArguments
+    public void setBundleSourcePaths(ConfigurationValue cv, String[] list)
+            throws CannotOpen
+    {
+        String libraryName = list[0];
+        String path = list[1];
+
+        PathCollection info = bundleSourcePaths.get(libraryName);
+        if (info == null)
+        {
+            info = new PathCollection(libraryName);
+            bundleSourcePaths.put(libraryName, info);
+        }
+        info.addPath(path);
+    }
+
+    //
+    // 'bundle-include-sources'
+    //
+
+    private final Map<String, PathCollection> bundleIncludeSources = new HashMap<String, PathCollection>();
+
+    public Map<String, PathCollection> getBundleIncludeSources()
+    {
+        return bundleIncludeSources;
+    }
+
+    @Config(allowMultiple = true)
+    @Mapping("bundle-include-sources")
+    @InfiniteArguments
+    public void setBundleIncludeSources(ConfigurationValue cv, String[] list)
+            throws CannotOpen
+    {
+        String libraryName = list[0];
+        String path = list[1];
+
+        PathCollection info = bundleIncludeSources.get(libraryName);
+        if (info == null)
+        {
+            info = new PathCollection(libraryName);
+            bundleIncludeSources.put(libraryName, info);
+        }
+        info.addPath(path);
     }
 
 }

@@ -37,6 +37,7 @@ import org.apache.flex.swc.SWC;
 import org.apache.flex.utils.FilenameNormalization;
 
 import randori.compiler.bundle.Bundle;
+import randori.compiler.bundle.BundleConfiguration;
 import randori.compiler.bundle.BundleLibrary;
 import randori.compiler.bundle.IBundle;
 import randori.compiler.bundle.IBundleCategory;
@@ -52,6 +53,8 @@ import randori.compiler.bundle.io.BundleWriter;
 import randori.compiler.clients.CompilerArguments;
 import randori.compiler.clients.Randori;
 import randori.compiler.common.VersionInfo;
+import randori.compiler.driver.IRandoriBackend;
+import randori.compiler.internal.config.PathCollection;
 import randori.compiler.internal.driver.RandoriBackend;
 import randori.compiler.projects.IRandoriBundleProject;
 
@@ -72,10 +75,60 @@ public class RandoriBundleProject extends RandoriProject implements
         return bundleConfiguration;
     }
 
-    public RandoriBundleProject(Workspace workspace)
+    public RandoriBundleProject(Workspace workspace, IRandoriBackend backend)
     {
-        super(workspace, IASDocBundleDelegate.NIL_DELEGATE,
-                new RandoriBackend());
+        super(workspace, IASDocBundleDelegate.NIL_DELEGATE, backend);
+    }
+
+    @Override
+    public boolean configure(String[] args)
+    {
+        boolean result = super.configure(args);
+        if (!result)
+            return false;
+
+        String bundleName = getConfiguration().getAppName();
+        String output = getConfiguration().getOutput();
+        BundleConfiguration bundleConfig = new BundleConfiguration(bundleName,
+                output);
+
+        bundleConfig.setJsOutputAsFiles(getConfiguration()
+                .getJsClassesAsFiles());
+        // add global -library-path
+        for (String path : getConfiguration().getCompilerLibraryPath())
+        {
+            bundleConfig.addLibraryPath(path);
+        }
+
+        List<String> libraries = getConfiguration().getBundleLibraries();
+        for (String libraryName : libraries)
+        {
+            IBundleConfigurationEntry entry = bundleConfig
+                    .addEntry(libraryName);
+            PathCollection collection = null;
+
+            // -bundle-source-path
+            collection = getConfiguration().getBundleSourcePaths().get(
+                    libraryName);
+            for (String path : collection.getPaths())
+            {
+                entry.addSourcePath(path);
+            }
+
+            // -bundle-include-sources
+            collection = getConfiguration().getBundleIncludeSources().get(
+                    libraryName);
+            if (collection != null)
+            {
+                for (String path : collection.getPaths())
+                {
+                    entry.addIncludeSources(path);
+                }
+            }
+        }
+
+        result = configure(bundleConfig);
+        return result;
     }
 
     @Override

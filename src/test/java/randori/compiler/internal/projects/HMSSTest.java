@@ -51,7 +51,7 @@ public class HMSSTest
         randori = new Randori(backend);
 
         workspace = new Workspace();
-        bundleCompiler = new RandoriBundleProject(workspace);
+        bundleCompiler = new RandoriBundleProject(workspace, backend);
         applicationCompiler = new RandoriApplicationProject(workspace);
 
         // Cleanup before tests to allow test output examination.
