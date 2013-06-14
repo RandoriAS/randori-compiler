@@ -829,11 +829,13 @@ public class ClassBTest extends FunctionalTestBase
                 .getDependencies();
         ArrayList<IScopedDefinition> list = new ArrayList<IScopedDefinition>(
                 dependencies);
-        Assert.assertEquals(1, list.size());
+        Assert.assertEquals(2, list.size());
         Assert.assertEquals("demo.foo.MyFunction", list.get(0)
                 .getQualifiedName());
-        assertOut("demo.foo.ClassB.prototype.array_literal_dependency = function() {" +
-        		"\n\tvar o = [demo.foo.MyFunction];\n}");
+        Assert.assertEquals("demo.foo.support.Mode1", list.get(1)
+                .getQualifiedName());
+        assertOut("demo.foo.ClassB.prototype.array_literal_dependency = function() {"
+                + "\n\tvar o = [demo.foo.MyFunction, demo.foo.support.Mode1];\n}");
     }
 
     @Test

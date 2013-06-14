@@ -26,6 +26,7 @@ import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IParameterDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
+import org.apache.flex.compiler.internal.tree.as.ArrayLiteralNode;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
 import org.apache.flex.compiler.tree.as.IIdentifierNode;
 import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
@@ -119,6 +120,13 @@ public class IdentifierEmitter extends BaseSubEmitter implements
                     }
                 }
             }
+        }
+        // proto, don't know if I should put this here, checks and
+        // adds a class from [], this is special since we don't have
+        // a specific emit for array literal
+        if (node.getAncestorOfType(ArrayLiteralNode.class) != null)
+        {
+            getModel().addDependency(definition);
         }
         String name = MetaDataUtils.getExportQualifiedName(definition);
         write(name);
@@ -229,7 +237,10 @@ public class IdentifierEmitter extends BaseSubEmitter implements
         if (DefinitionUtils.isPackageFunction(definition))
         {
             name = MetaDataUtils.getPackageFunctionExportName(definition);
-            getModel().addDependency(definition);
+            if (node.getAncestorOfType(ArrayLiteralNode.class) != null)
+            {
+                getModel().addDependency(definition);
+            }
         }
         write(name);
     }

@@ -603,7 +603,7 @@ public class ClassB extends ClassA
     
     public function array_literal_dependency():void 
     {
-        var o:Array = [MyFunction];
+        var o:Array = [MyFunction, Mode1];
     }
 }
 }
