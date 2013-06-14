@@ -27,7 +27,7 @@ import java.util.List;
 
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
-import org.apache.flex.compiler.definitions.ITypeDefinition;
+import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
@@ -43,7 +43,7 @@ import randori.compiler.internal.utils.MetaDataUtils.MetaData;
  */
 public class SessionModel implements ISessionModel
 {
-    private HashMap<String, ITypeDefinition> dependencies = new HashMap<String, ITypeDefinition>();
+    private HashMap<String, IScopedDefinition> dependencies = new HashMap<String, IScopedDefinition>();
 
     private List<IMetaTag> propertyInjectTags = new ArrayList<IMetaTag>();
 
@@ -113,7 +113,7 @@ public class SessionModel implements ISessionModel
     //--------------------------------------------------------------------------
 
     @Override
-    public void addDependency(ITypeDefinition definition)
+    public void addDependency(IScopedDefinition definition)
     {
         if (dependencies.containsKey(definition.getQualifiedName()))
             return;
@@ -131,7 +131,7 @@ public class SessionModel implements ISessionModel
         dependencies.put(definition.getQualifiedName(), definition);
     }
 
-    private boolean isExport(ITypeDefinition definition)
+    private boolean isExport(IScopedDefinition definition)
     {
         IMetaTag tag = MetaDataUtils.findTag(definition, MetaData.JavaScript);
         if (tag != null)
@@ -146,7 +146,7 @@ public class SessionModel implements ISessionModel
     }
 
     @Override
-    public Collection<ITypeDefinition> getDependencies()
+    public Collection<IScopedDefinition> getDependencies()
     {
         return dependencies.values();
     }
@@ -206,9 +206,9 @@ public class SessionModel implements ISessionModel
                 viewInjectTags.add(tag);
         }
     }
-    
+
     private boolean isCall;
-    
+
     @Override
     public void setCall(boolean value)
     {

@@ -20,6 +20,7 @@ import randori.webkit.fileapi.FileReader;
 import randori.webkit.html.HTMLBRElement;
 import randori.webkit.page.Location;
 import randori.webkit.page.Window;
+import demo.foo.support.trace;
 
 public class ClassB extends ClassA
 {
@@ -581,5 +582,11 @@ public class ClassB extends ClassA
     {
         MyFunction();
     }
+    
+    public function package_function_dependency():void 
+    {
+        trace("Hello Worlds! You are mine!");
+    }
+
 }
 }

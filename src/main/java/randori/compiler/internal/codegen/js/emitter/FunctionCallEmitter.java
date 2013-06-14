@@ -27,6 +27,7 @@ import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IParameterDefinition;
+import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
@@ -122,6 +123,12 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         }
         else
         {
+            // check for package level function for dep
+            if (DefinitionUtils.isPackageFunction(definition))
+            {
+                getModel().addDependency((IScopedDefinition) definition);
+            }
+
             // this injects super transform, new transform
             // super() to 'foo.bar.Baz.call'
             getWalker().walk(node.getNameNode());

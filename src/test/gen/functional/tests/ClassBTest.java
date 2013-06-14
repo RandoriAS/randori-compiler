@@ -19,6 +19,10 @@
 
 package functional.tests;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.apache.flex.compiler.tree.as.IGetterNode;
 import org.apache.flex.compiler.tree.as.ISetterNode;
@@ -763,6 +767,23 @@ public class ClassBTest extends FunctionalTestBase
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.package_function_call = function() {"
                 + "\n\tdemo.foo.MyFunction();\n}");
+    }
+
+    @Test
+    public void package_function_dependency()
+    {
+        IFunctionNode node = findFunction("package_function_dependency",
+                classNode);
+        visitor.visitFunction(node);
+        Collection<IScopedDefinition> dependencies = getEmitter().getModel()
+                .getDependencies();
+        ArrayList<IScopedDefinition> list = new ArrayList<IScopedDefinition>(
+                dependencies);
+        Assert.assertEquals(1, list.size());
+        Assert.assertEquals("demo.foo.support.trace", list.get(0)
+                .getQualifiedName());
+        assertOut("demo.foo.ClassB.prototype.package_function_dependency = function() {"
+                + "\n\tdemo.foo.support.trace(\"Hello Worlds! You are mine!\");\n}");
     }
 
     @Test

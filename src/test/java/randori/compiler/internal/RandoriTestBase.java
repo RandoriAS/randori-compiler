@@ -45,6 +45,7 @@ import org.apache.flex.utils.FilenameNormalization;
 import org.junit.Assert;
 
 import randori.compiler.driver.IBackend;
+import randori.compiler.internal.codegen.js.RandoriEmitter;
 import randori.compiler.internal.constants.TestConstants;
 import randori.compiler.internal.driver.RandoriBackend;
 
@@ -65,6 +66,11 @@ public abstract class RandoriTestBase extends TestBase
 
     private Collection<ICompilerProblem> problems;
 
+    protected RandoriEmitter getEmitter()
+    {
+        return (RandoriEmitter) emitter;
+    }
+    
     protected Collection<ICompilerProblem> getFileProblems()
     {
         return problems;

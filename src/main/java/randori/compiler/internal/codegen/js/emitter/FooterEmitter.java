@@ -24,6 +24,7 @@ import java.util.Collection;
 import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IParameterDefinition;
+import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
@@ -124,13 +125,13 @@ public class FooterEmitter extends BaseSubEmitter implements
         writeNewline(".getClassDependencies = function(t) {", true);
         writeNewline("var p;");
 
-        Collection<ITypeDefinition> dependencies = getEmitter().getModel()
+        Collection<IScopedDefinition> dependencies = getEmitter().getModel()
                 .getDependencies();
 
         if (dependencies.size() > 0)
         {
             writeNewline("p = [];");
-            for (ITypeDefinition type : dependencies)
+            for (IScopedDefinition type : dependencies)
             {
                 writeNewline("p.push('"
                         + MetaDataUtils.getExportQualifiedName(type) + "');");
