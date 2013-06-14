@@ -4,6 +4,8 @@ public class AnotherStaticClass
 {
     public static const MODE:String = "foo";
     
+    public static var MODE1:String = "foo";
+    
     public function get stage():SupportClassA { return null; };
     
     public static function get current():AnotherStaticClass { return null; }

@@ -787,6 +787,27 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void static_var_dependency()
+    {
+        IFunctionNode node = findFunction("static_var_dependency", classNode);
+        visitor.visitFunction(node);
+        Collection<IScopedDefinition> dependencies = getEmitter().getModel()
+                .getDependencies();
+        ArrayList<IScopedDefinition> list = new ArrayList<IScopedDefinition>(
+                dependencies);
+        Assert.assertEquals(3, list.size());
+        Assert.assertEquals("demo.foo.support.SupportClassA", list.get(0)
+                .getQualifiedName());
+        Assert.assertEquals("demo.foo.support.AnotherStaticClass", list.get(1)
+                .getQualifiedName());
+        Assert.assertEquals("demo.foo.support.Mode1", list.get(2)
+                .getQualifiedName());
+        assertOut("demo.foo.ClassB.prototype.static_var_dependency = function() {"
+                + "\n\tdemo.foo.support.SupportClassA.inputMode = demo.foo.support."
+                + "AnotherStaticClass.MODE;\n\tdemo.foo.support.Mode1.prepareStuff();\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);

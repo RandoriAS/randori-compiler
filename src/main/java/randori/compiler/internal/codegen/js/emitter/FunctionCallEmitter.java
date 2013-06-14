@@ -117,6 +117,9 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         if (definition != null && definition.getNode() != null
                 && definition.isStatic())
         {
+            // stati cmethod call
+            IScopedDefinition parent = (IScopedDefinition) definition.getParent();
+            getModel().addDependency(parent);
             String name = DefinitionNameUtils.toExportQualifiedName(definition,
                     getProject());
             write(name);

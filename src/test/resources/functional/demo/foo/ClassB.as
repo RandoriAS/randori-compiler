@@ -5,9 +5,11 @@ import demo.foo.support.AnotherStaticClass;
 import demo.foo.support.MapTypeIdExportFalse;
 import demo.foo.support.MapTypeIdExportTrue;
 import demo.foo.support.MenuItem2;
+import demo.foo.support.Mode1;
 import demo.foo.support.PolyFill;
 import demo.foo.support.StaticClass;
 import demo.foo.support.SupportClassA;
+import demo.foo.support.trace;
 
 import randori.async.Promise;
 import randori.behaviors.AbstractMediator;
@@ -20,7 +22,6 @@ import randori.webkit.fileapi.FileReader;
 import randori.webkit.html.HTMLBRElement;
 import randori.webkit.page.Location;
 import randori.webkit.page.Window;
-import demo.foo.support.trace;
 
 public class ClassB extends ClassA
 {
@@ -587,6 +588,11 @@ public class ClassB extends ClassA
     {
         trace("Hello Worlds! You are mine!");
     }
-
+    
+    public function static_var_dependency():void 
+    {
+        SupportClassA.inputMode = AnotherStaticClass.MODE;
+        Mode1.prepareStuff();
+    }
 }
 }
