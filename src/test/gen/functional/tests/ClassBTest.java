@@ -821,6 +821,24 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void array_literal_dependency()
+    {
+        IFunctionNode node = findFunction("array_literal_dependency", classNode);
+        visitor.visitFunction(node);
+        Collection<IScopedDefinition> dependencies = getEmitter().getModel()
+                .getDependencies();
+        ArrayList<IScopedDefinition> list = new ArrayList<IScopedDefinition>(
+                dependencies);
+        Assert.assertEquals(2, list.size());
+        Assert.assertEquals("demo.foo.MyFunction", list.get(0)
+                .getQualifiedName());
+        Assert.assertEquals("demo.foo.support.Mode1", list.get(1)
+                .getQualifiedName());
+        assertOut("demo.foo.ClassB.prototype.array_literal_dependency = function() {"
+                + "\n\tvar o = [demo.foo.MyFunction, demo.foo.support.Mode1];\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
