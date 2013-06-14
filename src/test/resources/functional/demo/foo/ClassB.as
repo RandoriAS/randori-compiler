@@ -594,5 +594,15 @@ public class ClassB extends ClassA
         SupportClassA.inputMode = AnotherStaticClass.MODE;
         Mode1.prepareStuff();
     }
+
+    public function inner_class_no_dependency():void 
+    {
+        var o:FooInner = new FooInner();
+        o.bar();
+    }
 }
+}
+
+class FooInner {
+    public function bar():void{}
 }

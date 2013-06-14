@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IScopedDefinition;
@@ -115,6 +116,10 @@ public class SessionModel implements ISessionModel
     @Override
     public void addDependency(IScopedDefinition definition)
     {
+        // do not allow private inner classes
+        if (definition instanceof IClassDefinition && definition.isPrivate())
+            return;
+        
         if (dependencies.containsKey(definition.getQualifiedName()))
             return;
 

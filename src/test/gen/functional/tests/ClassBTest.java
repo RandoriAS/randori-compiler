@@ -808,6 +808,19 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void inner_class_no_dependency()
+    {
+        IFunctionNode node = findFunction("inner_class_no_dependency",
+                classNode);
+        visitor.visitFunction(node);
+        Collection<IScopedDefinition> dependencies = getEmitter().getModel()
+                .getDependencies();
+        Assert.assertEquals(0, dependencies.size());
+        assertOut("demo.foo.ClassB.prototype.inner_class_no_dependency = function() {"
+                + "\n\tvar o = new demo.foo.ClassB$FooInner();\n\to.bar();\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
