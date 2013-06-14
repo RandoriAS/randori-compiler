@@ -24,6 +24,7 @@ import java.util.Collection;
 import org.apache.flex.compiler.definitions.IAccessorDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
+import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
@@ -45,21 +46,21 @@ import org.apache.flex.compiler.units.ICompilationUnit;
 public interface ISessionModel
 {
     /**
-     * Adds an {@link ITypeDefinition} to the sessions dependency collection.
+     * Adds an {@link IScopedDefinition} to the sessions dependency collection.
      * <p>
      * Note; The implementing class usually will apply rules to check whether
      * the type is already contained and other export/native rules.
      * 
-     * @param definition The {@link ITypeDefinition} to add as a dependency of
+     * @param definition The {@link IScopedDefinition} to add as a dependency of
      * the session.
      */
-    void addDependency(ITypeDefinition definition);
+    void addDependency(IScopedDefinition definition);
 
     /**
-     * Returns a collection of {@link ITypeDefinition} that have been added as
+     * Returns a collection of {@link IScopedDefinition} that have been added as
      * dependencies of the session.
      */
-    Collection<ITypeDefinition> getDependencies();
+    Collection<IScopedDefinition> getDependencies();
 
     /**
      * Returns all {@link IVariableDefinition} <code>[Inject]</code> metadata

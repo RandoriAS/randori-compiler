@@ -5,9 +5,11 @@ import demo.foo.support.AnotherStaticClass;
 import demo.foo.support.MapTypeIdExportFalse;
 import demo.foo.support.MapTypeIdExportTrue;
 import demo.foo.support.MenuItem2;
+import demo.foo.support.Mode1;
 import demo.foo.support.PolyFill;
 import demo.foo.support.StaticClass;
 import demo.foo.support.SupportClassA;
+import demo.foo.support.trace;
 
 import randori.async.Promise;
 import randori.behaviors.AbstractMediator;
@@ -581,5 +583,26 @@ public class ClassB extends ClassA
     {
         MyFunction();
     }
+    
+    public function package_function_dependency():void 
+    {
+        trace("Hello Worlds! You are mine!");
+    }
+    
+    public function static_var_dependency():void 
+    {
+        SupportClassA.inputMode = AnotherStaticClass.MODE;
+        Mode1.prepareStuff();
+    }
+
+    public function inner_class_no_dependency():void 
+    {
+        var o:FooInner = new FooInner();
+        o.bar();
+    }
 }
+}
+
+class FooInner {
+    public function bar():void{}
 }
