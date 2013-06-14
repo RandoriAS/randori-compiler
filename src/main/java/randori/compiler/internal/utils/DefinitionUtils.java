@@ -31,6 +31,7 @@ import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IInterfaceDefinition;
+import org.apache.flex.compiler.definitions.IPackageDefinition;
 import org.apache.flex.compiler.definitions.IParameterDefinition;
 import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
@@ -67,6 +68,12 @@ import randori.compiler.codegen.js.IRandoriEmitter;
  */
 public class DefinitionUtils
 {
+    public static final boolean isPackageFunction(IDefinition definition)
+    {
+        return (definition instanceof IFunctionDefinition && definition
+                .getParent() instanceof IPackageDefinition);
+    }
+
     public static final boolean hasSuperCall(IFunctionNode node,
             ICompilerProject project)
     {

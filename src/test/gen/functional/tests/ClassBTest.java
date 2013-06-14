@@ -19,6 +19,10 @@
 
 package functional.tests;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.apache.flex.compiler.tree.as.IGetterNode;
 import org.apache.flex.compiler.tree.as.ISetterNode;
@@ -763,6 +767,57 @@ public class ClassBTest extends FunctionalTestBase
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.package_function_call = function() {"
                 + "\n\tdemo.foo.MyFunction();\n}");
+    }
+
+    @Test
+    public void package_function_dependency()
+    {
+        IFunctionNode node = findFunction("package_function_dependency",
+                classNode);
+        visitor.visitFunction(node);
+        Collection<IScopedDefinition> dependencies = getEmitter().getModel()
+                .getDependencies();
+        ArrayList<IScopedDefinition> list = new ArrayList<IScopedDefinition>(
+                dependencies);
+        Assert.assertEquals(1, list.size());
+        Assert.assertEquals("demo.foo.support.trace", list.get(0)
+                .getQualifiedName());
+        assertOut("demo.foo.ClassB.prototype.package_function_dependency = function() {"
+                + "\n\tdemo.foo.support.trace(\"Hello Worlds! You are mine!\");\n}");
+    }
+
+    @Test
+    public void static_var_dependency()
+    {
+        IFunctionNode node = findFunction("static_var_dependency", classNode);
+        visitor.visitFunction(node);
+        Collection<IScopedDefinition> dependencies = getEmitter().getModel()
+                .getDependencies();
+        ArrayList<IScopedDefinition> list = new ArrayList<IScopedDefinition>(
+                dependencies);
+        Assert.assertEquals(3, list.size());
+        Assert.assertEquals("demo.foo.support.SupportClassA", list.get(0)
+                .getQualifiedName());
+        Assert.assertEquals("demo.foo.support.AnotherStaticClass", list.get(1)
+                .getQualifiedName());
+        Assert.assertEquals("demo.foo.support.Mode1", list.get(2)
+                .getQualifiedName());
+        assertOut("demo.foo.ClassB.prototype.static_var_dependency = function() {"
+                + "\n\tdemo.foo.support.SupportClassA.inputMode = demo.foo.support."
+                + "AnotherStaticClass.MODE;\n\tdemo.foo.support.Mode1.prepareStuff();\n}");
+    }
+
+    @Test
+    public void inner_class_no_dependency()
+    {
+        IFunctionNode node = findFunction("inner_class_no_dependency",
+                classNode);
+        visitor.visitFunction(node);
+        Collection<IScopedDefinition> dependencies = getEmitter().getModel()
+                .getDependencies();
+        Assert.assertEquals(0, dependencies.size());
+        assertOut("demo.foo.ClassB.prototype.inner_class_no_dependency = function() {"
+                + "\n\tvar o = new demo.foo.ClassB$FooInner();\n\to.bar();\n}");
     }
 
     @Test
