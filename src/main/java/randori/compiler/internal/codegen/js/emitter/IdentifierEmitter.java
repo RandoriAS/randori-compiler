@@ -24,7 +24,6 @@ import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
-import org.apache.flex.compiler.definitions.IPackageDefinition;
 import org.apache.flex.compiler.definitions.IParameterDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
@@ -227,8 +226,11 @@ public class IdentifierEmitter extends BaseSubEmitter implements
             IFunctionDefinition definition)
     {
         String name = MetaDataUtils.getFunctionBaseName(definition);
-        if (definition.getParent() instanceof IPackageDefinition)
+        if (DefinitionUtils.isPackageFunction(definition))
+        {
             name = MetaDataUtils.getPackageFunctionExportName(definition);
+            getModel().addDependency(definition);
+        }
         write(name);
     }
 

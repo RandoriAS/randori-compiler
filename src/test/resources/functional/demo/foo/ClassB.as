@@ -600,6 +600,11 @@ public class ClassB extends ClassA
         var o:FooInner = new FooInner();
         o.bar();
     }
+    
+    public function array_literal_dependency():void 
+    {
+        var o:Array = [MyFunction];
+    }
 }
 }
 
