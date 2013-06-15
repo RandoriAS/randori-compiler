@@ -118,8 +118,10 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                 && definition.isStatic())
         {
             // stati cmethod call
-            IScopedDefinition parent = (IScopedDefinition) definition.getParent();
-            getModel().addDependency(parent);
+            IScopedDefinition parent = (IScopedDefinition) definition
+                    .getParent();
+            
+            getModel().addDependency(parent, node);
             String name = DefinitionNameUtils.toExportQualifiedName(definition,
                     getProject());
             write(name);
@@ -129,7 +131,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
             // check for package level function for dep
             if (DefinitionUtils.isPackageFunction(definition))
             {
-                getModel().addDependency((IScopedDefinition) definition);
+                getModel().addDependency((IScopedDefinition) definition, node);
             }
 
             // this injects super transform, new transform
@@ -200,7 +202,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         // if the called expression type is NOT the same as the parent class
         if (definiton != newDefinition)
         {
-            getEmitter().getModel().addDependency(newDefinition);
+            getEmitter().getModel().addRuntimeDependency(newDefinition);
         }
 
         if (expression instanceof IClassDefinition)
@@ -553,7 +555,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
             String name = MetaDataUtils
                     .getClassExportName((ClassTraitsDefinition) type);
             write(name);
-            getModel().addDependency(type);
+            // XXX DEPS             getModel().addDependency(type);
         }
         else if (type instanceof IClassDefinition
                 && type.getBaseName().equals("Function"))

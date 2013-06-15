@@ -69,7 +69,9 @@ public class MethodEmitter extends BaseSubEmitter implements
         write(" = function() ");
         writeNewline("{", true);
         // we have a synthesized constructor, implict
-
+        
+        getModel().setInScope(true);
+        
         emitConstructorFieldInitializers(definition);
         String qualifiedName = DefinitionUtils.toBaseClassQualifiedName(
                 (ITypeDefinition) definition.getParent(), getWalker()
@@ -79,6 +81,8 @@ public class MethodEmitter extends BaseSubEmitter implements
             writeNewline(qualifiedName + ".call(this);");
         }
 
+        getModel().setInScope(false);
+        
         indentPop();
         writeNewline();
         write("}");

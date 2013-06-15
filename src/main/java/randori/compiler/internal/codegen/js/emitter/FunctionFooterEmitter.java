@@ -24,9 +24,11 @@ import java.util.Collection;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.apache.flex.compiler.tree.as.IFunctionNode;
+import org.apache.flex.compiler.tree.as.IScopedDefinitionNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
+import randori.compiler.internal.utils.MetaDataUtils;
 
 /**
  * Handles the production of the specialized footer Randori requires for
@@ -51,7 +53,10 @@ public class FunctionFooterEmitter extends BaseSubEmitter implements
         writeNewline();
 
         emitClassName(node);
-        emitGetClassDependencies(node);
+        emitDependencies(node, "Runtime", getEmitter().getModel()
+                .getRuntimeDependencies());
+        emitDependencies(node, "Static", getEmitter().getModel()
+                .getStaticDependencies());
         emitInjectionPoints(node);
         //emitLast(node);
     }
@@ -66,25 +71,28 @@ public class FunctionFooterEmitter extends BaseSubEmitter implements
         writeNewline();
     }
 
-    void emitGetClassDependencies(IFunctionNode tnode)
+    void emitDependencies(IScopedDefinitionNode node, String name,
+            Collection<IScopedDefinition> dependencies)
     {
-        // foo.bar.Baz.getClassDependencies = function () {
+        // foo.bar.Baz.get[name]Dependencies = function () {
         //     var p;
         //     return  [];
         // };
-        write(tnode.getQualifiedName());
-        writeNewline(".getClassDependencies = function(t) {", true);
-        writeNewline("var p;");
 
-        Collection<IScopedDefinition> dependencies = getEmitter().getModel()
-                .getDependencies();
+        final String qualifiedName = MetaDataUtils.getExportQualifiedName(node
+                .getDefinition());
+
+        write(qualifiedName);
+        writeNewline(".get" + name + "Dependencies = function(t) {", true);
+        writeNewline("var p;");
 
         if (dependencies.size() > 0)
         {
             writeNewline("p = [];");
             for (IScopedDefinition type : dependencies)
             {
-                writeNewline("p.push('" + type.getQualifiedName() + "');");
+                writeNewline("p.push('"
+                        + MetaDataUtils.getExportQualifiedName(type) + "');");
             }
             writeNewline("return p;", false);
         }

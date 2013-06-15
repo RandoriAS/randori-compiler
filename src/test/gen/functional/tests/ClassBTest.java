@@ -776,7 +776,7 @@ public class ClassBTest extends FunctionalTestBase
                 classNode);
         visitor.visitFunction(node);
         Collection<IScopedDefinition> dependencies = getEmitter().getModel()
-                .getDependencies();
+                .getRuntimeDependencies();
         ArrayList<IScopedDefinition> list = new ArrayList<IScopedDefinition>(
                 dependencies);
         Assert.assertEquals(1, list.size());
@@ -792,7 +792,7 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("static_var_dependency", classNode);
         visitor.visitFunction(node);
         Collection<IScopedDefinition> dependencies = getEmitter().getModel()
-                .getDependencies();
+                .getRuntimeDependencies();
         ArrayList<IScopedDefinition> list = new ArrayList<IScopedDefinition>(
                 dependencies);
         Assert.assertEquals(3, list.size());
@@ -814,7 +814,7 @@ public class ClassBTest extends FunctionalTestBase
                 classNode);
         visitor.visitFunction(node);
         Collection<IScopedDefinition> dependencies = getEmitter().getModel()
-                .getDependencies();
+                .getRuntimeDependencies();
         Assert.assertEquals(0, dependencies.size());
         assertOut("demo.foo.ClassB.prototype.inner_class_no_dependency = function() {"
                 + "\n\tvar o = new demo.foo.ClassB$FooInner();\n\to.bar();\n}");
@@ -826,7 +826,7 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("array_literal_dependency", classNode);
         visitor.visitFunction(node);
         Collection<IScopedDefinition> dependencies = getEmitter().getModel()
-                .getDependencies();
+                .getRuntimeDependencies();
         ArrayList<IScopedDefinition> list = new ArrayList<IScopedDefinition>(
                 dependencies);
         Assert.assertEquals(2, list.size());

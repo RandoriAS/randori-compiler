@@ -331,7 +331,7 @@ public class RandoriUtils
             ITypeDefinition type = m.getLeftOperandNode().resolveType(project);
             if (type != null)
             {
-                model.addDependency(type);
+// XXX DEPS                model.addDependency(type, expression);
             }
         }
     }

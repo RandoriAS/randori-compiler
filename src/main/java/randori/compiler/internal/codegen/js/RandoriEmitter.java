@@ -376,6 +376,15 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     }
 
     @Override
+    protected void emitMethodScope(IScopedNode node)
+    {
+        getModel().setInScope(true);
+        write(" ");
+        getWalker().walk(node);
+        getModel().setInScope(false);
+    }
+
+    @Override
     public void emitFunctionObject(IFunctionObjectNode node)
     {
         FunctionObjectNode f = (FunctionObjectNode) node;

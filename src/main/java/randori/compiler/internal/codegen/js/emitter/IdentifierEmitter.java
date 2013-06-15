@@ -31,6 +31,7 @@ import org.apache.flex.compiler.tree.as.IExpressionNode;
 import org.apache.flex.compiler.tree.as.IIdentifierNode;
 import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
 import org.apache.flex.compiler.tree.as.IParameterNode;
+import org.apache.flex.compiler.tree.as.IVariableNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
@@ -121,12 +122,19 @@ public class IdentifierEmitter extends BaseSubEmitter implements
                 }
             }
         }
+        else if (node.getParent() instanceof IVariableNode)
+        {
+            if (node == ((IVariableNode)node.getParent()).getAssignedValueNode())
+            {
+                getModel().addDependency(definition, node);
+            }
+        }
         // proto, don't know if I should put this here, checks and
         // adds a class from [], this is special since we don't have
         // a specific emit for array literal
         if (node.getAncestorOfType(ArrayLiteralNode.class) != null)
         {
-            getModel().addDependency(definition);
+         // XXX DEPS             getModel().addDependency(definition);
         }
         String name = MetaDataUtils.getExportQualifiedName(definition);
         write(name);
@@ -239,7 +247,7 @@ public class IdentifierEmitter extends BaseSubEmitter implements
             name = MetaDataUtils.getPackageFunctionExportName(definition);
             if (node.getAncestorOfType(ArrayLiteralNode.class) != null)
             {
-                getModel().addDependency(definition);
+             // XXX DEPS                 getModel().addDependency(definition);
             }
         }
         write(name);

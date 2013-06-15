@@ -29,6 +29,7 @@ import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.tree.as.IClassNode;
+import org.apache.flex.compiler.tree.as.IScopedDefinitionNode;
 import org.apache.flex.compiler.tree.as.IVariableNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
@@ -70,7 +71,10 @@ public class FooterEmitter extends BaseSubEmitter implements
     {
         emitInherit(node);
         emitClassName(node);
-        emitGetClassDependencies(node);
+        emitDependencies(node, "Runtime", getEmitter().getModel()
+                .getRuntimeDependencies());
+        emitDependencies(node, "Static", getEmitter().getModel()
+                .getStaticDependencies());
         emitInjectionPoints(node);
         emitLast(node);
     }
@@ -111,22 +115,20 @@ public class FooterEmitter extends BaseSubEmitter implements
         writeNewline();
     }
 
-    void emitGetClassDependencies(IClassNode tnode)
+    void emitDependencies(IScopedDefinitionNode node, String name,
+            Collection<IScopedDefinition> dependencies)
     {
-        // foo.bar.Baz.getClassDependencies = function () {
+        // foo.bar.Baz.get[name]Dependencies = function () {
         //     var p;
         //     return  [];
         // };
 
-        final String qualifiedName = MetaDataUtils.getExportQualifiedName(tnode
+        final String qualifiedName = MetaDataUtils.getExportQualifiedName(node
                 .getDefinition());
 
         write(qualifiedName);
-        writeNewline(".getClassDependencies = function(t) {", true);
+        writeNewline(".get" + name + "Dependencies = function(t) {", true);
         writeNewline("var p;");
-
-        Collection<IScopedDefinition> dependencies = getEmitter().getModel()
-                .getDependencies();
 
         if (dependencies.size() > 0)
         {
