@@ -34,6 +34,8 @@ import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.internal.scopes.TypeScope;
 import org.apache.flex.compiler.tree.as.IASNode;
 import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
+import org.apache.flex.compiler.tree.as.IClassNode;
+import org.apache.flex.compiler.tree.as.ITypeNode;
 
 import randori.compiler.codegen.js.ISessionModel;
 import randori.compiler.internal.utils.MetaDataUtils;
@@ -134,6 +136,13 @@ public class SessionModel implements ISessionModel
     @Override
     public void addDependency(IScopedDefinition definition, IASNode node)
     {
+        ITypeNode type = (ITypeNode) node.getAncestorOfType(ITypeNode.class);
+        if (type != null)
+        {
+            if (definition == type.getDefinition())
+                return;
+        }
+
         if (node.getContainingScope().getScope() instanceof TypeScope)
         {
             addStaticDependency(definition);
@@ -144,7 +153,7 @@ public class SessionModel implements ISessionModel
         }
     }
 
-    @Override
+    //@Override
     public void addRuntimeDependency(IScopedDefinition definition)
     {
         // do not allow private inner classes
@@ -167,7 +176,7 @@ public class SessionModel implements ISessionModel
         runtimeDependencies.put(definition.getQualifiedName(), definition);
     }
 
-    @Override
+    //@Override
     public void addStaticDependency(IScopedDefinition definition)
     {
         // do not allow private inner classes

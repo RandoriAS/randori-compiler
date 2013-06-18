@@ -55,9 +55,9 @@ public interface ISessionModel
      * @param definition The {@link IScopedDefinition} to add as a dependency of
      * the session.
      */
-    void addRuntimeDependency(IScopedDefinition definition);
+    //void addRuntimeDependency(IScopedDefinition definition);
 
-    void addStaticDependency(IScopedDefinition definition);
+    //void addStaticDependency(IScopedDefinition definition);
 
     void addDependency(IScopedDefinition definition, IASNode node);
 

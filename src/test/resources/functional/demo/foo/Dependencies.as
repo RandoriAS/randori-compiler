@@ -9,11 +9,13 @@ import demo.foo.support.trace;
 
 public class Dependencies
 {
+    public static var pfoo:Dependencies = Dependencies;
     public static var pfoo:String = ClassB.FOO;
     public static var pbar:Object = MyFunction();
     public static var pbar2 = MyTestFunction();
     
     public function runtime_dependencies():void {
+        var c:Dependencies = new Dependencies();
         var myClass = Mode1;
         var x = new Bar();
         trace("Yo");

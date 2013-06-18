@@ -202,7 +202,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         // if the called expression type is NOT the same as the parent class
         if (definiton != newDefinition)
         {
-            getEmitter().getModel().addRuntimeDependency(newDefinition);
+            getEmitter().getModel().addDependency(newDefinition, node);
         }
 
         if (expression instanceof IClassDefinition)
