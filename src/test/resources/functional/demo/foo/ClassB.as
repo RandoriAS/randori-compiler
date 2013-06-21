@@ -619,6 +619,13 @@ public class ClassB extends ClassA
     {
         var s:Object = myObject;
     }
+    
+    public function static_fromCharCode():void 
+    {
+        var chars:Array = ["a", "b", "c"];
+        var abcs:String = String.fromCharCode(chars[0], chars[1], chars[2]);
+    }
+
 }
 }
 

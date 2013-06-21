@@ -457,6 +457,12 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                     .getParameters(node, functionDefinition, getProject());
 
             int paramLen = parameters.size();
+            if(argLen > paramLen)
+            {
+                walkArguments(fnode);
+                return;
+            }
+            
             for (int i = 0; i < paramLen; i++)
             {
                 IParameterDefinition parameter = parameters.get(i);

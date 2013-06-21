@@ -151,7 +151,7 @@ public class ClassBTest extends FunctionalTestBase
         visitor.visitSetter(node);
         assertOut("demo.foo.ClassB.set_FileReaderNative = function(value) {\n}");
     }
-    
+
     @Ignore
     @Test
     public void FileReader_use_get_set_rename()
@@ -858,6 +858,16 @@ public class ClassBTest extends FunctionalTestBase
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.static_accessor_qname = function() {"
                 + "\n\tvar s = demo.foo.ClassB.get_myObject();\n}");
+    }
+
+    @Test
+    public void static_fromCharCode()
+    {
+        IFunctionNode node = findFunction("static_fromCharCode", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.static_fromCharCode = function() {"
+                + "\n\tvar chars = [\"a\", \"b\", \"c\"];\n\tvar abcs = "
+                + "String.fromCharCode(chars[0], chars[1], chars[2]);\n}");
     }
 
     @Test
