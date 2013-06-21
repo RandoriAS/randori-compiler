@@ -248,7 +248,8 @@ public class IdentifierEmitter extends BaseSubEmitter implements
         if (DefinitionUtils.isPackageFunction(definition))
         {
             name = MetaDataUtils.getPackageFunctionExportName(definition);
-            if (node.getAncestorOfType(ArrayLiteralNode.class) != null)
+            if (node.getAncestorOfType(ArrayLiteralNode.class) != null
+                    || DefinitionUtils.isPackageFunction(definition))
             {
                 getModel().addDependency(definition, node);
             }
