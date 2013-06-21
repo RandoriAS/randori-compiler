@@ -61,6 +61,8 @@ public class ClassB extends ClassA
     
     public function set accessor1(value:int):void{}
     
+    private static function get myObject():Object{return null;}
+    
     public function ClassB(param1:Object, param2:int = 42, param3:String = 'foo')
     {
         super(param1);
@@ -144,7 +146,7 @@ public class ClassB extends ClassA
         ClassB.FOO[foo] = "bar";
     }
     
-    [JavaScriptProperty(name="FileReader")]
+    [JavaScriptProperty(name="FileReaderNative")]
     /**
      *  @see randori.webkit.fileapi.FileReader
      */
@@ -611,6 +613,11 @@ public class ClassB extends ClassA
     public function vector_constructor_args():void 
     {
         mQuadBatches = new <Object>[new Object(), new Object(), {s:42}];
+    }
+    
+    public function static_accessor_qname():void 
+    {
+        var s:Object = myObject;
     }
 }
 }

@@ -141,7 +141,7 @@ public class ClassBTest extends FunctionalTestBase
     {
         IGetterNode node = findGetter("FileReader_", classNode);
         visitor.visitGetter(node);
-        assertOut("demo.foo.ClassB.get_FileReader = function() {\n\treturn null;\n}");
+        assertOut("demo.foo.ClassB.get_FileReaderNative = function() {\n\treturn null;\n}");
     }
 
     @Test
@@ -149,9 +149,10 @@ public class ClassBTest extends FunctionalTestBase
     {
         ISetterNode node = findSetter("FileReader_", classNode);
         visitor.visitSetter(node);
-        assertOut("demo.foo.ClassB.set_FileReader = function(value) {\n}");
+        assertOut("demo.foo.ClassB.set_FileReaderNative = function(value) {\n}");
     }
-
+    
+    @Ignore
     @Test
     public void FileReader_use_get_set_rename()
     {
@@ -159,8 +160,8 @@ public class ClassBTest extends FunctionalTestBase
                 classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.FileReader_use_get_set_rename = function() {"
-                + "\n\tset_FileReader(new FileReader());\n\t"
-                + "var a = demo.foo.ClassB.get_FileReader();\n}");
+                + "\n\tset_FileReaderNative(new FileReader());\n\t"
+                + "var a = get_FileReaderNative();\n}");
     }
 
     @Test
@@ -848,6 +849,15 @@ public class ClassBTest extends FunctionalTestBase
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.vector_constructor_args = function() {"
                 + "\n\tthis.mQuadBatches = [{}, {}, {s:42}];\n}");
+    }
+
+    @Test
+    public void static_accessor_qname()
+    {
+        IFunctionNode node = findFunction("static_accessor_qname", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.static_accessor_qname = function() {"
+                + "\n\tvar s = demo.foo.ClassB.get_myObject();\n}");
     }
 
     @Test
