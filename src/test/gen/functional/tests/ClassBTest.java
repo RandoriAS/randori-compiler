@@ -40,11 +40,12 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("ClassB", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB = function(param1, param2, param3) {"
-                + "\n\tthis.modela = null;\n\tthis.sAncestors = [];\n\tthis.tempClass = "
-                + "null;\n\tthis._stageInstance = null;\n\tthis.thenContracts = null;\n\t"
-                + "this.field3 = null;\n\tthis.field2 = 42;\n\tthis.field1 = \"Hello\";"
-                + "\n\tthis.j = null;\n\tthis.names = null;\n\tdemo.foo.ClassA.call("
-                + "this, param1);\n\tthis.field2 = param2;\n}");
+                + "\n\tthis.modela = null;\n\tthis.sAncestors = [];\n\tthis."
+                + "tempClass = null;\n\tthis._stageInstance = null;\n\tthis."
+                + "thenContracts = null;\n\tthis.field3 = null;\n\tthis.field2"
+                + " = 42;\n\tthis.field1 = \"Hello\";\n\tthis.j = null;\n\tthis."
+                + "mQuadBatches = null;\n\tthis.names = null;\n\tdemo.foo.ClassA"
+                + ".call(this, param1);\n\tthis.field2 = param2;\n}");
     }
 
     @Test
@@ -786,7 +787,7 @@ public class ClassBTest extends FunctionalTestBase
         assertOut("demo.foo.ClassB.prototype.package_function_dependency = function() {"
                 + "\n\tdemo.foo.support.trace(\"Hello Worlds! You are mine!\");\n}");
     }
-    
+
     @Ignore
     @Test
     public void static_var_dependency()
@@ -838,6 +839,15 @@ public class ClassBTest extends FunctionalTestBase
                 .getQualifiedName());
         assertOut("demo.foo.ClassB.prototype.array_literal_dependency = function() {"
                 + "\n\tvar o = [demo.foo.MyFunction, demo.foo.support.Mode1];\n}");
+    }
+
+    @Test
+    public void vector_constructor_args()
+    {
+        IFunctionNode node = findFunction("vector_constructor_args", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.vector_constructor_args = function() {"
+                + "\n\tthis.mQuadBatches = [{}, {}, {s:42}];\n}");
     }
 
     @Test

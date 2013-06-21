@@ -33,6 +33,8 @@ public class ClassB extends ClassA
     
     private static var sAncestors:Vector.<Event> = new <Event>[];
     
+    private var mQuadBatches:Vector.<Object>;
+    
     private static var _stageInstance:SupportClassA;
     
     public var tempClass:Class;
@@ -604,6 +606,11 @@ public class ClassB extends ClassA
     public function array_literal_dependency():void 
     {
         var o:Array = [MyFunction, Mode1];
+    }
+
+    public function vector_constructor_args():void 
+    {
+        mQuadBatches = new <Object>[new Object(), new Object(), {s:42}];
     }
 }
 }
