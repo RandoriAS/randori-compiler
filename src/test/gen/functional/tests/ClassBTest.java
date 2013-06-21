@@ -27,6 +27,7 @@ import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.apache.flex.compiler.tree.as.IGetterNode;
 import org.apache.flex.compiler.tree.as.ISetterNode;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import randori.compiler.internal.codegen.as.ASEmitter;
@@ -785,7 +786,8 @@ public class ClassBTest extends FunctionalTestBase
         assertOut("demo.foo.ClassB.prototype.package_function_dependency = function() {"
                 + "\n\tdemo.foo.support.trace(\"Hello Worlds! You are mine!\");\n}");
     }
-
+    
+    @Ignore
     @Test
     public void static_var_dependency()
     {

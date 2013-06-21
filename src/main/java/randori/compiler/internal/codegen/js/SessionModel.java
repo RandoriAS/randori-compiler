@@ -34,7 +34,6 @@ import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.internal.scopes.TypeScope;
 import org.apache.flex.compiler.tree.as.IASNode;
 import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
-import org.apache.flex.compiler.tree.as.IClassNode;
 import org.apache.flex.compiler.tree.as.ITypeNode;
 
 import randori.compiler.codegen.js.ISessionModel;

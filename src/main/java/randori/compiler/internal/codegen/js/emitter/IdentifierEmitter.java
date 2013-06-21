@@ -124,18 +124,21 @@ public class IdentifierEmitter extends BaseSubEmitter implements
         }
         else if (node.getParent() instanceof IVariableNode)
         {
-            if (node == ((IVariableNode)node.getParent()).getAssignedValueNode())
+            if (node == ((IVariableNode) node.getParent())
+                    .getAssignedValueNode())
             {
                 getModel().addDependency(definition, node);
             }
         }
+
         // proto, don't know if I should put this here, checks and
         // adds a class from [], this is special since we don't have
         // a specific emit for array literal
         if (node.getAncestorOfType(ArrayLiteralNode.class) != null)
         {
-         // XXX DEPS             getModel().addDependency(definition);
+            getModel().addDependency(definition, node);
         }
+
         String name = MetaDataUtils.getExportQualifiedName(definition);
         write(name);
         //write(node.getName());
@@ -247,7 +250,7 @@ public class IdentifierEmitter extends BaseSubEmitter implements
             name = MetaDataUtils.getPackageFunctionExportName(definition);
             if (node.getAncestorOfType(ArrayLiteralNode.class) != null)
             {
-             // XXX DEPS                 getModel().addDependency(definition);
+                getModel().addDependency(definition, node);
             }
         }
         write(name);
