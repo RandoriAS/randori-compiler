@@ -871,6 +871,17 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void unary_accessor_invocation()
+    {
+        IFunctionNode node = findFunction("unary_accessor_invocation",
+                classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.unary_accessor_invocation = function() {"
+                + "\n\tthis.set_accessor1(this.get_accessor1() + 1);\n\tthis.set_accessor1("
+                + "this.get_accessor1() - 1);\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);

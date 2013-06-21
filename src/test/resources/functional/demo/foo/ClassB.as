@@ -625,7 +625,12 @@ public class ClassB extends ClassA
         var chars:Array = ["a", "b", "c"];
         var abcs:String = String.fromCharCode(chars[0], chars[1], chars[2]);
     }
-
+    
+    public function unary_accessor_invocation():void 
+    {
+        accessor1++;
+        accessor1--;
+    }
 }
 }
 
