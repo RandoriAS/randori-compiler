@@ -22,6 +22,7 @@ package functional.tests;
 import static org.junit.Assert.assertNull;
 
 import org.apache.flex.compiler.tree.as.IFunctionNode;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -36,6 +37,8 @@ public class NoConstructorClassTest extends FunctionalTestBase
         assertNull(node);
     }
 
+    // XXX  @Ignore test_file()
+    @Ignore
     @Test
     public void test_file()
     {

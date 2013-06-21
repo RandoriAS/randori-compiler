@@ -19,6 +19,7 @@
 
 package functional.tests.annotation.javascript;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import functional.tests.FunctionalTestBase;
@@ -28,6 +29,9 @@ import functional.tests.FunctionalTestBase;
  */
 public class ExportPrototypeTest extends FunctionalTestBase
 {
+
+    // XXX  @Ignore test_file()
+    @Ignore
     @Test
     public void test_file()
     {
