@@ -26,6 +26,7 @@ import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
+import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
@@ -331,6 +332,16 @@ public class RandoriUtils
         //                    .getWalker().getProject());
     }
 
+    public static void addBinaryRightDependency(IExpressionNode right,
+            ISessionModel model, ICompilerProject project)
+    {
+        IDefinition definition = right.resolve(project);
+        if (definition instanceof IClassDefinition)
+        {
+            model.addDependency((IScopedDefinition) definition, right);
+        }
+    }
+
     public static void addMemberExpressionDependency(
             IExpressionNode expression, ISessionModel model,
             ICompilerProject project)
@@ -341,7 +352,7 @@ public class RandoriUtils
             ITypeDefinition type = m.getLeftOperandNode().resolveType(project);
             if (type != null)
             {
-                // XXX DEPS                model.addDependency(type, expression);
+                model.addDependency(type, expression);
             }
         }
     }
