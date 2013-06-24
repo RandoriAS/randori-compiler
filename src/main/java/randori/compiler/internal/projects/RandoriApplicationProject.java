@@ -189,6 +189,15 @@ public class RandoriApplicationProject extends RandoriProject implements
         try
         {
             BundleUtils.copyJSFilesFromBundle(libraryDir, file, bundle);
+
+            Collection<File> bundlePaths = getTargetSettings().getBundlePaths();
+            for (File bundleFile : bundlePaths)
+            {
+                bundle = BundleUtils.getBundle(bundleFile);
+                // get the js files
+                BundleUtils.copyJSFilesFromBundle(libraryDir, null, bundle);
+            }
+
         }
         catch (IOException e)
         {
