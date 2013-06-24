@@ -321,7 +321,7 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("const_string", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.const_string = function() {"
-                + "\n\tconst RANDORI_VENDOR_ITEM_EXPRESSION = \";\";\n\tvar "
+                + "\n\tvar RANDORI_VENDOR_ITEM_EXPRESSION = \";\";\n\tvar "
                 + "anyVendorItems = new RegExp(RANDORI_VENDOR_ITEM_EXPRESSION, \"g\")"
                 + ";\n\tthis.get_foo()(0);\n}");
     }
@@ -879,6 +879,15 @@ public class ClassBTest extends FunctionalTestBase
         assertOut("demo.foo.ClassB.prototype.unary_accessor_invocation = function() {"
                 + "\n\tthis.set_accessor1(this.get_accessor1() + 1);\n\tthis.set_accessor1("
                 + "this.get_accessor1() - 1);\n}");
+    }
+
+    @Test
+    public void local_const()
+    {
+        IFunctionNode node = findFunction("local_const", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.local_const = function() {"
+                + "\n\tvar o = \"foo\";\n}");
     }
 
     @Test
