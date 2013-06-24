@@ -2,7 +2,7 @@ package randori.compiler.internal.projects;
 
 
 /**
- * @author Frédéric THOMAS
+ * @author FrÃ©dÃ©ric THOMAS
  *         Date: 23/05/13
  *         Time: 15:21
  */

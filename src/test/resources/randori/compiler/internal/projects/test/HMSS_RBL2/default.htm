@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <title>HMSS Portal</title>
+        <!-- Write me down, no, seriously, do it:
+
+        @randorijs
+
+        -->
+        <!-- Useful for debugging. Remove for production -->
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="-1"/>
+        <meta http-equiv="Cache-Control" content="no-cache"/>
+        
+        <!-- Visual Style Sheet -->
+        <link rel="stylesheet" href="assets/css/default.css" type="text/css"/>
+        
+        <!-- Behavior Style Sheet -->
+        <link rel="stylesheet/randori" href="assets/css/behaviors.css" type="text/css"/>
+        
+        <!-- JQuery -->
+        <script type="text/javascript" src="jsLibs/jquery-1.9.1.js"></script>
+
+        <!-- Randori Dependencies -->
+        <script type="text/javascript" src="generated/lib/randori-guice-framework.js"></script>
+        <script type="text/javascript" src="generated/lib/randori-framework.js"></script>
+
+        <script type="text/javascript">
+            //Start the randori framework
+            $(function () {
+                var randoriApp = new randori.startup.RandoriBootstrap(document);
+                randoriApp.launch();
+            });
+        </script>
+    </head>
+    <body class="hmssApp">
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <span class="brand">HMSS</span>
+                    <span class="navbar-text pull-right">Welcome, M</span>	
+                </div>
+            </div>
+        </div>
+
+        <div class="v-nav">
+            <ul class="verticalTabs" id="menu">
+                <li id="template">{name}</li>
+            </ul>
+        </div>
+
+        <div id="viewStack" class="contentArea viewStack">
+        </div>
+    </body>
+</html>

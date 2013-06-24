@@ -1,0 +1,52 @@
+[
+    {
+        "name": "Spike Umbrella",
+        "image": "assets/images/gadgets/bond-gadgets-01-1012-lgn.jpg",
+        "status": "Deployed"
+    },
+    {
+        "name": "Bagpipe Flamethrower",
+        "image": "assets/images/gadgets/bond-gadgets-02-1012-lgn.jpg",
+        "status": "Deployed"
+    },
+    {
+        "name": "False Fingerprints",
+        "image": "assets/images/gadgets/bond-gadgets-03-1012-lgn.jpg",
+        "status": "Deployed"
+    },
+    {
+        "name": "Combination Safecracker-Copying Machine",
+        "image": "assets/images/gadgets/bond-gadgets-04-1012-lgn.jpg",
+        "status": "Deprecated"
+    },
+    {
+        "name": "Shark-Inflating Pellet",
+        "image": "assets/images/gadgets/bond-gadgets-05-1012-lgn.jpg",
+        "status": "Deployed"
+    },
+    {
+        "name": "Cigarette and Toothpaste Bomb",
+        "image": "assets/images/gadgets/bond-gadgets-06-1012-lgn.jpg",
+        "status": "Deployed"
+    },
+    {
+        "name": "Multitouch Table",
+        "image": "assets/images/gadgets/bond-gadgets-07-1012-lgn.jpg",
+        "status": "Scheduled"
+    },
+    {
+        "name": "Wallis WA-116 Agile",
+        "image": "assets/images/gadgets/bond-gadgets-08-1012-lgn.jpg",
+        "status": "Deployed"
+    },
+    {
+        "name": "Car Invisibility Cloak",
+        "image": "assets/images/gadgets/bond-gadgets-09-1012-lgn.jpg",
+        "status": "In Development"
+    },
+    {
+        "name": "Ring Camera",
+        "image": "assets/images/gadgets/bond-gadgets-10-1012-lgn.jpg",
+        "status": "In Development"
+    }
+]

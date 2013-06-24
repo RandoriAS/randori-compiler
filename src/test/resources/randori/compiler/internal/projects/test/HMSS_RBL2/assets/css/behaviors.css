@@ -1,0 +1,28 @@
+﻿.hmssApp {
+    -randori-context: startup.DemoContext;
+    -randori-mediator: mediators.IndexMediator;
+}
+
+.viewStack {
+    -randori-behavior: randori.behaviors.ViewStack;
+}
+
+.verticalTabs {
+    -randori-behavior: behaviors.VerticalTabs;
+}
+
+.intel {
+    -randori-mediator: mediators.IntelMediator;
+}
+
+.labs {
+    -randori-mediator: mediator.LabMediator;
+}
+
+.targets {
+    -randori-mediator: mediators.TargetsMediator;
+}
+
+.simpleList {
+    -randori-behavior: randori.behaviors.SimpleList;
+}
