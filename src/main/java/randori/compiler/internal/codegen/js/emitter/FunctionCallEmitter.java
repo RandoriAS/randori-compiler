@@ -34,7 +34,10 @@ import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.definitions.metadata.IMetaTagAttribute;
 import org.apache.flex.compiler.internal.definitions.AppliedVectorDefinition;
 import org.apache.flex.compiler.internal.definitions.ClassTraitsDefinition;
+import org.apache.flex.compiler.internal.tree.as.ContainerNode;
 import org.apache.flex.compiler.internal.tree.as.FunctionCallNode;
+import org.apache.flex.compiler.internal.tree.as.TypedExpressionNode;
+import org.apache.flex.compiler.internal.tree.as.VectorLiteralNode;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.ASTNodeID;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
@@ -118,8 +121,10 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                 && definition.isStatic())
         {
             // stati cmethod call
-            IScopedDefinition parent = (IScopedDefinition) definition.getParent();
-            getModel().addDependency(parent);
+            IScopedDefinition parent = (IScopedDefinition) definition
+                    .getParent();
+
+            getModel().addDependency(parent, node);
             String name = DefinitionNameUtils.toExportQualifiedName(definition,
                     getProject());
             write(name);
@@ -129,7 +134,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
             // check for package level function for dep
             if (DefinitionUtils.isPackageFunction(definition))
             {
-                getModel().addDependency((IScopedDefinition) definition);
+                getModel().addDependency((IScopedDefinition) definition, node);
             }
 
             // this injects super transform, new transform
@@ -200,7 +205,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         // if the called expression type is NOT the same as the parent class
         if (definiton != newDefinition)
         {
-            getEmitter().getModel().addDependency(newDefinition);
+            getEmitter().getModel().addDependency(newDefinition, node);
         }
 
         if (expression instanceof IClassDefinition)
@@ -215,7 +220,9 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
             }
             else if (newDefinition instanceof AppliedVectorDefinition)
             {
-                write("[]");
+                write("[");
+                walkParameters(node);
+                write("]");
                 return;
             }
             else if (baseName.equals("Array"))
@@ -387,7 +394,19 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
 
         IFunctionDefinition functionDefinition = null;
         IDefinition definition = node.resolveCalledExpression(getProject());
-        if (definition instanceof IClassDefinition)
+
+        // only a Vector Literal will be emitted in the first if,
+        if (definition instanceof AppliedVectorDefinition)
+        {
+            if (!(node.getNameNode() instanceof TypedExpressionNode))
+            {
+                VectorLiteralNode vnode = (VectorLiteralNode) node
+                        .getNameNode();
+                ContainerNode contentsNode = vnode.getContentsNode();
+                emitContainerNode(contentsNode);
+            }
+        }
+        else if (definition instanceof IClassDefinition)
         {
             functionDefinition = ((IClassDefinition) definition)
                     .getConstructor();
@@ -438,6 +457,12 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                     .getParameters(node, functionDefinition, getProject());
 
             int paramLen = parameters.size();
+            if(argLen > paramLen)
+            {
+                walkArguments(fnode);
+                return;
+            }
+            
             for (int i = 0; i < paramLen; i++)
             {
                 IParameterDefinition parameter = parameters.get(i);
@@ -553,7 +578,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
             String name = MetaDataUtils
                     .getClassExportName((ClassTraitsDefinition) type);
             write(name);
-            getModel().addDependency(type);
+            // XXX DEPS             getModel().addDependency(type);
         }
         else if (type instanceof IClassDefinition
                 && type.getBaseName().equals("Function"))
@@ -566,6 +591,27 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         else
         {
             getWalker().walk(node);
+        }
+    }
+
+    private void emitContainerNode(ContainerNode node)
+    {
+        final int len = node.getChildCount();
+        for (int i = 0; i < len; i++)
+        {
+            IExpressionNode inode = (IExpressionNode) node.getChild(i);
+            if (inode.getNodeID() == ASTNodeID.IdentifierID)
+            {
+                // test for Functions to be wrapped with createDelegate()
+                emitArgumentIdentifier((IIdentifierNode) inode);
+            }
+            else
+            {
+                getWalker().walk(inode);
+            }
+
+            if (i < len - 1)
+                writeToken(",");
         }
     }
 

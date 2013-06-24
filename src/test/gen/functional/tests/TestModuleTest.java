@@ -20,6 +20,7 @@
 package functional.tests;
 
 import org.apache.flex.compiler.tree.as.IFunctionNode;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -39,6 +40,8 @@ public class TestModuleTest extends FunctionalTestBase
                 + "\n\tbinder.bind(XMLHttpRequest).to(demo.foo.ClassA);\n}");
     }
 
+    // XXX  @Ignore test_file()
+    @Ignore
     @Test
     public void test_file()
     {

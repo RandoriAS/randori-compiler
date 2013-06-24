@@ -48,6 +48,7 @@ import org.apache.flex.compiler.tree.as.IFunctionObjectNode;
 import org.apache.flex.compiler.tree.as.IIdentifierNode;
 import org.apache.flex.compiler.tree.as.ILanguageIdentifierNode;
 import org.apache.flex.compiler.tree.as.ILiteralNode;
+import org.apache.flex.compiler.tree.as.IUnaryOperatorNode;
 import org.apache.flex.compiler.tree.as.ILiteralNode.LiteralType;
 import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
 import org.apache.flex.compiler.tree.as.IPackageNode;
@@ -376,6 +377,15 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     }
 
     @Override
+    protected void emitMethodScope(IScopedNode node)
+    {
+        getModel().setInScope(true);
+        write(" ");
+        getWalker().walk(node);
+        getModel().setInScope(false);
+    }
+
+    @Override
     public void emitFunctionObject(IFunctionObjectNode node)
     {
         FunctionObjectNode f = (FunctionObjectNode) node;
@@ -595,6 +605,60 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     public void emitMethodScope(IFunctionNode node)
     {
         emitMethodScope(node.getScopedNode());
+    }
+
+    @Override
+    public void emitUnaryOperator(IUnaryOperatorNode node)
+    {
+        if (node.getNodeID() == ASTNodeID.Op_PreIncrID
+                || node.getNodeID() == ASTNodeID.Op_PreDecrID
+                || node.getNodeID() == ASTNodeID.Op_BitwiseNotID
+                || node.getNodeID() == ASTNodeID.Op_LogicalNotID
+                || node.getNodeID() == ASTNodeID.Op_SubtractID
+                || node.getNodeID() == ASTNodeID.Op_AddID)
+        {
+            write(node.getOperator().getOperatorText());
+            getWalker().walk(node.getOperandNode());
+        }
+
+        else if (node.getNodeID() == ASTNodeID.Op_PostIncrID)
+        {
+            emitPostAssignment(node, "+");
+        }
+        else if (node.getNodeID() == ASTNodeID.Op_PostDecrID)
+        {
+            emitPostAssignment(node, "-");
+        }
+        else if (node.getNodeID() == ASTNodeID.Op_DeleteID
+                || node.getNodeID() == ASTNodeID.Op_VoidID)
+        {
+            writeToken(node.getOperator().getOperatorText());
+            getWalker().walk(node.getOperandNode());
+        }
+        else if (node.getNodeID() == ASTNodeID.Op_TypeOfID)
+        {
+            write(node.getOperator().getOperatorText());
+            write("(");
+            getWalker().walk(node.getOperandNode());
+            write(")");
+        }
+    }
+
+    private void emitPostAssignment(IUnaryOperatorNode node, String operator)
+    {
+        IDefinition definition = node.getOperandNode().resolve(
+                getWalker().getProject());
+        if (definition instanceof IAccessorDefinition)
+        {
+            String name = definition.getBaseName();
+            write("this.set_" + name + "(");
+            write("this.get_" + name + "() " + operator + " 1)");
+        }
+        else
+        {
+            getWalker().walk(node.getOperandNode());
+            write(node.getOperator().getOperatorText());
+        }
     }
 
     @Override

@@ -27,6 +27,7 @@ import org.apache.flex.compiler.tree.as.IFunctionNode;
 import org.apache.flex.compiler.tree.as.IGetterNode;
 import org.apache.flex.compiler.tree.as.ISetterNode;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import randori.compiler.internal.codegen.as.ASEmitter;
@@ -39,11 +40,12 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("ClassB", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB = function(param1, param2, param3) {"
-                + "\n\tthis.modela = null;\n\tthis.sAncestors = [];\n\tthis.tempClass = "
-                + "null;\n\tthis._stageInstance = null;\n\tthis.thenContracts = null;\n\t"
-                + "this.field3 = null;\n\tthis.field2 = 42;\n\tthis.field1 = \"Hello\";"
-                + "\n\tthis.j = null;\n\tthis.names = null;\n\tdemo.foo.ClassA.call("
-                + "this, param1);\n\tthis.field2 = param2;\n}");
+                + "\n\tthis.modela = null;\n\tthis.sAncestors = [];\n\tthis."
+                + "tempClass = null;\n\tthis._stageInstance = null;\n\tthis."
+                + "thenContracts = null;\n\tthis.field3 = null;\n\tthis.field2"
+                + " = 42;\n\tthis.field1 = \"Hello\";\n\tthis.j = null;\n\tthis."
+                + "mQuadBatches = null;\n\tthis.names = null;\n\tdemo.foo.ClassA"
+                + ".call(this, param1);\n\tthis.field2 = param2;\n}");
     }
 
     @Test
@@ -139,7 +141,7 @@ public class ClassBTest extends FunctionalTestBase
     {
         IGetterNode node = findGetter("FileReader_", classNode);
         visitor.visitGetter(node);
-        assertOut("demo.foo.ClassB.get_FileReader = function() {\n\treturn null;\n}");
+        assertOut("demo.foo.ClassB.get_FileReaderNative = function() {\n\treturn null;\n}");
     }
 
     @Test
@@ -147,9 +149,10 @@ public class ClassBTest extends FunctionalTestBase
     {
         ISetterNode node = findSetter("FileReader_", classNode);
         visitor.visitSetter(node);
-        assertOut("demo.foo.ClassB.set_FileReader = function(value) {\n}");
+        assertOut("demo.foo.ClassB.set_FileReaderNative = function(value) {\n}");
     }
 
+    @Ignore
     @Test
     public void FileReader_use_get_set_rename()
     {
@@ -157,8 +160,8 @@ public class ClassBTest extends FunctionalTestBase
                 classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.FileReader_use_get_set_rename = function() {"
-                + "\n\tset_FileReader(new FileReader());\n\t"
-                + "var a = demo.foo.ClassB.get_FileReader();\n}");
+                + "\n\tset_FileReaderNative(new FileReader());\n\t"
+                + "var a = get_FileReaderNative();\n}");
     }
 
     @Test
@@ -776,7 +779,7 @@ public class ClassBTest extends FunctionalTestBase
                 classNode);
         visitor.visitFunction(node);
         Collection<IScopedDefinition> dependencies = getEmitter().getModel()
-                .getDependencies();
+                .getRuntimeDependencies();
         ArrayList<IScopedDefinition> list = new ArrayList<IScopedDefinition>(
                 dependencies);
         Assert.assertEquals(1, list.size());
@@ -786,13 +789,14 @@ public class ClassBTest extends FunctionalTestBase
                 + "\n\tdemo.foo.support.trace(\"Hello Worlds! You are mine!\");\n}");
     }
 
+    @Ignore
     @Test
     public void static_var_dependency()
     {
         IFunctionNode node = findFunction("static_var_dependency", classNode);
         visitor.visitFunction(node);
         Collection<IScopedDefinition> dependencies = getEmitter().getModel()
-                .getDependencies();
+                .getRuntimeDependencies();
         ArrayList<IScopedDefinition> list = new ArrayList<IScopedDefinition>(
                 dependencies);
         Assert.assertEquals(3, list.size());
@@ -814,7 +818,7 @@ public class ClassBTest extends FunctionalTestBase
                 classNode);
         visitor.visitFunction(node);
         Collection<IScopedDefinition> dependencies = getEmitter().getModel()
-                .getDependencies();
+                .getRuntimeDependencies();
         Assert.assertEquals(0, dependencies.size());
         assertOut("demo.foo.ClassB.prototype.inner_class_no_dependency = function() {"
                 + "\n\tvar o = new demo.foo.ClassB$FooInner();\n\to.bar();\n}");
@@ -826,7 +830,7 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("array_literal_dependency", classNode);
         visitor.visitFunction(node);
         Collection<IScopedDefinition> dependencies = getEmitter().getModel()
-                .getDependencies();
+                .getRuntimeDependencies();
         ArrayList<IScopedDefinition> list = new ArrayList<IScopedDefinition>(
                 dependencies);
         Assert.assertEquals(2, list.size());
@@ -836,6 +840,45 @@ public class ClassBTest extends FunctionalTestBase
                 .getQualifiedName());
         assertOut("demo.foo.ClassB.prototype.array_literal_dependency = function() {"
                 + "\n\tvar o = [demo.foo.MyFunction, demo.foo.support.Mode1];\n}");
+    }
+
+    @Test
+    public void vector_constructor_args()
+    {
+        IFunctionNode node = findFunction("vector_constructor_args", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.vector_constructor_args = function() {"
+                + "\n\tthis.mQuadBatches = [{}, {}, {s:42}];\n}");
+    }
+
+    @Test
+    public void static_accessor_qname()
+    {
+        IFunctionNode node = findFunction("static_accessor_qname", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.static_accessor_qname = function() {"
+                + "\n\tvar s = demo.foo.ClassB.get_myObject();\n}");
+    }
+
+    @Test
+    public void static_fromCharCode()
+    {
+        IFunctionNode node = findFunction("static_fromCharCode", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.static_fromCharCode = function() {"
+                + "\n\tvar chars = [\"a\", \"b\", \"c\"];\n\tvar abcs = "
+                + "String.fromCharCode(chars[0], chars[1], chars[2]);\n}");
+    }
+
+    @Test
+    public void unary_accessor_invocation()
+    {
+        IFunctionNode node = findFunction("unary_accessor_invocation",
+                classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.unary_accessor_invocation = function() {"
+                + "\n\tthis.set_accessor1(this.get_accessor1() + 1);\n\tthis.set_accessor1("
+                + "this.get_accessor1() - 1);\n}");
     }
 
     @Test

@@ -28,6 +28,7 @@ import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
+import org.apache.flex.compiler.tree.as.IASNode;
 import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
 import org.apache.flex.compiler.units.ICompilationUnit;
 
@@ -54,13 +55,19 @@ public interface ISessionModel
      * @param definition The {@link IScopedDefinition} to add as a dependency of
      * the session.
      */
-    void addDependency(IScopedDefinition definition);
+    //void addRuntimeDependency(IScopedDefinition definition);
+
+    //void addStaticDependency(IScopedDefinition definition);
+
+    void addDependency(IScopedDefinition definition, IASNode node);
 
     /**
      * Returns a collection of {@link IScopedDefinition} that have been added as
      * dependencies of the session.
      */
-    Collection<IScopedDefinition> getDependencies();
+    Collection<IScopedDefinition> getRuntimeDependencies();
+
+    Collection<IScopedDefinition> getStaticDependencies();
 
     /**
      * Returns all {@link IVariableDefinition} <code>[Inject]</code> metadata
@@ -125,14 +132,18 @@ public interface ISessionModel
     void setSkipOperator(boolean value);
 
     boolean isInArguments();
-    
+
     void setInArguments(boolean value);
 
+    boolean isInScope();
+
+    void setInScope(boolean value);
+
     IBinaryOperatorNode getAssign();
-    
+
     void setAssign(IBinaryOperatorNode node);
 
     void setCall(boolean value);
-    
+
     boolean isCall();
 }
