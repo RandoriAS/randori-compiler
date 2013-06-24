@@ -30,9 +30,9 @@ public class DependenciesTest extends FunctionalTestBase
     {
         visitor.visitFile(fileNode);
 
-        Assert.assertEquals(7, getEmitter().getModel().getRuntimeDependencies()
+        Assert.assertEquals(10, getEmitter().getModel().getRuntimeDependencies()
                 .size());
-        Assert.assertEquals(3, getEmitter().getModel().getStaticDependencies()
+        Assert.assertEquals(4, getEmitter().getModel().getStaticDependencies()
                 .size());
 
 //        assertOut("if (typeof demo == \"undefined\")\n\tvar demo = {};\nif (typeof "

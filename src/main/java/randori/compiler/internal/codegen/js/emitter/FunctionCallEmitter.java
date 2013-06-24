@@ -578,7 +578,7 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
             String name = MetaDataUtils
                     .getClassExportName((ClassTraitsDefinition) type);
             write(name);
-            // XXX DEPS             getModel().addDependency(type);
+            getModel().addDependency(type, node);
         }
         else if (type instanceof IClassDefinition
                 && type.getBaseName().equals("Function"))
