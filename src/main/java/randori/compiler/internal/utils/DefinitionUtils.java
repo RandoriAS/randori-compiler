@@ -77,6 +77,8 @@ public class DefinitionUtils
     public static final boolean hasSuperCall(IFunctionNode node,
             ICompilerProject project)
     {
+        boolean flag = false;
+
         IClassDefinition definition = DefinitionUtils.getBaseClassDefinition(
                 node.getDefinition(), project);
 
@@ -87,10 +89,41 @@ public class DefinitionUtils
         for (int i = 0; i < len; i++)
         {
             IASNode child = node.getScopedNode().getChild(i);
-            if (child instanceof FunctionCallNode)
-                return ((FunctionCallNode) child).isSuperExpression();
+            if (child.getChildCount() > 0)
+            {
+                if (hasSuperCall(child, project))
+                    return true;
+            }
+            else
+            {
+                if (child instanceof FunctionCallNode)
+                    return ((FunctionCallNode) child).isSuperExpression();
+            }
         }
-        return false;
+        return flag;
+    }
+
+    public static final boolean hasSuperCall(IASNode node,
+            ICompilerProject project)
+    {
+        boolean flag = false;
+        final int len = node.getChildCount();
+        for (int i = 0; i < len; i++)
+        {
+            IASNode child = node.getChild(i);
+            if (child.getChildCount() > 0)
+            {
+                if (hasSuperCall(child, project))
+                    return true;
+            }
+            else
+            {
+                if (child instanceof ILanguageIdentifierNode)
+                    return ((ILanguageIdentifierNode) child).getKind() == LanguageIdentifierKind.SUPER;
+            }
+
+        }
+        return flag;
     }
 
     public static final String toBaseClassQualifiedName(
