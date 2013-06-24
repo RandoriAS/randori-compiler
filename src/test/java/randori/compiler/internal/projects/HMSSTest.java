@@ -102,6 +102,12 @@ public class HMSSTest
 
             generated = new File(hmssWithCommonAndNestedRbls + "/generated");
             FileUtils.deleteDirectory(generated);
+            
+            // delete libs that are copied from rbl archives
+            FileUtils.deleteQuietly(new File(hmssWithCommonRbl + "/libs/CommonModule.js"));
+
+            FileUtils.deleteQuietly(new File(hmssWithCommonAndNestedRbls + "/libs/CommonModule.js"));
+            FileUtils.deleteQuietly(new File(hmssWithCommonAndNestedRbls + "/libs/LabModule.js"));
         }
         catch (IOException e)
         {
@@ -287,7 +293,7 @@ public class HMSSTest
         paths.add(hmss + "/generated/mediator/LabMediator.js");
         paths.add(hmss + "/generated/mediators/IndexMediator.js");
         paths.add(hmss + "/generated/mediators/TargetsMediator.js");
-        paths.add(hmss + "/generated/services/parser/GeneratedJsonParser.js");
+        paths.add(hmss + "/generated/services/parser/GenericJsonParser.js");
         paths.add(hmss + "/generated/services/LabService.js");
         paths.add(hmss + "/generated/services/TargetsService.js");
         paths.add(hmss + "/generated/startup/DemoContext.js");
@@ -335,10 +341,11 @@ public class HMSSTest
         paths.add(hmssWithCommonRbl + "/generated/mediator/LabMediator.js");
         paths.add(hmssWithCommonRbl + "/generated/mediators/IndexMediator.js");
         paths.add(hmssWithCommonRbl + "/generated/mediators/TargetsMediator.js");
-        paths.add(hmssWithCommonRbl + "/generated/services/parser/GeneratedJsonParser.js");
         paths.add(hmssWithCommonRbl + "/generated/services/LabService.js");
         paths.add(hmssWithCommonRbl + "/generated/services/TargetsService.js");
         paths.add(hmssWithCommonRbl + "/generated/startup/DemoContext.js");
+        
+        paths.add(hmssWithCommonRbl + "/libs/CommonModule.js");
 
         File fileToTest;
         for (String path : paths)
@@ -376,19 +383,18 @@ public class HMSSTest
 
         final List<String> paths = new ArrayList<String>(13);
         paths.add(hmssWithCommonAndNestedRbls + "/generated/behaviors");
-        paths.add(hmssWithCommonAndNestedRbls + "/generated/mediator");
         paths.add(hmssWithCommonAndNestedRbls + "/generated/mediators");
         paths.add(hmssWithCommonAndNestedRbls + "/generated/services");
         paths.add(hmssWithCommonAndNestedRbls + "/generated/startup");
         paths.add(hmssWithCommonAndNestedRbls + "/generated/behaviors/EchoBehavior.js");
-        paths.add(hmssWithCommonAndNestedRbls + "/generated/mediator/LabMediator.js");
         paths.add(hmssWithCommonAndNestedRbls + "/generated/mediators/IndexMediator.js");
         paths.add(hmssWithCommonAndNestedRbls + "/generated/mediators/TargetsMediator.js");
-        paths.add(hmssWithCommonAndNestedRbls + "/generated/services/parser/GeneratedJsonParser.js");
-        paths.add(hmssWithCommonAndNestedRbls + "/generated/services/LabService.js");
         paths.add(hmssWithCommonAndNestedRbls + "/generated/services/TargetsService.js");
         paths.add(hmssWithCommonAndNestedRbls + "/generated/startup/DemoContext.js");
-
+        
+        paths.add(hmssWithCommonAndNestedRbls + "/libs/LabModule.js");
+        paths.add(hmssWithCommonAndNestedRbls + "/libs/CommonModule.js");
+        
         File fileToTest;
         for (String path : paths)
         {
