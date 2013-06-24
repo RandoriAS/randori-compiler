@@ -8,6 +8,7 @@ import demo.foo.support.StaticClass4;
 import demo.foo.support.StaticClass5;
 import demo.foo.support.StaticClass6;
 import demo.foo.support.StaticClass7;
+import demo.foo.support.StaticClass8;
 import demo.foo.support.SupportClassA;
 import demo.foo.support.globalFunc;
 import demo.foo.support.trace;
@@ -16,6 +17,7 @@ public class Dependencies
 {
     
     public function runtime_dependencies():void {
+        var b:Object = (true) ? StaticClass8 : false;
         var obj:Object = {};
         var b:Boolean = (obj instanceof StaticClass7);
         var classes:Array = [StaticClass6];
