@@ -131,6 +131,11 @@ public class IdentifierEmitter extends BaseSubEmitter implements
                 getModel().addDependency(definition, node);
             }
         }
+        else
+        {
+            // just a class definition
+            getModel().addDependency(definition, node);
+        }
 
         // proto, don't know if I should put this here, checks and
         // adds a class from [], this is special since we don't have
