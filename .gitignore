@@ -46,3 +46,5 @@ TestConstants.java
 
 LabModule.rbl
 CommonModule.rbl
+
+**/libs/*.js

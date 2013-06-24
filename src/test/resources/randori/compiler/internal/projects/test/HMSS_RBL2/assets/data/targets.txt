@@ -1,0 +1,20 @@
+[ 
+	{
+		"name": "Jaws", 
+		"image": "assets/images/jaws.jpg", 
+		"lastKnownLocation": "Unknown", 
+		"status": "Unknown"
+	}, 
+	{
+		"name": "Dr. Julius No", 
+		"image": "assets/images/drno.jpg", 
+		"lastKnownLocation": "Crab Key, Jamaica", 
+		"status": "Deceased"
+	}, 
+	{
+		"name": "Ernst Stavro Blofeld", 
+		"image": "assets/images/blofeld.jpg", 
+		"lastKnownLocation": "Baja, California", 
+		"status": "Presumed Dead"
+	}
+]
