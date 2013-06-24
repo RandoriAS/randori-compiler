@@ -31,6 +31,7 @@ import randori.compiler.codegen.js.ISubEmitter;
 import randori.compiler.internal.utils.ASNodeUtils;
 import randori.compiler.internal.utils.ExpressionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
+import randori.compiler.internal.utils.RandoriUtils;
 
 /**
  * Handles the production of the {@link IBinaryOperatorNode}.
@@ -96,6 +97,8 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
         getModel().setInAssignment(false);
 
         getEmitter().getWalker().walk(right);
+        
+        RandoriUtils.addBinaryRightDependency(right, getModel(), getProject());
 
         if (!MetaDataUtils.isNative(lhsDefinition) && wasAssignment
                 && lhsDefinition instanceof IAccessorDefinition)
