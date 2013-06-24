@@ -631,6 +631,11 @@ public class ClassB extends ClassA
         accessor1++;
         accessor1--;
     }
+    
+    public function local_const():void 
+    {
+        const o:String = "foo";
+    }
 }
 }
 
