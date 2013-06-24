@@ -33,6 +33,8 @@ public class ClassB extends ClassA
     
     private static var sAncestors:Vector.<Event> = new <Event>[];
     
+    private var mQuadBatches:Vector.<Object>;
+    
     private static var _stageInstance:SupportClassA;
     
     public var tempClass:Class;
@@ -58,6 +60,8 @@ public class ClassB extends ClassA
     public function get accessor1():int{}
     
     public function set accessor1(value:int):void{}
+    
+    private static function get myObject():Object{return null;}
     
     public function ClassB(param1:Object, param2:int = 42, param3:String = 'foo')
     {
@@ -142,7 +146,7 @@ public class ClassB extends ClassA
         ClassB.FOO[foo] = "bar";
     }
     
-    [JavaScriptProperty(name="FileReader")]
+    [JavaScriptProperty(name="FileReaderNative")]
     /**
      *  @see randori.webkit.fileapi.FileReader
      */
@@ -604,6 +608,28 @@ public class ClassB extends ClassA
     public function array_literal_dependency():void 
     {
         var o:Array = [MyFunction, Mode1];
+    }
+
+    public function vector_constructor_args():void 
+    {
+        mQuadBatches = new <Object>[new Object(), new Object(), {s:42}];
+    }
+    
+    public function static_accessor_qname():void 
+    {
+        var s:Object = myObject;
+    }
+    
+    public function static_fromCharCode():void 
+    {
+        var chars:Array = ["a", "b", "c"];
+        var abcs:String = String.fromCharCode(chars[0], chars[1], chars[2]);
+    }
+    
+    public function unary_accessor_invocation():void 
+    {
+        accessor1++;
+        accessor1--;
     }
 }
 }

@@ -31,7 +31,10 @@ import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
+import org.apache.flex.compiler.internal.scopes.TypeScope;
+import org.apache.flex.compiler.tree.as.IASNode;
 import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
+import org.apache.flex.compiler.tree.as.ITypeNode;
 
 import randori.compiler.codegen.js.ISessionModel;
 import randori.compiler.internal.utils.MetaDataUtils;
@@ -44,7 +47,9 @@ import randori.compiler.internal.utils.MetaDataUtils.MetaData;
  */
 public class SessionModel implements ISessionModel
 {
-    private HashMap<String, IScopedDefinition> dependencies = new HashMap<String, IScopedDefinition>();
+    private HashMap<String, IScopedDefinition> runtimeDependencies = new HashMap<String, IScopedDefinition>();
+
+    private HashMap<String, IScopedDefinition> staticDependencies = new HashMap<String, IScopedDefinition>();
 
     private List<IMetaTag> propertyInjectTags = new ArrayList<IMetaTag>();
 
@@ -109,18 +114,52 @@ public class SessionModel implements ISessionModel
         inArguments = value;
     }
 
+    private boolean inScope;
+
+    @Override
+    public boolean isInScope()
+    {
+        return inScope;
+    }
+
+    @Override
+    public void setInScope(boolean value)
+    {
+        inScope = value;
+    }
+
     //--------------------------------------------------------------------------
     // Dependencies
     //--------------------------------------------------------------------------
 
     @Override
-    public void addDependency(IScopedDefinition definition)
+    public void addDependency(IScopedDefinition definition, IASNode node)
+    {
+        ITypeNode type = (ITypeNode) node.getAncestorOfType(ITypeNode.class);
+        if (type != null)
+        {
+            if (definition == type.getDefinition())
+                return;
+        }
+
+        if (node.getContainingScope().getScope() instanceof TypeScope)
+        {
+            addStaticDependency(definition);
+        }
+        else
+        {
+            addRuntimeDependency(definition);
+        }
+    }
+
+    //@Override
+    public void addRuntimeDependency(IScopedDefinition definition)
     {
         // do not allow private inner classes
         if (definition instanceof IClassDefinition && definition.isPrivate())
             return;
-        
-        if (dependencies.containsKey(definition.getQualifiedName()))
+
+        if (runtimeDependencies.containsKey(definition.getQualifiedName()))
             return;
 
         // if this class is considered native, pass
@@ -133,7 +172,30 @@ public class SessionModel implements ISessionModel
         if (!isExport(definition))
             return;
 
-        dependencies.put(definition.getQualifiedName(), definition);
+        runtimeDependencies.put(definition.getQualifiedName(), definition);
+    }
+
+    //@Override
+    public void addStaticDependency(IScopedDefinition definition)
+    {
+        // do not allow private inner classes
+        if (definition instanceof IClassDefinition && definition.isPrivate())
+            return;
+
+        if (staticDependencies.containsKey(definition.getQualifiedName()))
+            return;
+
+        // if this class is considered native, pass
+        if (MetaDataUtils.isNative(definition))
+            return;
+
+        // if this class has export="false" pass
+        //if (!MetaDataUtils.isExport(definition))
+        //    return;
+        if (!isExport(definition))
+            return;
+
+        staticDependencies.put(definition.getQualifiedName(), definition);
     }
 
     private boolean isExport(IScopedDefinition definition)
@@ -151,9 +213,15 @@ public class SessionModel implements ISessionModel
     }
 
     @Override
-    public Collection<IScopedDefinition> getDependencies()
+    public Collection<IScopedDefinition> getRuntimeDependencies()
     {
-        return dependencies.values();
+        return runtimeDependencies.values();
+    }
+
+    @Override
+    public Collection<IScopedDefinition> getStaticDependencies()
+    {
+        return staticDependencies.values();
     }
 
     //--------------------------------------------------------------------------

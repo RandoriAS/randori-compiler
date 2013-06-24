@@ -19,6 +19,7 @@
 
 package functional.tests;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -26,6 +27,9 @@ import org.junit.Test;
  */
 public class InjectTest extends FunctionalTestBase
 {
+
+    // XXX  @Ignore test_file()
+    @Ignore
     @Test
     public void test_file()
     {

@@ -312,7 +312,8 @@ public class MetaDataUtils
         return name;
     }
 
-    public static String getPackageFunctionExportName(IFunctionDefinition definition)
+    public static String getPackageFunctionExportName(
+            IFunctionDefinition definition)
     {
         String name = definition.getQualifiedName();
         IMetaTag tag = definition.getMetaTagByName(MetaData.JavaScriptMethod
@@ -544,6 +545,11 @@ public class MetaDataUtils
         return findTag(definition, MetaData.JavaScript);
     }
 
+    public static IMetaTag findJavaScriptPropertyTag(IDefinition definition)
+    {
+        return findTag(definition, MetaData.JavaScriptProperty);
+    }
+
     public static boolean hasJavaScriptTag(IClassDefinition definition)
     {
         return findTag(definition, MetaData.JavaScript) != null;
@@ -605,4 +611,20 @@ public class MetaDataUtils
         return tag.getAttribute(ATT_NAME) != null;
     }
 
+    public static boolean hasJavaScriptPropertyName(
+            IAccessorDefinition definition, ICompilerProject project)
+    {
+        IMetaTag tag = findJavaScriptPropertyTag(definition);
+        if (tag == null)
+        {
+            IAccessorDefinition other = definition
+                    .resolveCorrespondingAccessor(project);
+            if (other == null)
+                return false;
+            tag = other.getMetaTagByName(MetaData.JavaScriptProperty.getName());
+            if (tag == null)
+                return false;
+        }
+        return tag.getAttribute(ATT_NAME) != null;
+    }
 }

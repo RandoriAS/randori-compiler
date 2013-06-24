@@ -27,10 +27,12 @@ import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IParameterDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.internal.tree.as.ArrayLiteralNode;
+import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
 import org.apache.flex.compiler.tree.as.IIdentifierNode;
 import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
 import org.apache.flex.compiler.tree.as.IParameterNode;
+import org.apache.flex.compiler.tree.as.IVariableNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
@@ -121,13 +123,23 @@ public class IdentifierEmitter extends BaseSubEmitter implements
                 }
             }
         }
+        else if (node.getParent() instanceof IVariableNode)
+        {
+            if (node == ((IVariableNode) node.getParent())
+                    .getAssignedValueNode())
+            {
+                getModel().addDependency(definition, node);
+            }
+        }
+
         // proto, don't know if I should put this here, checks and
         // adds a class from [], this is special since we don't have
         // a specific emit for array literal
         if (node.getAncestorOfType(ArrayLiteralNode.class) != null)
         {
-            getModel().addDependency(definition);
+            getModel().addDependency(definition, node);
         }
+
         String name = MetaDataUtils.getExportQualifiedName(definition);
         write(name);
         //write(node.getName());
@@ -195,32 +207,40 @@ public class IdentifierEmitter extends BaseSubEmitter implements
     {
         if (!MetaDataUtils.isNative(definition))
         {
-            String name = MetaDataUtils.getAccessorName(definition,
+            String baseName = MetaDataUtils.getAccessorName(definition,
                     getProject());
+            String headName = getAccessorName(definition, node, getProject());
 
             if (getModel().skipOperator())
             {
                 // TODO make sure this logic is correct; if (Window.console != null) {
                 // for now this also assumes we are native/global
-                write(name);
+                write(baseName);
                 return;
             }
+
+            if (!MetaDataUtils.hasJavaScriptPropertyName(definition,
+                    getProject()) && headName != null)
+            {
+                write(headName + ".");
+            }
+
             if (getModel().isInAssignment()
                     && ExpressionUtils.isRight(getModel().getAssign(), node))
             {
                 if (getModel().isCall())
-                    write("set_" + name + ".call");
+                    write("set_" + baseName + ".call");
                 else
-                    write("set_" + name);
+                    write("set_" + baseName);
                 // we do not set setCall(false) since the binary value will pick it up
                 // and add 'this' to the arguments
             }
             else
             {
                 if (getModel().isCall())
-                    write("get_" + name + ".call(this)");
+                    write("get_" + baseName + ".call(this)");
                 else
-                    write("get_" + name + "()");
+                    write("get_" + baseName + "()");
                 getModel().setCall(false);
             }
         }
@@ -237,9 +257,10 @@ public class IdentifierEmitter extends BaseSubEmitter implements
         if (DefinitionUtils.isPackageFunction(definition))
         {
             name = MetaDataUtils.getPackageFunctionExportName(definition);
-            if (node.getAncestorOfType(ArrayLiteralNode.class) != null)
+            if (node.getAncestorOfType(ArrayLiteralNode.class) != null
+                    || DefinitionUtils.isPackageFunction(definition))
             {
-                getModel().addDependency(definition);
+                getModel().addDependency(definition, node);
             }
         }
         write(name);
@@ -259,4 +280,19 @@ public class IdentifierEmitter extends BaseSubEmitter implements
         }
     }
 
+    // XXX HACK this needs to be worked out with MemberAccess that is adding the
+    // qname
+    public static String getAccessorName(IAccessorDefinition definition,
+            IIdentifierNode node, ICompilerProject project)
+    {
+        if (definition.isStatic()
+                && !(node.getParent() instanceof IMemberAccessExpressionNode))
+        {
+            String typeName = RandoriUtils.toTypeAccessQualifiedName(
+                    definition.getNode(), project);
+            return typeName;
+        }
+
+        return null;
+    }
 }

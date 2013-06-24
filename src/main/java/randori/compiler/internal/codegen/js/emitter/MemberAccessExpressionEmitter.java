@@ -129,7 +129,7 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
                     && rightDef.isStatic())
             {
                 // add the static access's parent ClassDefinition
-                getModel().addDependency((IScopedDefinition) leftDef);
+                getModel().addDependency((IScopedDefinition) leftDef, node);
                 String qualifiedName = MetaDataUtils
                         .getExportQualifiedName((ITypeDefinition) leftDef);
                 write(qualifiedName);

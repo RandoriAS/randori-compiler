@@ -92,6 +92,16 @@ public class RandoriUtils
         return qualifiedName;
     }
 
+    public static String toTypeAccessQualifiedName(IASNode node,
+            ICompilerProject project)
+    {
+        IClassNode typeNode = (IClassNode) DefinitionUtils
+                .findParentTypeNode(node.getParent());
+        String qualifiedName = MetaDataUtils.getExportQualifiedName(typeNode
+                .getDefinition());
+        return qualifiedName;
+    }
+
     /**
      * Returns a package name based on the annotation <code>JavaScript</code>
      * <code>name</code> attribute.
@@ -331,7 +341,7 @@ public class RandoriUtils
             ITypeDefinition type = m.getLeftOperandNode().resolveType(project);
             if (type != null)
             {
-                model.addDependency(type);
+                // XXX DEPS                model.addDependency(type, expression);
             }
         }
     }
