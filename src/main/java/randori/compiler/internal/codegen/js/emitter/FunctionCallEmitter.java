@@ -337,7 +337,6 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
     {
         // foreach parameter in the types constructor, match the argument
         // if there is no argument for the parameter, use the default value.
-
         IFunctionDefinition constructor = type.getConstructor();
         IParameterDefinition[] parameters = constructor.getParameters();
         IExpressionNode[] arguments = node.getArgumentNodes();
@@ -346,9 +345,37 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         if (arguments.length > 0)
         {
             int i = 0;
-            final int len = parameters.length;
+            int len = parameters.length;
+            int lena = arguments.length;
+            boolean flag = false;
             for (IParameterDefinition parameter : parameters)
             {
+                String arg = null;
+
+                if (i < arguments.length)
+                {
+                    arg = getWalker().getEmitter().stringifyNode(arguments[i]);
+                }
+
+                String value = null;
+
+                if (parameter.getVariableNode() != null)
+                {
+                    value = DefinitionUtils.returnInitialVariableValue(
+                            parameter.getVariableNode(), getEmitter());
+                }
+
+                if (arg != null
+                        && arg.equals("undefined")
+                        || (arg == null && value != null && value
+                                .equals("undefined")))
+                {
+                    flag = true;
+                    lena--;
+                    i++;
+                    continue;
+                }
+
                 // name
                 write(parameter.getBaseName());
                 write(":");
@@ -356,17 +383,15 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                 // vaule
                 if (i < arguments.length)
                 {
-                    getWalker().walk(arguments[i]);
+                    write(arg);
                 }
                 else
                 {
                     // default
-                    String value = DefinitionUtils.returnInitialVariableValue(
-                            parameter.getVariableNode(), getEmitter());
                     write(value);
                 }
-
-                if (i < len - 1)
+                // this is crap, but I will get back to it
+                if ((!flag && i < len - 1) || (flag && i < lena))
                     write(", ");
                 i++;
             }
@@ -457,12 +482,12 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                     .getParameters(node, functionDefinition, getProject());
 
             int paramLen = parameters.size();
-            if(argLen > paramLen)
+            if (argLen > paramLen)
             {
                 walkArguments(fnode);
                 return;
             }
-            
+
             for (int i = 0; i < paramLen; i++)
             {
                 IParameterDefinition parameter = parameters.get(i);
