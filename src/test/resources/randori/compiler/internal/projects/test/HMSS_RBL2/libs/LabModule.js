@@ -1,4 +1,61 @@
-/** Compiled by the Randori compiler v0.2.4.26 on Mon Jun 24 16:34:29 EDT 2013 */
+/** Compiled by the Randori compiler v0.2.4.27 on Tue Jun 25 12:54:17 EDT 2013 */
+
+
+// ====================================================
+// mediator.LabMediator
+// ====================================================
+
+if (typeof mediator == "undefined")
+	var mediator = {};
+
+mediator.LabMediator = function() {
+	this.targetList = null;
+	this.labService = null;
+	randori.behaviors.AbstractMediator.call(this);
+};
+
+mediator.LabMediator.prototype.onRegister = function() {
+	this.labService.get().then($createStaticDelegate(this, this.handleResult));
+};
+
+mediator.LabMediator.prototype.handleResult = function(result) {
+	this.targetList.set_data(result);
+};
+
+$inherit(mediator.LabMediator, randori.behaviors.AbstractMediator);
+
+mediator.LabMediator.className = "mediator.LabMediator";
+
+mediator.LabMediator.getRuntimeDependencies = function(t) {
+	var p;
+	return [];
+};
+
+mediator.LabMediator.getStaticDependencies = function(t) {
+	var p;
+	return [];
+};
+
+mediator.LabMediator.injectionPoints = function(t) {
+	var p;
+	switch (t) {
+		case 1:
+			p = randori.behaviors.AbstractMediator.injectionPoints(t);
+			p.push({n:'labService', t:'services.LabService', r:0, v:null});
+			break;
+		case 2:
+			p = randori.behaviors.AbstractMediator.injectionPoints(t);
+			break;
+		case 3:
+			p = randori.behaviors.AbstractMediator.injectionPoints(t);
+			p.push({n:'targetList', t:'randori.behaviors.SimpleList'});
+			break;
+		default:
+			p = [];
+			break;
+	}
+	return p;
+};
 
 
 // ====================================================
@@ -55,63 +112,6 @@ services.LabService.injectionPoints = function(t) {
 			break;
 		case 3:
 			p = randori.service.AbstractService.injectionPoints(t);
-			break;
-		default:
-			p = [];
-			break;
-	}
-	return p;
-};
-
-
-// ====================================================
-// mediator.LabMediator
-// ====================================================
-
-if (typeof mediator == "undefined")
-	var mediator = {};
-
-mediator.LabMediator = function() {
-	this.targetList = null;
-	this.labService = null;
-	randori.behaviors.AbstractMediator.call(this);
-};
-
-mediator.LabMediator.prototype.onRegister = function() {
-	this.labService.get().then($createStaticDelegate(this, this.handleResult));
-};
-
-mediator.LabMediator.prototype.handleResult = function(result) {
-	this.targetList.set_data(result);
-};
-
-$inherit(mediator.LabMediator, randori.behaviors.AbstractMediator);
-
-mediator.LabMediator.className = "mediator.LabMediator";
-
-mediator.LabMediator.getRuntimeDependencies = function(t) {
-	var p;
-	return [];
-};
-
-mediator.LabMediator.getStaticDependencies = function(t) {
-	var p;
-	return [];
-};
-
-mediator.LabMediator.injectionPoints = function(t) {
-	var p;
-	switch (t) {
-		case 1:
-			p = randori.behaviors.AbstractMediator.injectionPoints(t);
-			p.push({n:'labService', t:'services.LabService', r:0, v:null});
-			break;
-		case 2:
-			p = randori.behaviors.AbstractMediator.injectionPoints(t);
-			break;
-		case 3:
-			p = randori.behaviors.AbstractMediator.injectionPoints(t);
-			p.push({n:'targetList', t:'randori.behaviors.SimpleList'});
 			break;
 		default:
 			p = [];

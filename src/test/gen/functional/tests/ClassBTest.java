@@ -891,6 +891,19 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void json_undefined_defaults()
+    {
+        IFunctionNode node = findFunction("json_undefined_defaults", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.json_undefined_defaults = function() {"
+                + "\n\tvar chance = new demo.foo.support.Chance();\n\tchance."
+                + "character({casing:true, pool:\"bla\"});\n\tchance.character("
+                + "{casing:true, pool:\"bla\", symbols:true});\n\tchance.character("
+                + "{alpha:true, casing:false, symbols:true});\n\tchance.character("
+                + "{casing:false});\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
