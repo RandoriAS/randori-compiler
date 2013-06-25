@@ -22,6 +22,8 @@ import randori.webkit.fileapi.FileReader;
 import randori.webkit.html.HTMLBRElement;
 import randori.webkit.page.Location;
 import randori.webkit.page.Window;
+import demo.foo.support.CharacterParam;
+import demo.foo.support.Chance;
 
 public class ClassB extends ClassA
 {
@@ -635,6 +637,15 @@ public class ClassB extends ClassA
     public function local_const():void 
     {
         const o:String = "foo";
+    }
+    
+    public function json_undefined_defaults():void 
+    {
+        var chance:Chance = new Chance();
+        chance.character(new CharacterParam(undefined, true, "bla"));
+        chance.character(new CharacterParam(undefined, true, "bla", true));
+        chance.character(new CharacterParam(true, false, undefined, true));
+        chance.character(new CharacterParam(undefined, false));
     }
 }
 }
