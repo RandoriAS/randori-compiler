@@ -674,8 +674,16 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
         if (definition instanceof IAccessorDefinition)
         {
             String name = definition.getBaseName();
-            write("this.set_" + name + "(");
-            write("this.get_" + name + "() " + operator + " 1)");
+            IExpressionNode operandNode = node.getOperandNode();
+            String prefix = "this";
+            if (operandNode.getNodeID() == ASTNodeID.MemberAccessExpressionID)
+            {
+                prefix = stringifyNode(((IMemberAccessExpressionNode) operandNode)
+                        .getLeftOperandNode());
+            }
+
+            write(prefix + ".set_" + name + "(");
+            write(prefix + ".get_" + name + "() " + operator + " 1)");
         }
         else
         {

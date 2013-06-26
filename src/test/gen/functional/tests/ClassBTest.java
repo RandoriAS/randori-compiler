@@ -593,19 +593,21 @@ public class ClassBTest extends FunctionalTestBase
     {
         IFunctionNode node = findFunction("compound_assignment", classNode);
         visitor.visitFunction(node);
-        assertOut("demo.foo.ClassB.prototype.compound_assignment = function() {\n\t"
-                + "this.set_foo(this.get_foo() << 42);\n\t"
-                + "this.set_foo(this.get_foo() >> 42);\n\t"
-                + "this.set_foo(this.get_foo() >>> 42);\n\t"
-                + "this.set_foo(this.get_foo() * 42);\n\t"
-                + "this.set_foo(this.get_foo() / 42);\n\t"
-                + "this.set_foo(this.get_foo() % 42);\n\t"
-                + "this.set_foo(this.get_foo() & 42);\n\t"
-                + "this.set_foo(this.get_foo() ^ 42);\n\t"
-                + "this.set_foo(this.get_foo() | 42);\n\t"
-                + "this.set_foo(this.get_foo() + 42);\n\t"
-                + "this.set_foo(this.get_foo() - 42);\n\t"
-                + "this.set_foo(this.get_foo() && 42);\n}");
+        assertOut("demo.foo.ClassB.prototype.compound_assignment = function() {"
+                + "\n\tvar o = new demo.foo.ClassB(o, 42, \"foo\");\n\t"
+                + "o.set_foo(o.get_foo() + 42);"
+                + "\n\tthis.set_foo(this.get_foo() << 42);"
+                + "\n\tthis.set_foo(this.get_foo() >> 42);"
+                + "\n\tthis.set_foo(this.get_foo() >>> 42);"
+                + "\n\tthis.set_foo(this.get_foo() * 42);"
+                + "\n\tthis.set_foo(this.get_foo() / 42);"
+                + "\n\tthis.set_foo(this.get_foo() % 42);"
+                + "\n\tthis.set_foo(this.get_foo() & 42);"
+                + "\n\tthis.set_foo(this.get_foo() ^ 42);"
+                + "\n\tthis.set_foo(this.get_foo() | 42);"
+                + "\n\tthis.set_foo(this.get_foo() + 42);"
+                + "\n\tthis.set_foo(this.get_foo() - 42);"
+                + "\n\tthis.set_foo(this.get_foo() && 42);\n}");
     }
 
     @Test
@@ -880,8 +882,11 @@ public class ClassBTest extends FunctionalTestBase
                 classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.unary_accessor_invocation = function() {"
-                + "\n\tthis.set_accessor1(this.get_accessor1() + 1);\n\tthis.set_accessor1("
-                + "this.get_accessor1() - 1);\n}");
+                + "\n\tthis.field3.set_accessor1(this.field3.get_accessor1() - 1);"
+                + "\n\tvar o = new demo.foo.ClassB(o, 42, \"foo\");\n\to."
+                + "set_accessor1(o.get_accessor1() + 1);\n\tthis.set_accessor1("
+                + "this.get_accessor1() + 1);\n\tthis.set_accessor1(this."
+                + "get_accessor1() - 1);\n}");
     }
 
     @Test
