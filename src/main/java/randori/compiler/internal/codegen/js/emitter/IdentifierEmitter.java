@@ -154,13 +154,13 @@ public class IdentifierEmitter extends BaseSubEmitter implements
     private void emitIdentifierVariable(IIdentifierNode node,
             IVariableDefinition definition)
     {
+        IClassDefinition cdef = DefinitionUtils.getClassDefinition(definition);
         // TODO this is volitale a needs to use the identifier Class check on the left operand eventually
         if (definition.isStatic()
                 && !(node.getParent() instanceof IMemberAccessExpressionNode))
         {
+
             // output the qualified name and identifier IE FOO[bar] where FOO is static
-            IClassDefinition cdef = DefinitionUtils
-                    .getClassDefinition(definition);
             if (cdef != null)
             {
                 String qualifiedName = cdef.getQualifiedName();
@@ -171,7 +171,18 @@ public class IdentifierEmitter extends BaseSubEmitter implements
         }
         else
         {
-            write(node.getName());
+            IExpressionNode leftBase = ExpressionUtils.getLeftBase(node);
+            if (definition.isStatic() && leftBase == node)
+            {
+                String qualifiedName = cdef.getQualifiedName();
+                write(qualifiedName);
+                write(".");
+                write(definition.getBaseName());
+            }
+            else
+            {
+                write(node.getName());
+            }
         }
     }
 
