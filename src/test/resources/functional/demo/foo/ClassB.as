@@ -619,6 +619,10 @@ public class ClassB extends ClassA
     
     public function static_accessor_qname():void 
     {
+        myObject.foo = "goo";
+        if (myObject.foo) {
+            onSelectHandler(myObject.bar);
+        }
         var s:Object = myObject;
     }
     
@@ -646,6 +650,11 @@ public class ClassB extends ClassA
         chance.character(new CharacterParam(undefined, true, "bla", true));
         chance.character(new CharacterParam(true, false, undefined, true));
         chance.character(new CharacterParam(undefined, false));
+    }
+    
+    public function json_undefined_defaults():void 
+    {
+        
     }
 }
 }

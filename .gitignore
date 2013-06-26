@@ -26,6 +26,9 @@ build/docs
 build/libs
 build/poms
 
+CommonModule.js
+LabModule.js
+
 .gradle/
 
 project.properties

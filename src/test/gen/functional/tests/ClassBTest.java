@@ -857,7 +857,10 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("static_accessor_qname", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.static_accessor_qname = function() {"
-                + "\n\tvar s = demo.foo.ClassB.get_myObject();\n}");
+                + "\n\tdemo.foo.ClassB.get_myObject().foo = \"goo\";\n\tif "
+                + "(demo.foo.ClassB.get_myObject().foo) {\n\t\tdemo.foo.ClassB."
+                + "onSelectHandler(demo.foo.ClassB.get_myObject().bar);\n\t}\n\t"
+                + "var s = demo.foo.ClassB.get_myObject();\n}");
     }
 
     @Test
