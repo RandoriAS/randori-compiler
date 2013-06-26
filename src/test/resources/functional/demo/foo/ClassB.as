@@ -10,6 +10,7 @@ import demo.foo.support.MenuItem2;
 import demo.foo.support.Mode1;
 import demo.foo.support.PolyFill;
 import demo.foo.support.StaticClass;
+import demo.foo.support.StaticClass3;
 import demo.foo.support.SupportClassA;
 import demo.foo.support.trace;
 
@@ -658,9 +659,9 @@ public class ClassB extends ClassA
         chance.character(new CharacterParam(undefined, false));
     }
     
-    public function json_undefined_defaults():void 
+    public function static_class_static_var_method_invoke():void 
     {
-        
+        StaticClass3.static4.instanceMethod(42, 411);
     }
 }
 }
