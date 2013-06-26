@@ -457,7 +457,7 @@ public class ExpressionUtils
 
         if (allowMembers && base instanceof IMemberAccessExpressionNode)
         {
-            //  foo.super()
+            //  super.foo()
             IMemberAccessExpressionNode mnode = (IMemberAccessExpressionNode) base;
             if (mnode.getLeftOperandNode().getNodeID() == ASTNodeID.SuperID)
                 return true;
@@ -619,4 +619,19 @@ public class ExpressionUtils
         return false;
     }
 
+    /**
+     * Returns whether the {@link IExpressionNode} is a <code>super</code>
+     * expression.
+     * <p>
+     * Will return <code>false</code> if argument is <code>null</code>.
+     * 
+     * @param node The node to check for super.
+     */
+    public static boolean isSuperExpression(IExpressionNode node)
+    {
+        if (node == null)
+            return false;
+        return node instanceof ILanguageIdentifierNode
+                && ((ILanguageIdentifierNode) node).getKind() == LanguageIdentifierKind.SUPER;
+    }
 }

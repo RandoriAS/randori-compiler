@@ -28,6 +28,7 @@ import org.apache.flex.compiler.definitions.IParameterDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.internal.tree.as.ArrayLiteralNode;
 import org.apache.flex.compiler.projects.ICompilerProject;
+import org.apache.flex.compiler.tree.ASTNodeID;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
 import org.apache.flex.compiler.tree.as.IIdentifierNode;
 import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
@@ -227,6 +228,14 @@ public class IdentifierEmitter extends BaseSubEmitter implements
             if (!MetaDataUtils.hasJavaScriptPropertyName(definition,
                     getProject()) && headName != null)
             {
+                write(headName + ".");
+            }
+            else if (node.getParent().getNodeID() == ASTNodeID.MemberAccessExpressionID
+                    && node.getParent().getParent().getNodeID() != ASTNodeID.MemberAccessExpressionID
+                    && definition.isStatic())
+            {
+                headName = RandoriUtils.toTypeAccessQualifiedName(
+                        definition.getNode(), getProject());
                 write(headName + ".");
             }
 
