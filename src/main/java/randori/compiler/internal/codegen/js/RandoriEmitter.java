@@ -71,6 +71,7 @@ import randori.compiler.internal.codegen.js.emitter.HeaderEmitter;
 import randori.compiler.internal.codegen.js.emitter.IdentifierEmitter;
 import randori.compiler.internal.codegen.js.emitter.MemberAccessExpressionEmitter;
 import randori.compiler.internal.codegen.js.emitter.MethodEmitter;
+import randori.compiler.internal.codegen.js.emitter.SuperCallEmitter;
 import randori.compiler.internal.utils.ASNodeUtils;
 import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
@@ -124,6 +125,9 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
 
     private FunctionCallEmitter functionCall;
 
+    @SuppressWarnings("unused")
+    private SuperCallEmitter superCall;
+
     private HeaderEmitter header;
 
     private FooterEmitter footer;
@@ -160,6 +164,7 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
         dynamicAccessEmitter = new DynamicAccessEmitter(this);
         binaryOperator = new BinaryOperatorEmitter(this);
         functionCall = new FunctionCallEmitter(this);
+        superCall = new SuperCallEmitter(this);
 
         header = new HeaderEmitter(this);
         footer = new FooterEmitter(this);
@@ -405,7 +410,23 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     @Override
     public void emitFunctionCall(IFunctionCallNode node)
     {
+        IExpressionNode nameNode = node.getNameNode();
+        @SuppressWarnings("unused")
+        IExpressionNode left = null;
+        if (nameNode.getNodeID() == ASTNodeID.MemberAccessExpressionID)
+        {
+            left = ((IMemberAccessExpressionNode) nameNode)
+                    .getLeftOperandNode();
+        }
+
+        //if (node.isCallToSuper() || ExpressionUtils.isSuperExpression(left))
+        //{
+        //    superCall.emit(node);
+        //}
+        //else
+        //{
         functionCall.emit(node);
+        //}
     }
 
     @Override

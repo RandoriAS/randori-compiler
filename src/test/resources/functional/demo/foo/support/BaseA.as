@@ -7,5 +7,13 @@ public class BaseA
         if (b.length > 0)
             a = b;
     }
+    
+    public function foo(a:String, b:String = "randori"):void
+    {
+    }
+    
+    public function bar(a:String, b:String = "randori"):void
+    {
+    }
 }
 }

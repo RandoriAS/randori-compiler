@@ -40,6 +40,7 @@ import org.apache.flex.compiler.internal.tree.as.TypedExpressionNode;
 import org.apache.flex.compiler.internal.tree.as.VectorLiteralNode;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.ASTNodeID;
+import org.apache.flex.compiler.tree.as.IClassNode;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
 import org.apache.flex.compiler.tree.as.IFunctionCallNode;
 import org.apache.flex.compiler.tree.as.IIdentifierNode;
@@ -460,8 +461,8 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         }
         else
         {
-            walkArguments(node);
-            return;
+            //walkArguments(node);
+            //return;
         }
 
         FunctionCallNode fnode = (FunctionCallNode) node;
@@ -473,6 +474,18 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
             write("this");
             if (argLen > 0)
                 writeToken(",");
+        }
+
+        // constructor
+        if (functionDefinition == null)
+        {
+            IClassNode type = (IClassNode) node
+                    .getAncestorOfType(IClassNode.class);
+            if (type != null)
+            {
+                functionDefinition = type.getDefinition()
+                        .resolveBaseClass(getProject()).getConstructor();
+            }
         }
 
         // 1. check for a IFunctionDefinition
