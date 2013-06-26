@@ -3,6 +3,7 @@ package demo.foo
 import demo.foo.support.AnotherStaticClass;
 import demo.foo.support.Bar;
 import demo.foo.support.Mode1;
+import demo.foo.support.ParticleAssets;
 import demo.foo.support.Static2;
 import demo.foo.support.StaticClass4;
 import demo.foo.support.StaticClass5;
@@ -17,6 +18,7 @@ public class Dependencies
 {
     
     public function runtime_dependencies():void {
+        instance(new ParticleAssets.ParticleCoffeeXML());
         var b:Object = (true) ? StaticClass8 : false;
         var obj:Object = {};
         var b:Boolean = (obj instanceof StaticClass7);
@@ -32,6 +34,10 @@ public class Dependencies
         
         SupportClassA.inputMode = Static2.property;
 
+    }
+    
+    private function instance(value:Object):void
+    {
     }
     
     private function foo(value:String):void

@@ -25,8 +25,8 @@ import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
-import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.projects.ICompilerProject;
+import org.apache.flex.compiler.tree.ASTNodeID;
 import org.apache.flex.compiler.tree.as.IContainerNode;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
 import org.apache.flex.compiler.tree.as.IIdentifierNode;
@@ -130,28 +130,35 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
             {
                 // add the static access's parent ClassDefinition
                 getModel().addDependency((IScopedDefinition) leftDef, node);
-                String qualifiedName = MetaDataUtils
-                        .getExportQualifiedName((ITypeDefinition) leftDef);
-                write(qualifiedName);
-            }
-            // trans '_staticVar.foo' to 'my.package._staticVar.foo'
-            else if (leftDef instanceof IVariableDefinition
-                    && !(leftDef instanceof IAccessorDefinition)
-                    && leftDef.isStatic())
-            {
-                //IDefinition definition = (IDefinition) right.resolve(project);
-
-                IClassDefinition parent = (IClassDefinition) leftDef
-                        .getParent();
-                // append the parent's qualified name on the static variable
-                if (MetaDataUtils.isClassExport(parent))
+                if (right.getParent().getNodeID() != ASTNodeID.MemberAccessExpressionID)
                 {
-                    write(parent.getQualifiedName());
-                    write(".");
+                    String qualifiedName = MetaDataUtils
+                            .getExportQualifiedName((ITypeDefinition) leftDef);
+                    write(qualifiedName);
                 }
-
-                getWalker().walk(left);
+                else
+                {
+                    getWalker().walk(left);
+                }
             }
+            //            // trans '_staticVar.foo' to 'my.package._staticVar.foo'
+            //            else if (leftDef instanceof IVariableDefinition
+            //                    && !(leftDef instanceof IAccessorDefinition)
+            //                    && leftDef.isStatic())
+            //            {
+            //                //IDefinition definition = (IDefinition) right.resolve(project);
+            //
+            //                IClassDefinition parent = (IClassDefinition) leftDef
+            //                        .getParent();
+            //                // append the parent's qualified name on the static variable
+            //                if (MetaDataUtils.isClassExport(parent))
+            //                {
+            //                    write(parent.getQualifiedName());
+            //                    write(".");
+            //                }
+            //
+            //                getWalker().walk(left);
+            //            }
             else
             {
                 getWalker().walk(left);

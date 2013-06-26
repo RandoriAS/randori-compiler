@@ -912,6 +912,17 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void static_class_static_var_method_invoke()
+    {
+        IFunctionNode node = findFunction(
+                "static_class_static_var_method_invoke", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.static_class_static_var_method_invoke "
+                + "= function() {\n\tdemo.foo.support.StaticClass3.static4."
+                + "instanceMethod(42, 411);\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);

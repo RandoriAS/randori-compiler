@@ -5,5 +5,9 @@ public class StaticClass4
     public function StaticClass4()
     {
     }
+    
+    public function instanceMethod():void
+    {
+    }
 }
 }

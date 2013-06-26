@@ -81,7 +81,20 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         {
             if (definition != null)
             {
-                emitNew(node);
+                if (node.getNameNode().getNodeID() == ASTNodeID.MemberAccessExpressionID)
+                {
+                    write("new ");
+                    getWalker().walk(node.getNameNode());
+                    write("(");
+                    walkParameters(node);
+                    write(")");
+
+                }
+                else
+                {
+                    emitNew(node);
+                }
+
                 return;
             }
 
