@@ -2,6 +2,8 @@ package demo.foo
 {
 
 import demo.foo.support.AnotherStaticClass;
+import demo.foo.support.Chance;
+import demo.foo.support.CharacterParam;
 import demo.foo.support.MapTypeIdExportFalse;
 import demo.foo.support.MapTypeIdExportTrue;
 import demo.foo.support.MenuItem2;
@@ -22,8 +24,6 @@ import randori.webkit.fileapi.FileReader;
 import randori.webkit.html.HTMLBRElement;
 import randori.webkit.page.Location;
 import randori.webkit.page.Window;
-import demo.foo.support.CharacterParam;
-import demo.foo.support.Chance;
 
 public class ClassB extends ClassA
 {
@@ -468,6 +468,8 @@ public class ClassB extends ClassA
     
     public function compound_assignment():void
     {
+        var o:ClassB = new ClassB(o);
+        o.foo += 42;
         foo <<= 42;
         foo >>= 42;
         foo >>>= 42;
@@ -619,6 +621,10 @@ public class ClassB extends ClassA
     
     public function static_accessor_qname():void 
     {
+        myObject.foo = "goo";
+        if (myObject.foo) {
+            onSelectHandler(myObject.bar);
+        }
         var s:Object = myObject;
     }
     
@@ -630,8 +636,12 @@ public class ClassB extends ClassA
     
     public function unary_accessor_invocation():void 
     {
+        this.field3.accessor1--;
+        var o:ClassB = new ClassB(o);
+        o.accessor1++;
         accessor1++;
         accessor1--;
+
     }
     
     public function local_const():void 
@@ -646,6 +656,11 @@ public class ClassB extends ClassA
         chance.character(new CharacterParam(undefined, true, "bla", true));
         chance.character(new CharacterParam(true, false, undefined, true));
         chance.character(new CharacterParam(undefined, false));
+    }
+    
+    public function json_undefined_defaults():void 
+    {
+        
     }
 }
 }

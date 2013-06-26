@@ -25,6 +25,8 @@ import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.ASTNodeID;
 import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
+import org.apache.flex.compiler.tree.as.IIdentifierNode;
+import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
@@ -97,7 +99,7 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
         getModel().setInAssignment(false);
 
         getEmitter().getWalker().walk(right);
-        
+
         RandoriUtils.addBinaryRightDependency(right, getModel(), getProject());
 
         if (!MetaDataUtils.isNative(lhsDefinition) && wasAssignment
@@ -114,14 +116,30 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
             IDefinition left, IExpressionNode right)
     {
         IAccessorDefinition accessor = (IAccessorDefinition) left;
+
+        String prefix = "this";
+        if (node.getLeftOperandNode().getNodeID() == ASTNodeID.MemberAccessExpressionID)
+        {
+            IExpressionNode farLeft = ((IMemberAccessExpressionNode) node
+                    .getLeftOperandNode()).getLeftOperandNode();
+            if (farLeft.getNodeID() == ASTNodeID.IdentifierID
+                    && ((IIdentifierNode) farLeft).getName().equals("this"))
+            {
+
+            }
+            else
+            {
+                prefix = getEmitter().stringifyNode(farLeft);
+            }
+        }
+
         String name = accessor.getBaseName();
-        write("this.set_" + name + "(");
-        write("this.get_" + name + "()");
+        write(prefix + ".set_" + name + "(");
+        write(prefix + ".get_" + name + "()");
         write(" ");
         write(node.getOperator().getOperatorText().replace("=", ""));
         write(" ");
         getWalker().walk(right);
         write(")");
     }
-
 }
