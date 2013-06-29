@@ -30,6 +30,8 @@
 	<property name="randori.jar" value="${build.lib.dir}/randori.jar" />
 
 	<property name="deployed.dir" value="${basedir_clean}/deployed" />
+	
+	<property name="localdeploy.dir" value="${basedir_clean}/local-deploy" />
 
 	<property name="classes.dir" value="${build.output}/classes" />
 
@@ -109,7 +111,19 @@
 		<antcall target="clean" />
 	</target>
 	
-	<target name="main" depends="prebuild,copyFiles,compile,build,dist.compiler">
+	<target name="local.deploy.compiler" depends="build" description="Deploy Randori compiler to local directory.">
+		<delete failonerror="false" includeemptydirs="true">
+			<fileset dir="${localdeploy.dir}" />
+		</delete>
+		<mkdir dir="${localdeploy.dir}" />
+		<copy todir="${localdeploy.dir}">
+			<fileset dir="${build.lib.dir}">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="main" depends="prebuild,copyFiles,compile,build,local.deploy.compiler,dist.compiler">
 	</target>
 
 	<target name="super-clean" depends="thirdparty-clean,clean" />
