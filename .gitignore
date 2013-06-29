@@ -51,3 +51,4 @@ LabModule.rbl
 CommonModule.rbl
 
 **/libs/*.js
+/local-deploy
