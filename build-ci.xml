@@ -46,6 +46,11 @@
 			<file name="velocity-1.6.2.jar" />
 			<file name="guava.jar" />
 			<file name="antlr.jar" />
+			<file name="truezip-driver-file-7.7.2.jar" />
+			<file name="truezip-driver-zip-7.7.2.jar" />
+			<file name="truezip-file-7.7.2.jar" />
+			<file name="truezip-kernel-7.7.2.jar" />
+			<file name="truezip-swing-7.7.2.jar" />
 		</filelist>
 	</path>
 
@@ -65,6 +70,11 @@
 				<file name="jatl-0.2.2.jar" />
 				<file name="velocity-1.6.2-dep.jar" />
 				<file name="velocity-1.6.2.jar" />
+				<file name="truezip-driver-file-7.7.2.jar" />
+				<file name="truezip-driver-zip-7.7.2.jar" />
+				<file name="truezip-file-7.7.2.jar" />
+				<file name="truezip-kernel-7.7.2.jar" />
+				<file name="truezip-swing-7.7.2.jar" />
 			</filelist>
 		</copy>
 		<copy todir="${build.lib.dir}">
