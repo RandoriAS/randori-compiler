@@ -44,6 +44,8 @@ import org.apache.flex.swc.ISWC;
 import org.apache.flex.utils.FilenameNormalization;
 
 import randori.compiler.access.IASProjectAccess;
+import randori.compiler.bundle.IBundle;
+import randori.compiler.bundle.IBundleCategory;
 import randori.compiler.bundle.io.BundleUtils;
 import randori.compiler.common.VersionInfo;
 import randori.compiler.config.IRandoriTargetSettings;
@@ -230,7 +232,8 @@ public abstract class RandoriProject extends FlexProject implements
     @Override
     public boolean compile(boolean doBuild, boolean doExport)
     {
-        System.out.println("Randori Compiler v" + VersionInfo.RANDORI_COMPILER_VERSION);
+        System.out.println("Randori Compiler v"
+                + VersionInfo.RANDORI_COMPILER_VERSION);
         boolean success = startCompile(doBuild);
         if (!success)
             return false;
@@ -270,7 +273,7 @@ public abstract class RandoriProject extends FlexProject implements
         {
             addSWCsFromBundles(bundles, files, outputDirectory);
         }
-        
+
         bundles = getConfiguration().getBundlePath();
         // if -bundle-path is present, add all SWCs from the bundles
         if (bundles.size() > 0)
@@ -365,6 +368,33 @@ public abstract class RandoriProject extends FlexProject implements
             for (ISWC swc : swcs)
             {
                 files.add(swc.getSWCFile());
+            }
+        }
+    }
+
+    protected void addJSFromBundles(List<String> bundles, List<File> files,
+            File outputDirectory, IBundleCategory category)
+    {
+        // temporarily copy swcs in bundles
+        for (String bundle : bundles)
+        {
+            tempOutput = new File(outputDirectory, "___temp___");
+            try
+            {
+                tempOutput.mkdirs();
+                IBundle bundle2 = BundleUtils.getBundle(new File(bundle));
+                // root == null means use InputStream to copy
+                List<File> copiedFiles = BundleUtils.copyJSFilesFromBundle(
+                        tempOutput, null, bundle2);
+                for (File file : copiedFiles)
+                {
+                    category.addFile(file, file.getName());
+                }
+
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
             }
         }
     }

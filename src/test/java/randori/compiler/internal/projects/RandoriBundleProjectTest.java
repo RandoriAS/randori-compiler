@@ -125,13 +125,13 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
         Assert.assertTrue(!sdkFile.exists());
     }
 
-    //@Test
+    @Test
     public void test_build_guice_then_framework()
     {
         // build the guice
-        String path = TestConstants.RandoriASFramework
+        String guicePath = TestConstants.RandoriASFramework
                 + "/randori-compiler/temp/build/randori-guice.rbl";
-        configuration = new BundleConfiguration("randori-guice", path);
+        configuration = new BundleConfiguration("randori-guice", guicePath);
 
         configuration.addExternalLibraryPath(builtinSWC.getAbsolutePath());
         configuration.addExternalLibraryPath(jQuerySWC.getAbsolutePath());
@@ -147,19 +147,22 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
         Assert.assertTrue(success);
 
         // build famework
-        path = TestConstants.RandoriASFramework
+        String frameworkpath = TestConstants.RandoriASFramework
                 + "/randori-compiler/temp/build/randori-framework.rbl";
-        configuration = new BundleConfiguration("randori-framework", path);
+        configuration = new BundleConfiguration("randori-framework",
+                frameworkpath);
 
-        configuration.addExternalLibraryPath(builtinSWC.getAbsolutePath());
-        configuration.addExternalLibraryPath(jQuerySWC.getAbsolutePath());
-        configuration.addExternalLibraryPath(htmlCoreLibSWC.getAbsolutePath());
+        configuration.addLibraryPath(builtinSWC.getAbsolutePath());
+        configuration.addLibraryPath(jQuerySWC.getAbsolutePath());
+        configuration.addLibraryPath(htmlCoreLibSWC.getAbsolutePath());
+        configuration.addBundlePath(guicePath);
 
         IBundleConfigurationEntry framework = configuration
                 .addEntry("randori-framework");
         framework.addSourcePath(randoriSrc);
-        
+
         args = configuration.toArguments();
+        @SuppressWarnings("unused")
         int exit = Randori.staticMainNoExit(args, null);
 
         Assert.assertTrue(success);
