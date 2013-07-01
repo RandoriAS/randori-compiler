@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -139,61 +140,69 @@ public class BundleUtils
     }
 
     // XXX throw a IOException or something
-    public static void copyJSFilesFromBundle(File destinationDir, File sdkRoot,
-            IBundle sdkBundle) throws IOException
+    public static List<File> copyJSFilesFromBundle(File destinationDir,
+            File sdkRoot, IBundle sdkBundle) throws IOException
     {
+        List<File> result = new ArrayList<File>();
+
         // if sdkRoot is null, this means we are copying from the IBundle stream
         Collection<IBundleLibrary> libraries = sdkBundle.getLibraries();
         for (IBundleLibrary library : libraries)
         {
-            copyJSFilesFromLibrary(destinationDir, sdkRoot, library);
+            copyJSFilesFromLibrary(destinationDir, sdkRoot, library, result);
         }
+
+        return result;
     }
 
     private static void copyJSFilesFromLibrary(File destinationDir,
-            File sdkRoot, IBundleLibrary library)
+            File sdkRoot, IBundleLibrary library, List<File> copiedFiles)
     {
         IBundleContainer container = library
                 .getContainer(IBundleContainer.Type.JS);
         if (container != null)
         {
-            copyJSFilesFromContainer(destinationDir, sdkRoot, container);
+            copyJSFilesFromContainer(destinationDir, sdkRoot, container,
+                    copiedFiles);
         }
     }
 
     private static void copyJSFilesFromContainer(File destinationDir,
-            File sdkRoot, IBundleContainer container)
+            File sdkRoot, IBundleContainer container, List<File> copiedFiles)
     {
         IBundleCategory category = container
                 .getCategory(IBundleCategory.Type.MONOLITHIC);
         if (category != null)
         {
-            copyJSFilesFromCategory(destinationDir, sdkRoot, category);
+            copyJSFilesFromCategory(destinationDir, sdkRoot, category,
+                    copiedFiles);
         }
     }
 
     private static void copyJSFilesFromCategory(File destinationDir,
-            File sdkRoot, IBundleCategory category)
+            File sdkRoot, IBundleCategory category, List<File> copiedFiles)
     {
         Collection<IBundleEntry> entries = category.getEntries();
         for (IBundleEntry entry : entries)
         {
-            copyJSEntry(destinationDir, sdkRoot, entry);
+            copyJSEntry(destinationDir, sdkRoot, entry, copiedFiles);
         }
     }
 
     // dest C:\Users\Work\Documents\git-randori\randori-compiler\temp\out\libs
     // entry:path randori-framework/js/mono/Randori.js
     private static void copyJSEntry(File destinationDir, File sdkRoot,
-            IBundleEntry entry)
+            IBundleEntry entry, List<File> copiedFiles)
     {
         if (sdkRoot == null)
         {
             try
             {
+                File destinationFile = new File(destinationDir + File.separator
+                        + new File(entry.getPath()).getName());
                 FileUtils.copyInputStreamToFile(entry.createInputStream(),
-                        new File(destinationDir + File.separator
-                                + new File(entry.getPath()).getName()));
+                        destinationFile);
+                copiedFiles.add(destinationFile);
             }
             catch (IOException e)
             {
@@ -211,11 +220,10 @@ public class BundleUtils
                 FileUtils.copyFile(sourceFile, destinationFile);
                 //logger.debug("Copied JS file " + sourceFile.getName()
                 //        + " to library path " + destinationDir.getPath());
+                copiedFiles.add(destinationFile);
             }
             catch (IOException e)
             {
-                //logger.error(LogUtils.dumpStackTrace(Thread.currentThread()
-                //        .getStackTrace()));
                 e.printStackTrace();
             }
         }

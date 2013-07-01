@@ -262,6 +262,11 @@ public class BundleConfiguration implements IBundleConfiguration
     {
         List<String> result = new ArrayList<String>();
 
+        for (String arg : bundlePaths)
+        {
+            result.add("-bundle-path=" + arg);
+        }
+
         for (String arg : libraryPaths)
         {
             result.add("-library-path=" + arg);
