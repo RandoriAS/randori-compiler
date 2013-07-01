@@ -94,6 +94,13 @@ public class RandoriBundleProject extends RandoriProject implements
 
         bundleConfig.setJsOutputAsFiles(getConfiguration()
                 .getJsClassesAsFiles());
+
+        // -bundle-path
+        for (String path : getConfiguration().getBundlePath())
+        {
+            bundleConfig.addBundlePath(path);
+        }
+
         // add global -library-path
         for (String path : getConfiguration().getCompilerLibraryPath())
         {
@@ -197,12 +204,40 @@ public class RandoriBundleProject extends RandoriProject implements
         if (bundles.size() > 0)
         {
             addSWCsFromBundles((List<String>) bundles, files, outputDirectory);
-        }
 
-        // add the swcs for the .rbl archives onto the library path
-        for (File file : files)
+            // add the swcs for the .rbl archives onto the library path
+            for (File file : files)
+            {
+                configuration.addLibraryPath(file.getAbsolutePath());
+            }
+        }
+    }
+
+    private void addBundleJS(IBundleConfigurationEntry entry,
+            Collection<String> bundlePaths)
+    {
+        List<File> files = new ArrayList<File>();
+        File outputDirectory = getOutputDirectory();
+
+        // if -bundle-path is present, add all SWCs from the bundles
+        if (bundlePaths.size() > 0)
         {
-            configuration.addLibraryPath(file.getAbsolutePath());
+            String name = entry.getName();
+            IBundleLibrary library = bundle.getLibrary(name);
+            IBundleContainer container = library
+                    .getContainer(IBundleContainer.Type.JS);
+            if (container == null)
+            {
+                container = library.addContainer(IBundleContainer.Type.JS);
+                container.addCategory(IBundleCategory.Type.MONOLITHIC);
+            }
+
+            IBundleCategory category = container
+                    .getCategory(IBundleCategory.Type.MONOLITHIC);
+
+            // XXX copy the js from the rbl
+            addJSFromBundles(new ArrayList<String>(bundlePaths), files,
+                    outputDirectory, category);
         }
     }
 
@@ -253,6 +288,8 @@ public class RandoriBundleProject extends RandoriProject implements
             // TODO this has to be done based off of compiler args -js-classes-as-files
             library.addContainer(Type.JS).addCategory(
                     IBundleCategory.Type.MONOLITHIC);
+
+            addBundleJS(entry, getBundleConfiguration().getBundlePaths());
 
             boolean success;
 
