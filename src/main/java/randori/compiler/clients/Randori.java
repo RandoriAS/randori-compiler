@@ -54,8 +54,6 @@ public class Randori
 
     private RandoriProject project;
 
-    private ProblemQuery problems;
-
     private IBackend backend;
 
     /**
@@ -128,10 +126,10 @@ public class Randori
             if (continueCompilation)
             {
                 compile();
-                if (problems.hasFilteredProblems())
+                if (project.getProblemQuery().hasFilteredProblems())
                     exitCode = ExitCode.FAILED_WITH_PROBLEMS;
             }
-            else if (problems.hasFilteredProblems())
+            else if (project.getProblemQuery().hasFilteredProblems())
             {
                 exitCode = ExitCode.FAILED_WITH_CONFIG_PROBLEMS;
             }
@@ -150,7 +148,7 @@ public class Randori
             {
                 final ICompilerProblem unexpectedExceptionProblem = new UnexpectedExceptionProblem(
                         e);
-                problems.add(unexpectedExceptionProblem);
+                project.getProblemQuery().add(unexpectedExceptionProblem);
             }
             exitCode = ExitCode.FAILED_WITH_EXCEPTIONS;
         }
@@ -173,7 +171,6 @@ public class Randori
     {
         this.backend = backend;
         workspace = new Workspace();
-        problems = new ProblemQuery();
     }
 
     /**

@@ -125,6 +125,46 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
         Assert.assertTrue(!sdkFile.exists());
     }
 
+    //@Test
+    public void test_build_guice_then_framework()
+    {
+        // build the guice
+        String path = TestConstants.RandoriASFramework
+                + "/randori-compiler/temp/build/randori-guice.rbl";
+        configuration = new BundleConfiguration("randori-guice", path);
+
+        configuration.addExternalLibraryPath(builtinSWC.getAbsolutePath());
+        configuration.addExternalLibraryPath(jQuerySWC.getAbsolutePath());
+        configuration.addExternalLibraryPath(htmlCoreLibSWC.getAbsolutePath());
+
+        IBundleConfigurationEntry guice = configuration
+                .addEntry("randori-guice-framework");
+        guice.addSourcePath(randoriGuiceSrc);
+
+        String[] args = configuration.toArguments();
+        project.configure(args);
+        boolean success = project.compile(true, true);
+        Assert.assertTrue(success);
+
+        // build famework
+        path = TestConstants.RandoriASFramework
+                + "/randori-compiler/temp/build/randori-framework.rbl";
+        configuration = new BundleConfiguration("randori-framework", path);
+
+        configuration.addExternalLibraryPath(builtinSWC.getAbsolutePath());
+        configuration.addExternalLibraryPath(jQuerySWC.getAbsolutePath());
+        configuration.addExternalLibraryPath(htmlCoreLibSWC.getAbsolutePath());
+
+        IBundleConfigurationEntry framework = configuration
+                .addEntry("randori-framework");
+        framework.addSourcePath(randoriSrc);
+        
+        args = configuration.toArguments();
+        int exit = Randori.staticMainNoExit(args, null);
+
+        Assert.assertTrue(success);
+    }
+
     @Test
     public void test_compile()
     {
