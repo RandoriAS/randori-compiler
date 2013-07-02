@@ -30,7 +30,7 @@ public class DependenciesTest extends FunctionalTestBase
     {
         visitor.visitFile(fileNode);
 
-        Assert.assertEquals(12, getEmitter().getModel().getRuntimeDependencies()
+        Assert.assertEquals(13, getEmitter().getModel().getRuntimeDependencies()
                 .size());
         Assert.assertEquals(4, getEmitter().getModel().getStaticDependencies()
                 .size());
