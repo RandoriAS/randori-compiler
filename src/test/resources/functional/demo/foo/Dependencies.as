@@ -2,6 +2,7 @@ package demo.foo
 {
 import demo.foo.support.AnotherStaticClass;
 import demo.foo.support.Bar;
+import demo.foo.support.IA;
 import demo.foo.support.Mode1;
 import demo.foo.support.ParticleAssets;
 import demo.foo.support.Static2;
@@ -18,6 +19,7 @@ public class Dependencies
 {
     
     public function runtime_dependencies():void {
+        instance(IA);
         instance(new ParticleAssets.ParticleCoffeeXML());
         var b:Object = (true) ? StaticClass8 : false;
         var obj:Object = {};
