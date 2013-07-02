@@ -126,7 +126,7 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
     }
 
     @Test
-    public void test_build_guice_then_framework()
+    public void test_build_guice_then_framework() throws IOException
     {
         // build the guice
         String guicePath = TestConstants.RandoriASFramework
@@ -166,6 +166,10 @@ public class RandoriBundleProjectTest extends RandoriTestCaseBase
         int exit = Randori.staticMainNoExit(args, null);
 
         Assert.assertTrue(success);
+
+        File build = new File(TestConstants.RandoriASFramework
+                + "/randori-compiler/temp/build");
+        FileUtils.deleteDirectory(build);
     }
 
     @Test
