@@ -167,6 +167,25 @@ public class CompilerArguments
     }
 
     //--------------------------------------------------------------------------
+    // SWC
+    //--------------------------------------------------------------------------
+
+    private List<String> metadatas = new ArrayList<String>();
+
+    // -keep-as3-metadata
+    public List<String> getKeepMetadata()
+    {
+        return metadatas;
+    }
+
+    public void addKeepMetadata(String metadata)
+    {
+        if (metadatas.contains(metadata))
+            return;
+        metadatas.add(metadata);
+    }
+
+    //--------------------------------------------------------------------------
     // Doc
     //--------------------------------------------------------------------------
 
@@ -262,6 +281,11 @@ public class CompilerArguments
         {
             result.add("-include-sources="
                     + StringUtils.join(includes.toArray(new String[] {}), ","));
+        }
+        if (metadatas.size() > 0)
+        {
+            result.add("-keep-as3-metadata="
+                    + StringUtils.join(metadatas.toArray(new String[] {}), ","));
         }
 
         if (jsMergedFiles.size() > 0)

@@ -464,6 +464,15 @@ public class RandoriBundleProject extends RandoriProject implements
         {
             arguments.addIncludedSources(FilenameNormalization.normalize(path));
         }
+        
+        // add Randori metadata
+        arguments.addKeepMetadata("JavaScript");
+        arguments.addKeepMetadata("JavaScriptConstructor");
+        arguments.addKeepMetadata("JavaScriptMethod");
+        arguments.addKeepMetadata("JavaScriptProperty");
+        arguments.addKeepMetadata("JavaScriptCode");
+        arguments.addKeepMetadata("View");
+        arguments.addKeepMetadata("Inject");
     }
 
     private boolean compileSWC(IBundleLibrary library,
