@@ -15,7 +15,7 @@ public class ConditionalSuperConstructorTest extends FunctionalTestBase
                 + "\n\tvar ridiculousCrap = false;\n\tif (textures.length > 0) {"
                 + "\n\t\tif (true) {\n\t\t\tif (ridiculousCrap) {\n\t\t\t} else {"
                 + "\n\t\t\t\tdemo.foo.ClassA.call(this, textures[0]);\n\t\t\t}\n\t\t}\n\t} "
-                + "else {\n\t\tthrow new Error(\"Empty texture array\", 0);\n\t}\n}");
+                + "else {\n\t\tthrow new Error(\"Empty texture array\");\n\t}\n}");
     }
 
     @Override

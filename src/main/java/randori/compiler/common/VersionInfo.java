@@ -26,15 +26,17 @@ public class VersionInfo
 {
     public static final String RANDORI_MAJOR_VERSION = "0";
 
-    public static final String RANDORI_MINOR_VERSION = "2";
+    public static final String RANDORI_MINOR_VERSION = "3";
 
-    public static final String RANDORI_NANO_VERSION = "4";
+    public static final String RANDORI_NANO_VERSION = "0";
+
+    private static final String RANDORI_MIN_VERSION = "0.3.0";
 
     // XXX TEMP
     public static final String RANDORI_BUILD = "1";
     public static final String RANDORI_BUILD_VERSION = "1";
 
-    public static final String RANDORI_COMPILER_VERSION = "0.2.4.30";
+    public static final String RANDORI_COMPILER_VERSION = "0.2.5";
     public static final String RANDORI_COMPILER_NAME = "randori";
 
     public static final String LIB_VERSION_1_0 = "1.0";
@@ -53,6 +55,11 @@ public class VersionInfo
                     + RANDORI_MINOR_VERSION + "." + RANDORI_NANO_VERSION;
         }
         return RANDORI_VERSION_NUMBER;
+    }
+
+    public static String getMinimumSupportedVersion()
+    {
+        return RANDORI_MIN_VERSION;
     }
 
     public static String getLibVersion()
@@ -83,4 +90,5 @@ public class VersionInfo
     {
         return RANDORI_BUILD;
     }
+
 }
