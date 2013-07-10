@@ -367,6 +367,7 @@ public class ClassB extends ClassA
     public function constant_export_true():void
     {
         var mapOptions:Object;
+        mapOptions.mapTypeId = demo.foo.support.MapTypeIdExportTrue.ROADMAP;
         mapOptions.mapTypeId = MapTypeIdExportTrue.ROADMAP;
     }
     

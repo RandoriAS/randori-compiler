@@ -36,7 +36,7 @@ public class QualifiedNamesTest extends FunctionalTestBase
         IFunctionNode node = findFunction("public_constant", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.QualifiedNames.prototype.public_constant = function() {"
-                + "\n\tvar a = demo.foo.ClassA.CONSTANT;\n}");
+                + "\n\tvar a = 0;\n}");
     }
 
     @Test
@@ -46,7 +46,7 @@ public class QualifiedNamesTest extends FunctionalTestBase
         visitor.visitFunction(node);
         assertOut("demo.foo.QualifiedNames.prototype.new_inner_class = function() {"
                 + "\n\tvar i = new demo.foo.QualifiedNames$InnerClass();\n\ti."
-                + "set_property(demo.foo.ClassA.CONSTANT);\n}");
+                + "set_property(0);\n}");
     }
 
     @Test

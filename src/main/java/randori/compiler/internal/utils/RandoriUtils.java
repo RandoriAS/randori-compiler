@@ -313,7 +313,9 @@ public class RandoriUtils
 
         if (result == null && MetaDataUtils.isClassExport(parent))
         {
-            result = parent.getQualifiedName() + "." + definition.getBaseName();
+            String baseName = MetaDataUtils.getExportQualifiedName(definition);
+            String typeQualifiedName = MetaDataUtils.getExportQualifiedName(parent);
+            result = typeQualifiedName + "." + baseName;
         }
 
         if (result == null)
