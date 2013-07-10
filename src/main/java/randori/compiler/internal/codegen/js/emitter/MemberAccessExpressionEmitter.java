@@ -106,7 +106,14 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
             write(((IIdentifierNode) right).getName());
             return;
         }
-
+        
+        if (rightDef instanceof IConstantDefinition) {
+            String value = DefinitionUtils.returnInitialConstantValue(
+                    (IConstantDefinition) rightDef, getProject());
+            write(value);
+            return;
+        }
+        
         if (RandoriUtils.isConstantMemberAccess(left, right, project))
         {
             // if Foo.BAR, we skip below and just write the scalar value

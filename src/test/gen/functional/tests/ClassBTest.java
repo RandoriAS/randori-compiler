@@ -458,8 +458,8 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("constant_export_true", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.constant_export_true = function() {"
-                + "\n\tvar mapOptions;\n\tmapOptions.mapTypeId = "
-                + "demo.foo.support.MapTypeIdExportTrue.ROADMAP;\n}");
+                + "\n\tvar mapOptions;\n\tmapOptions.mapTypeId = \"roadmap\";\n\t"
+                + "mapOptions.mapTypeId = \"roadmap\";\n}");
     }
 
     @Test
@@ -703,8 +703,7 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("static_dependency", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.static_dependency = function() {"
-                + "\n\tthis.method1(demo.foo.ClassA.CONSTANT);\n\tvar o = "
-                + "demo.foo.support.AnotherStaticClass.MODE;\n}");
+                + "\n\tthis.method1(0);\n\tvar o = " + "\"foo\";\n}");
     }
 
     @Test
