@@ -20,6 +20,7 @@
 package demo.application.hmss;
 
 import org.apache.flex.compiler.tree.as.IFunctionNode;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import randori.compiler.internal.RandoriTestBase;
@@ -41,6 +42,7 @@ public class TargetsServiceTest extends RandoriTestBase
                 + "targets;\n\tthis.path = \"assets\\/data\\/targets.txt\";\n}");
     }
 
+    @Ignore
     @Test
     public void test_get()
     {

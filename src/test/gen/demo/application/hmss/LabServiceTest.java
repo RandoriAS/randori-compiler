@@ -1,6 +1,7 @@
 package demo.application.hmss;
 
 import org.apache.flex.compiler.tree.as.IFunctionNode;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import randori.compiler.internal.RandoriTestBase;
@@ -21,7 +22,8 @@ public class LabServiceTest extends RandoriTestBase
                 + "this, xmlHttpRequest);\n\tthis.targets = targets;\n\tthis.path = "
                 + "\"assets\\/data\\/gadgets.txt\";\n}");
     }
-
+    
+    @Ignore
     @Test
     public void test_get()
     {

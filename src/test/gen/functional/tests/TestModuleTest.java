@@ -28,7 +28,7 @@ import org.junit.Test;
  */
 public class TestModuleTest extends FunctionalTestBase
 {
-
+    @Ignore
     @Test
     public void configure()
     {
