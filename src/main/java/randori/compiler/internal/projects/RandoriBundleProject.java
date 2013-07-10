@@ -464,7 +464,7 @@ public class RandoriBundleProject extends RandoriProject implements
         {
             arguments.addIncludedSources(FilenameNormalization.normalize(path));
         }
-        
+
         // add Randori metadata
         arguments.addKeepMetadata("JavaScript");
         arguments.addKeepMetadata("JavaScriptConstructor");
@@ -509,8 +509,8 @@ public class RandoriBundleProject extends RandoriProject implements
 
         version.setRandoriVersion(VersionInfo.getRandoriVersion());
         version.setRandoriBuild(VersionInfo.getBuild());
-        //version.setRandoriMinSupportedVersion(targetSettings.getMinimumSupportedVersion());
-        version.setRandoriMinSupportedVersion("0");
+        version.setRandoriMinSupportedVersion(VersionInfo
+                .getMinimumSupportedVersion());
 
         version.setCompilerName(VersionInfo.getCompilerName());
         version.setCompilerVersion(VersionInfo.getCompilerVersion());

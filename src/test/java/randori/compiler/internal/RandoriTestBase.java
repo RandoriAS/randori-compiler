@@ -70,7 +70,7 @@ public abstract class RandoriTestBase extends TestBase
     {
         return (RandoriEmitter) emitter;
     }
-    
+
     protected Collection<ICompilerProblem> getFileProblems()
     {
         return problems;
@@ -160,18 +160,18 @@ public abstract class RandoriTestBase extends TestBase
     {
         super.addLibraries(libraries);
 
-        String base = TestConstants.RandoriASFramework;
+        String base = TestConstants.RandoriSDKBuiltSWC;
         libraries.add(new File(FilenameNormalization.normalize(base
-                + "\\randori-libraries\\HTMLCoreLib\\bin\\HTMLCoreLib.swc")));
+                + "/builtin.swc")));
         libraries.add(new File(FilenameNormalization.normalize(base
-                + "\\randori-libraries\\JQuery\\bin\\JQuery.swc")));
+                + "/HTMLCoreLib.swc")));
         libraries.add(new File(FilenameNormalization.normalize(base
-                + "\\randori-framework\\bin\\randori-framework.swc")));
-        libraries
-                .add(new File(
-                        FilenameNormalization
-                                .normalize(base
-                                        + "\\randori-guice-framework\\bin\\randori-guice-framework.swc")));
+                + "/JQuery.swc")));
+        libraries.add(new File(FilenameNormalization.normalize(base
+                + "/randori-framework.swc")));
+        libraries.add(new File(FilenameNormalization.normalize(base
+                + "/randori-guice-framework.swc")));
+
     }
 
     @Override

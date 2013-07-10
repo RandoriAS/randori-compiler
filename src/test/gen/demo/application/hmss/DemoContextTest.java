@@ -31,6 +31,7 @@ import randori.compiler.internal.constants.TestConstants;
  */
 public class DemoContextTest extends RandoriTestBase
 {
+    @Ignore
     @Test
     public void test_constructor()
     {
@@ -38,7 +39,7 @@ public class DemoContextTest extends RandoriTestBase
         visitor.visitFunction(node);
         assertOut("startup.DemoContext = function() {\n\tguice.GuiceModule.call(this);\n}");
     }
-    
+
     @Ignore
     @Test
     public void test_configure()

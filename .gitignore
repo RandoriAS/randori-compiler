@@ -28,7 +28,7 @@ build/poms
 
 CommonModule.js
 LabModule.js
-
+randori-compiler-latest.zip
 .gradle/
 
 project.properties
