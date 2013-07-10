@@ -284,20 +284,23 @@ public class DefinitionUtils
     {
         String result = null;
         IClassDefinition parent = (IClassDefinition) definition.getParent();
-        if (MetaDataUtils.isClassExport(parent))
+        
+        Object value = definition.resolveInitialValue(project);
+        if (value != null)
+        {
+            if (value instanceof String)
+                result = "\"" + value + "\"";
+            else
+                result = value.toString();
+        }
+        
+        if (result == null && MetaDataUtils.isClassExport(parent))
         {
             result = parent.getQualifiedName() + "." + definition.getBaseName();
         }
         else
         {
-            Object value = definition.resolveInitialValue(project);
-            if (value != null)
-            {
-                if (value instanceof String)
-                    result = "\"" + value + "\"";
-                else
-                    result = value.toString();
-            }
+
         }
 
         if (result == null)
