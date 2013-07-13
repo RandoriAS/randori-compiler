@@ -28,12 +28,15 @@ import java.util.List;
 import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
+import org.apache.flex.compiler.definitions.IInterfaceDefinition;
 import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
+import org.apache.flex.compiler.internal.definitions.ClassTraitsDefinition;
 import org.apache.flex.compiler.internal.scopes.TypeScope;
 import org.apache.flex.compiler.tree.as.IASNode;
 import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
+import org.apache.flex.compiler.tree.as.IInterfaceNode;
 import org.apache.flex.compiler.tree.as.ITypeNode;
 
 import randori.compiler.codegen.js.ISessionModel;
@@ -135,6 +138,17 @@ public class SessionModel implements ISessionModel
     @Override
     public void addDependency(IScopedDefinition definition, IASNode node)
     {
+        // do not allow interfaces
+        if (definition instanceof IInterfaceDefinition)
+            return;
+
+        if (definition instanceof ClassTraitsDefinition)
+        {
+            ITypeNode inode = ((ClassTraitsDefinition) definition).getNode();
+            if (inode instanceof IInterfaceNode)
+                return;
+        }
+
         ITypeNode type = (ITypeNode) node.getAncestorOfType(ITypeNode.class);
         if (type != null)
         {
@@ -142,6 +156,18 @@ public class SessionModel implements ISessionModel
                 return;
         }
 
+        // do not allow private inner classes
+        if (definition instanceof IClassDefinition && definition.isPrivate())
+            return;
+
+        // if this class is considered native, pass
+        if (MetaDataUtils.isNative(definition))
+            return;
+
+        // if this class has export="false" pass
+        if (!isExport(definition))
+            return;
+        
         if (node.getContainingScope().getScope() instanceof TypeScope)
         {
             addStaticDependency(definition);
@@ -152,47 +178,18 @@ public class SessionModel implements ISessionModel
         }
     }
 
-    //@Override
-    public void addRuntimeDependency(IScopedDefinition definition)
+    void addRuntimeDependency(IScopedDefinition definition)
     {
-        // do not allow private inner classes
-        if (definition instanceof IClassDefinition && definition.isPrivate())
-            return;
 
         if (runtimeDependencies.containsKey(definition.getQualifiedName()))
-            return;
-
-        // if this class is considered native, pass
-        if (MetaDataUtils.isNative(definition))
-            return;
-
-        // if this class has export="false" pass
-        //if (!MetaDataUtils.isExport(definition))
-        //    return;
-        if (!isExport(definition))
             return;
 
         runtimeDependencies.put(definition.getQualifiedName(), definition);
     }
 
-    //@Override
-    public void addStaticDependency(IScopedDefinition definition)
+    void addStaticDependency(IScopedDefinition definition)
     {
-        // do not allow private inner classes
-        if (definition instanceof IClassDefinition && definition.isPrivate())
-            return;
-
         if (staticDependencies.containsKey(definition.getQualifiedName()))
-            return;
-
-        // if this class is considered native, pass
-        if (MetaDataUtils.isNative(definition))
-            return;
-
-        // if this class has export="false" pass
-        //if (!MetaDataUtils.isExport(definition))
-        //    return;
-        if (!isExport(definition))
             return;
 
         staticDependencies.put(definition.getQualifiedName(), definition);
