@@ -19,6 +19,7 @@ public class Dependencies
 {
     
     public function runtime_dependencies():void {
+        var o:IA = null;
         instance(IA);
         instance(new ParticleAssets.ParticleCoffeeXML());
         var b:Object = (true) ? StaticClass8 : false;
