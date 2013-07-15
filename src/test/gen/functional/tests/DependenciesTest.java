@@ -19,9 +19,15 @@
 
 package functional.tests;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.Assert;
 
+import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.junit.Test;
+
+import randori.compiler.internal.utils.RandoriUtils;
 
 public class DependenciesTest extends FunctionalTestBase
 {
@@ -30,30 +36,35 @@ public class DependenciesTest extends FunctionalTestBase
     {
         visitor.visitFile(fileNode);
 
-        Assert.assertEquals(12, getEmitter().getModel().getRuntimeDependencies()
-                .size());
+        List<String> rdps = new ArrayList<String>();
+        rdps.add("*demo.foo.support.IA");
+        rdps.add("demo.foo.support.trace");
+        rdps.add("demo.foo.support.AnotherStaticClass");
+        rdps.add("demo.foo.support.StaticClass8");
+        rdps.add("demo.foo.support.SupportClassA");
+        rdps.add("demo.foo.support.Static2");
+        rdps.add("demo.foo.support.Mode1");
+        rdps.add("demo.foo.support.globalFunc");
+        rdps.add("demo.foo.support.StaticClass5");
+        rdps.add("demo.foo.support.StaticClass6");
+        rdps.add("demo.foo.support.ParticleAssets");
+        rdps.add("demo.foo.support.StaticClass7");
+        rdps.add("demo.foo.support.Bar");
+
+        Assert.assertEquals(rdps.size(), getEmitter().getModel()
+                .getRuntimeDependencies().size());
+
+        int i = 0;
+        for (IScopedDefinition definition : getEmitter().getModel()
+                .getRuntimeDependencies())
+        {
+            Assert.assertEquals(rdps.get(i),
+                    RandoriUtils.toDependencyName(definition));
+            i++;
+        }
+
         Assert.assertEquals(4, getEmitter().getModel().getStaticDependencies()
                 .size());
-
-//        assertOut("if (typeof demo == \"undefined\")\n\tvar demo = {};\nif (typeof "
-//                + "demo.foo == \"undefined\")\n\tdemo.foo = {};\n\ndemo.foo.Dependencies "
-//                + "= function() {\n\t\n};\n\ndemo.foo.Dependencies.pfoo = demo.foo.ClassB."
-//                + "FOO;\n\ndemo.foo.Dependencies.pbar = demo.foo.MyFunction();\n\ndemo.foo."
-//                + "Dependencies.pbar2 = demo.foo.MyTestFunction();\n\ndemo.foo.Dependencies."
-//                + "prototype.runtime_dependencies = function() {\n\tvar myClass = demo.foo."
-//                + "support.Mode1;\n\tvar x = new demo.foo.support.Bar();\n\tdemo.foo.support."
-//                + "trace(\"Yo\");\n\tdemo.foo.support.AnotherStaticClass.set_current(3);"
-//                + "\n\tdemo.foo.support.SupportClassA.inputMode = demo.foo.support.Static2."
-//                + "property;\n};\n\ndemo.foo.Dependencies.className = \"demo.foo.Dependencies"
-//                + "\";\n\ndemo.foo.Dependencies.getRuntimeDependencies = function(t) {\n\tvar"
-//                + " p;\n\tp = [];\n\tp.push('demo.foo.support.trace');\n\tp.push('demo.foo."
-//                + "support.SupportClassA');\n\tp.push('demo.foo.support.AnotherStaticClass');"
-//                + "\n\tp.push('demo.foo.support.Static2');\n\tp.push('demo.foo.support.Mode1');"
-//                + "\n\tp.push('demo.foo.support.Bar');\n\treturn p;\n};\n\ndemo.foo.Dependencies"
-//                + ".getStaticDependencies = function(t) {\n\tvar p;\n\tp = [];\n\tp.push('demo."
-//                + "foo.MyFunction');\n\tp.push('demo.foo.ClassB');\n\tp.push('demo.foo."
-//                + "MyTestFunction');\n\treturn p;\n};\n\ndemo.foo.Dependencies.injectionPoints "
-//                + "= function(t) {\n\treturn [];\n};\n");
     }
 
     @Override

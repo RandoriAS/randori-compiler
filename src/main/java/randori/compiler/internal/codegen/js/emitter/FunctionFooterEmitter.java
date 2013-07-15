@@ -29,6 +29,7 @@ import org.apache.flex.compiler.tree.as.IScopedDefinitionNode;
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
 import randori.compiler.internal.utils.MetaDataUtils;
+import randori.compiler.internal.utils.RandoriUtils;
 
 /**
  * Handles the production of the specialized footer Randori requires for
@@ -91,8 +92,8 @@ public class FunctionFooterEmitter extends BaseSubEmitter implements
             writeNewline("p = [];");
             for (IScopedDefinition type : dependencies)
             {
-                writeNewline("p.push('"
-                        + MetaDataUtils.getExportQualifiedName(type) + "');");
+                String depName = RandoriUtils.toDependencyName(type);
+                writeNewline("p.push('" + depName + "');");
             }
             writeNewline("return p;", false);
         }

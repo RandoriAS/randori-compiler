@@ -135,8 +135,8 @@ public class FooterEmitter extends BaseSubEmitter implements
             writeNewline("p = [];");
             for (IScopedDefinition type : dependencies)
             {
-                writeNewline("p.push('"
-                        + MetaDataUtils.getExportQualifiedName(type) + "');");
+                String depName = RandoriUtils.toDependencyName(type);
+                writeNewline("p.push('" + depName + "');");
             }
             writeNewline("return p;", false);
         }

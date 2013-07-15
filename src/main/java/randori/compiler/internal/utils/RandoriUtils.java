@@ -26,6 +26,7 @@ import org.apache.flex.compiler.definitions.IClassDefinition;
 import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
+import org.apache.flex.compiler.definitions.IInterfaceDefinition;
 import org.apache.flex.compiler.definitions.IScopedDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
@@ -41,6 +42,7 @@ import org.apache.flex.compiler.tree.as.IASNode;
 import org.apache.flex.compiler.tree.as.IClassNode;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
 import org.apache.flex.compiler.tree.as.IIdentifierNode;
+import org.apache.flex.compiler.tree.as.IInterfaceNode;
 import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
 
 import randori.compiler.codegen.as.IASEmitter;
@@ -314,7 +316,8 @@ public class RandoriUtils
         if (result == null && MetaDataUtils.isClassExport(parent))
         {
             String baseName = MetaDataUtils.getExportQualifiedName(definition);
-            String typeQualifiedName = MetaDataUtils.getExportQualifiedName(parent);
+            String typeQualifiedName = MetaDataUtils
+                    .getExportQualifiedName(parent);
             result = typeQualifiedName + "." + baseName;
         }
 
@@ -357,5 +360,26 @@ public class RandoriUtils
                 model.addDependency(type, expression);
             }
         }
+    }
+
+    public static String toDependencyName(IDefinition definition)
+    {
+        String name = MetaDataUtils.getExportQualifiedName(definition);
+        if (isInterface(definition))
+            name = "*" + name;
+        return name;
+    }
+
+    private static boolean isInterface(IDefinition definition)
+    {
+        if (definition instanceof IInterfaceDefinition)
+            return true;
+        if (definition instanceof ClassTraitsDefinition)
+        {
+            ClassTraitsDefinition cdef = (ClassTraitsDefinition) definition;
+            if (cdef.getNode() instanceof IInterfaceNode)
+                return true;
+        }
+        return false;
     }
 }
