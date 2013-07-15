@@ -472,10 +472,10 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
                 return;
             }
         }
-        else
+        else if (!ExpressionUtils.isSuperExpression(node.getNameNode()))
         {
-            //walkArguments(node);
-            //return;
+            walkArguments(node);
+            return;
         }
 
         FunctionCallNode fnode = (FunctionCallNode) node;
