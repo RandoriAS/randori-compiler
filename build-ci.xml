@@ -41,6 +41,7 @@
 			<file name="compiler.jar" />
 			<file name="commons-io.jar" />
 			<file name="commons-lang3-3.1.jar" />
+			<file name="commons-compress-1.5.jar" />
 			<file name="jatl-0.2.2.jar" />
 			<file name="velocity-1.6.2-dep.jar" />
 			<file name="velocity-1.6.2.jar" />
@@ -67,6 +68,7 @@
 				<file name="commons-io.jar" />
 				<file name="commons-lang3-3.1.jar" />
 				<file name="guava.jar" />
+				<file name="commons-compress-1.5.jar"/>
 				<file name="jatl-0.2.2.jar" />
 				<file name="velocity-1.6.2-dep.jar" />
 				<file name="velocity-1.6.2.jar" />
