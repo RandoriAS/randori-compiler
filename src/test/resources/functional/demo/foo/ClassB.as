@@ -700,6 +700,13 @@ public class ClassB extends ClassA
         register("foo", StaticClass.foo);
     }
     
+    public function vector_initialize():void 
+    {
+        var vector:Vector.<String> = Vector.<String>(["v1", "v2", "v3"]);
+        var nums:Vector.<Number> = new Vector.<Number>(10);
+        var objs:Vector.<Object> = new Vector.<Object>(10);
+    }
+    
 }
 }
 

@@ -963,6 +963,17 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void vector_initialize()
+    {
+        IFunctionNode node = findFunction("vector_initialize", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.vector_initialize = function() {"
+                + "\n\tvar vector = [\"v1\", \"v2\", \"v3\"];\n\tvar nums = "
+                + "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0];\n\tvar objs = [null, null, "
+                + "null, null, null, null, null, null, null, null];\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
