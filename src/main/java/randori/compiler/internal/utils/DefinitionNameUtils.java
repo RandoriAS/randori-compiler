@@ -21,6 +21,7 @@ package randori.compiler.internal.utils;
 
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
+import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.projects.IASProject;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.as.IClassNode;
@@ -44,6 +45,12 @@ public class DefinitionNameUtils
     {
         IClassNode typeNode = (IClassNode) DefinitionUtils
                 .findParentTypeNode(definition.getNode().getParent());
+        if (definition instanceof ITypeDefinition)
+        {
+            typeNode = (IClassNode) definition.getNode();
+            return MetaDataUtils.getExportQualifiedName(typeNode
+                    .getDefinition());
+        }
         String qualifiedName = MetaDataUtils.getExportQualifiedName(typeNode
                 .getDefinition());
         String baseName = definition.getBaseName();
