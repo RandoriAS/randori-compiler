@@ -145,10 +145,13 @@ public class IdentifierEmitter extends BaseSubEmitter implements
         {
             getModel().addDependency(definition, node);
         }
-
-        String name = MetaDataUtils.getExportQualifiedName(definition);
-        write(name);
-        //write(node.getName());
+        
+        if (node.getParent() instanceof IMemberAccessExpressionNode) {
+            write(node.getName());
+        } else {
+            String name = MetaDataUtils.getExportQualifiedName(definition);
+            write(name);
+        }
     }
 
     private void emitIdentifierVariable(IIdentifierNode node,
