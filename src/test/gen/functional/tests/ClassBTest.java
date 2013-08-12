@@ -373,7 +373,7 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("static_delegate", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.static_delegate = function() {"
-                + "\n\tvar something;\n\tsomething($createStaticDelegate(this, handleMe));\n}");
+                + "\n\tvar something;\n\tsomething($createStaticDelegate(this, demo.foo.ClassB.handleMe));\n}");
     }
 
     @Test
@@ -948,6 +948,18 @@ public class ClassBTest extends FunctionalTestBase
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.full_qualified_class_new = function() {"
                 + "\n\tnew demo.foo.support.BugS();\n\tnew demo.foo.support.BugS();\n}");
+    }
+
+    @Test
+    public void static_method_path_delegate()
+    {
+        IFunctionNode node = findFunction("static_method_path_delegate",
+                classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.static_method_path_delegate = function() {"
+                + "\n\tthis.register(\"foo\", $createStaticDelegate(this, "
+                + "demo.foo.ClassB.linear));\n\tthis.register(\"foo\", $createStaticDelegate("
+                + "my.name.is.Mike, my.name.is.Mike.my.name.is.Mike.foo));\n}");
     }
 
     @Test

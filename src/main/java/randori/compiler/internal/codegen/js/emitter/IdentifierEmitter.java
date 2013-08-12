@@ -122,6 +122,17 @@ public class IdentifierEmitter extends BaseSubEmitter implements
                         return;
                     }
                 }
+                else if (rightDef instanceof IFunctionDefinition)
+                {
+                    IFunctionDefinition fdef = (IFunctionDefinition) rightDef;
+                    if (fdef.isStatic() && definition.getNode() != null)
+                    {
+                        String qualifiedName = DefinitionNameUtils
+                                .toExportQualifiedName(definition, getProject());
+                        write(qualifiedName);
+                        return;
+                    }
+                }
             }
         }
         else if (node.getParent() instanceof IVariableNode)
@@ -145,10 +156,13 @@ public class IdentifierEmitter extends BaseSubEmitter implements
         {
             getModel().addDependency(definition, node);
         }
-        
-        if (node.getParent() instanceof IMemberAccessExpressionNode) {
+
+        if (node.getParent() instanceof IMemberAccessExpressionNode)
+        {
             write(node.getName());
-        } else {
+        }
+        else
+        {
             String name = MetaDataUtils.getExportQualifiedName(definition);
             write(name);
         }
@@ -281,6 +295,13 @@ public class IdentifierEmitter extends BaseSubEmitter implements
     private void emitIdentifierFunction(IIdentifierNode node,
             IFunctionDefinition definition)
     {
+        if (definition.isStatic() && definition.getNode() != null)
+        {
+            String qualifiedName = DefinitionNameUtils.toExportQualifiedName(
+                    definition, getProject());
+            write(qualifiedName);
+            return;
+        }
         String name = MetaDataUtils.getFunctionBaseName(definition);
         if (DefinitionUtils.isPackageFunction(definition))
         {

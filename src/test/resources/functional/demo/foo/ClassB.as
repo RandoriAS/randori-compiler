@@ -687,6 +687,18 @@ public class ClassB extends ClassA
         new BugS();
     }
     
+    private function register(type:String, func:Function):void {}
+    
+    protected static function linear(ratio:Number):Number
+    {
+        return ratio;
+    }
+    
+    public function static_method_path_delegate():void 
+    {
+        register("foo", linear);
+        register("foo", StaticClass.foo);
+    }
     
 }
 }

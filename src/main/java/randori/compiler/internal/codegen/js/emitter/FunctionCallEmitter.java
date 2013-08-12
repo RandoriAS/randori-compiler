@@ -636,7 +636,8 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         {
             write(IRandoriEmitter.STATIC_DELEGATE_NAME);
             write("(this, ");
-            getWalker().walk(node);
+            String string = getEmitter().stringifyNode(node);
+            write(string);
             write(")");
         }
         else
