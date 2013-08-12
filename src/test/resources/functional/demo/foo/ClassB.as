@@ -29,6 +29,10 @@ import randori.webkit.page.Window;
 
 public class ClassB extends ClassA
 {
+    [Factory(factoryClass="flash.utils.FlashEmbed.getEmbed",type="flash.display.Bitmap")]
+    [Embed(source = "../startup.jpg")]
+    private var Background:Class;
+    
     protected static const REGEXP:RegExp = /^\s+|\s+$/g;
     
     private static const SAMPLEMAP:Object = new Object();
@@ -722,6 +726,16 @@ public class ClassB extends ClassA
         for (var i:int=0, j:int=10; i<j; ++i)
             k += i * j;
     }
+    
+    public function multiple_nested_for() {
+        var total:int = 0;
+        for each (var keyA:int in [1, 2, 3])
+        for each (var keyB:int in [4, 5, 6])
+        for each (var keyC:int in [7, 8, 9])
+        total += keyA + keyB + keyC;
+    }
+    
+    
 }
 }
 
