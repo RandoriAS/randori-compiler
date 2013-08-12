@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.internal.units.SourceCompilationUnitFactory;
 import org.apache.flex.compiler.problems.ICompilerProblem;
 import org.apache.flex.compiler.tree.as.IASNode;
@@ -195,6 +196,18 @@ public abstract class RandoriTestBase extends TestBase
     protected IBackend createBackend()
     {
         return new RandoriBackend();
+    }
+
+    protected IVariableNode findConstant(String name, IClassNode node)
+    {
+        IDefinitionNode[] nodes = node.getAllMemberNodes();
+        for (IDefinitionNode inode : nodes)
+        {
+            if (inode.getDefinition() instanceof IConstantDefinition
+                    && inode.getName().equals(name))
+                return (IVariableNode) inode;
+        }
+        return null;
     }
 
     protected IVariableNode findField(String name, IClassNode node)

@@ -29,6 +29,10 @@ import randori.webkit.page.Window;
 
 public class ClassB extends ClassA
 {
+    [Factory(factoryClass="flash.utils.FlashEmbed.getEmbed",type="flash.display.Bitmap")]
+    [Embed(source = "../startup.jpg")]
+    private var Background:Class;
+    
     protected static const REGEXP:RegExp = /^\s+|\s+$/g;
     
     private static const SAMPLEMAP:Object = new Object();

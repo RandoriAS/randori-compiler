@@ -40,12 +40,13 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("ClassB", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB = function(param1, param2, param3) {"
-                + "\n\tthis.modela = null;\n\tthis.sAncestors = [];\n\tthis."
-                + "tempClass = null;\n\tthis._stageInstance = null;\n\tthis."
-                + "thenContracts = null;\n\tthis.field3 = null;\n\tthis.field2"
-                + " = 42;\n\tthis.field1 = \"Hello\";\n\tthis.j = null;\n\tthis."
-                + "mQuadBatches = null;\n\tthis.names = null;\n\tdemo.foo.ClassA"
-                + ".call(this, param1);\n\tthis.field2 = param2;\n}");
+                + "\n\tthis.modela = null;\n\tthis.sAncestors = [];\n\tthis.tempClass = "
+                + "null;\n\tthis._stageInstance = null;\n\tthis.Background = "
+                + "flash.utils.FlashEmbed.getEmbed(\"flash.display.Bitmap\", "
+                + "{source:\"../startup.jpg\"});\n\tthis.thenContracts = null;\n\t"
+                + "this.field3 = null;\n\tthis.field2 = 42;\n\tthis.field1 = \"Hello\";"
+                + "\n\tthis.j = null;\n\tthis.mQuadBatches = null;\n\tthis.names = null;"
+                + "\n\tdemo.foo.ClassA.call(this, param1);\n\tthis.field2 = param2;\n}");
     }
 
     @Test

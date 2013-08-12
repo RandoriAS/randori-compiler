@@ -59,7 +59,7 @@ public class FieldEmitter extends BaseSubEmitter implements
     {
         if (node instanceof IEmbedNode)
             return; // TODO what is Embed node going to do
-        
+
         if (node == null)
             return;
 
