@@ -922,6 +922,35 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void static_access_var()
+    {
+        IFunctionNode node = findFunction("static_access_var", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.static_access_var = function() {"
+                + "\n\tvar s = demo.foo.ClassB.FOO;\n\tvar s2 = demo.foo.ClassB.FOO;\n}");
+    }
+
+    @Ignore
+    // #147
+    @Test
+    public void multiple_setter_declarations()
+    {
+        IFunctionNode node = findFunction("multiple_setter_declarations",
+                classNode);
+        visitor.visitFunction(node);
+        assertOut("");
+    }
+
+    @Test
+    public void full_qualified_class_new()
+    {
+        IFunctionNode node = findFunction("full_qualified_class_new", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.full_qualified_class_new = function() {"
+                + "\n\tnew demo.foo.support.BugS();\n\tnew demo.foo.support.BugS();\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);

@@ -2,6 +2,7 @@ package demo.foo
 {
 
 import demo.foo.support.AnotherStaticClass;
+import demo.foo.support.BugS;
 import demo.foo.support.Chance;
 import demo.foo.support.CharacterParam;
 import demo.foo.support.MapTypeIdExportFalse;
@@ -500,7 +501,11 @@ public class ClassB extends ClassA
         super.goo = super.goo;
     }
     
-    override public function get foo(value:Object):void
+    override public function get foo():Object
+    {
+    }
+    
+    override public function set foo(value:Object):void
     {
     }
     
@@ -664,6 +669,25 @@ public class ClassB extends ClassA
     {
         StaticClass3.static4.instanceMethod(42, 411);
     }
+    
+    public function static_access_var():void 
+    {
+        var s:Object = FOO;
+        var s2:Object = ClassB.FOO;
+    }
+    
+    public function multiple_setter_declarations():void 
+    {
+        field3.data = field3.foo = field3.data + '42';
+    }
+    
+    public function full_qualified_class_new():void 
+    {
+        new demo.foo.support.BugS();
+        new BugS();
+    }
+    
+    
 }
 }
 
