@@ -25,7 +25,9 @@ import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.IParameterDefinition;
+import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
+import org.apache.flex.compiler.internal.definitions.ClassTraitsDefinition;
 import org.apache.flex.compiler.internal.tree.as.ArrayLiteralNode;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.ASTNodeID;
@@ -259,13 +261,28 @@ public class IdentifierEmitter extends BaseSubEmitter implements
                 write(headName + ".");
             }
             else if (node.getParent().getNodeID() == ASTNodeID.MemberAccessExpressionID
-                    && node.getParent().getParent().getNodeID() != ASTNodeID.MemberAccessExpressionID
                     && definition.isStatic())
             {
-                headName = RandoriUtils.toTypeAccessQualifiedName(
-                        definition.getNode(), getProject());
-                write(headName + ".");
+                IMemberAccessExpressionNode possibleType = (IMemberAccessExpressionNode) node
+                        .getParent();
+                IExpressionNode left = possibleType.getLeftOperandNode();
+                ITypeDefinition type = left.resolveType(getProject());
+                if (!(type instanceof ClassTraitsDefinition))
+                {
+                    headName = RandoriUtils.toTypeAccessQualifiedName(
+                            definition.getNode(), getProject());
+                    write(headName + ".");
+                }
+
             }
+            //            else if (node.getParent().getNodeID() == ASTNodeID.MemberAccessExpressionID
+            //                    && node.getParent().getParent().getNodeID() != ASTNodeID.MemberAccessExpressionID
+            //                    && definition.isStatic())
+            //            {
+            //                headName = RandoriUtils.toTypeAccessQualifiedName(
+            //                        definition.getNode(), getProject());
+            //                write(headName + ".");
+            //            }
 
             if (getModel().isInAssignment()
                     && ExpressionUtils.isRight(getModel().getAssign(), node))
