@@ -1179,8 +1179,29 @@ public class ASEmitter implements IASEmitter, IEmitter
         // initializer
         if (node0 != null)
         {
-            getWalker().walk(node0);
-            write(";");
+            if (node0 instanceof IContainerNode)
+            {
+                IContainerNode cnode = (IContainerNode) node0;
+                int len = cnode.getChildCount();
+                write("var ");
+                for (int i = 0; i < len; i++)
+                {
+                    IVariableExpressionNode child = (IVariableExpressionNode) cnode
+                            .getChild(i);
+                    String string = stringifyNode(child);
+                    write(string.replace("var ", ""));
+                    if (i < len - 1)
+                        write(", ");
+                    
+                }
+                write(";");
+            }
+            else
+            {
+                getWalker().walk(node0);
+                write(";");
+            }
+
             if (node1.getNodeID() != ASTNodeID.NilID)
                 write(" ");
         }

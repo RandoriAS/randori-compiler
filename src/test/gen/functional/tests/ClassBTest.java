@@ -985,6 +985,17 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void multiple_declarations_in_for_container()
+    {
+        IFunctionNode node = findFunction(
+                "multiple_declarations_in_for_container", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.multiple_declarations_in_for_container = "
+                + "function() {\n\tvar k = 0;\n\tfor (var i = 0, j = 10; i < j; ++i)"
+                + "\n\t\tk += i * j;\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
