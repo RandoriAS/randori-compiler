@@ -36,6 +36,7 @@ import org.apache.flex.compiler.internal.definitions.AppliedVectorDefinition;
 import org.apache.flex.compiler.internal.definitions.ClassTraitsDefinition;
 import org.apache.flex.compiler.internal.tree.as.ContainerNode;
 import org.apache.flex.compiler.internal.tree.as.FunctionCallNode;
+import org.apache.flex.compiler.internal.tree.as.NumericLiteralNode;
 import org.apache.flex.compiler.internal.tree.as.TypedExpressionNode;
 import org.apache.flex.compiler.internal.tree.as.VectorLiteralNode;
 import org.apache.flex.compiler.projects.ICompilerProject;
@@ -57,6 +58,7 @@ import randori.compiler.internal.utils.MetaDataUtils.MetaData;
 import randori.compiler.internal.utils.MetaDataUtils.MetaData.Mode;
 import randori.compiler.internal.utils.RandoriUtils;
 import randori.compiler.problems.CannotCallPrivateConstructorProblem;
+import sun.net.www.protocol.gopher.GopherClient;
 
 /**
  * Handles the production of the {@link IFunctionCallNode}.
@@ -235,7 +237,37 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
             else if (newDefinition instanceof AppliedVectorDefinition)
             {
                 write("[");
-                walkParameters(node);
+                IExpressionNode[] argumentNodes = node.getArgumentNodes();
+                AppliedVectorDefinition vector = (AppliedVectorDefinition) newDefinition;
+                if (argumentNodes.length == 1)
+                {
+                    IExpressionNode arg = argumentNodes[0];
+                    if (arg.getNodeID() == ASTNodeID.LiteralIntegerID)
+                    {
+                        NumericLiteralNode literal = (NumericLiteralNode) arg;
+                        Integer value = Integer.parseInt(literal.getValue());
+                        // IE String, int
+                        String vectorElementType = vector.getBaseName();
+                        String defaultValue = "null";
+                        if (vectorElementType.contains("Number")
+                                || vectorElementType.contains("int")
+                                || vectorElementType.contains("unit"))
+                        {
+                            defaultValue = "0";
+                        }
+                        for (int i = 0; i < value; i++)
+                        {
+                            write(defaultValue);
+                            if (i < value - 1)
+                                write(", ");
+                        }
+                    }
+                }
+                else
+                {
+                    walkParameters(node);
+                }
+
                 write("]");
                 return;
             }
