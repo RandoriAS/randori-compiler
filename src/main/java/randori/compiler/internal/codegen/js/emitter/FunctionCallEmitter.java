@@ -58,7 +58,6 @@ import randori.compiler.internal.utils.MetaDataUtils.MetaData;
 import randori.compiler.internal.utils.MetaDataUtils.MetaData.Mode;
 import randori.compiler.internal.utils.RandoriUtils;
 import randori.compiler.problems.CannotCallPrivateConstructorProblem;
-import sun.net.www.protocol.gopher.GopherClient;
 
 /**
  * Handles the production of the {@link IFunctionCallNode}.

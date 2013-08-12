@@ -974,6 +974,17 @@ public class ClassBTest extends FunctionalTestBase
     }
 
     @Test
+    public void delegate_assignment()
+    {
+        IFunctionNode node = findFunction("delegate_assignment", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.delegate_assignment = function() {"
+                + "\n\tthis.set_onComplete(demo.foo.ClassB.onSelectHandler);"
+                + "\n\tthis.set_renderFunction($createStaticDelegate(this, "
+                + "this.get_onComplete));\n}");
+    }
+
+    @Test
     public void test_file()
     {
         visitor.visitFile(fileNode);
