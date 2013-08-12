@@ -928,7 +928,8 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("static_access_var", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.static_access_var = function() {"
-                + "\n\tvar s = demo.foo.ClassB.FOO;\n\tvar s2 = demo.foo.ClassB.FOO;\n}");
+                + "\n\tvar s1 = demo.foo.ClassB.get_myObject();\n\tvar s = "
+                + "demo.foo.ClassB.FOO;\n\tvar s2 = demo.foo.ClassB.FOO;\n}");
     }
 
     @Ignore

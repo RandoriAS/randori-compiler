@@ -676,6 +676,7 @@ public class ClassB extends ClassA
     
     public function static_access_var():void 
     {
+        var s1:Object = ClassB.myObject;
         var s:Object = FOO;
         var s2:Object = ClassB.FOO;
     }
