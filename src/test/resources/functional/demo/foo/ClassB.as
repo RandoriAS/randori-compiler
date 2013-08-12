@@ -716,6 +716,12 @@ public class ClassB extends ClassA
         this.renderFunction = onComplete;
     }
     
+    public function multiple_declarations_in_for_container():void 
+    {
+        var k:int = 0;
+        for (var i:int=0, j:int=10; i<j; ++i)
+            k += i * j;
+    }
 }
 }
 
