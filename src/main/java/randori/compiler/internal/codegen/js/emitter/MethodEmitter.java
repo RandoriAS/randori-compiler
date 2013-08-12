@@ -19,6 +19,7 @@
 
 package randori.compiler.internal.codegen.js.emitter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.flex.compiler.definitions.IAccessorDefinition;
@@ -27,6 +28,8 @@ import org.apache.flex.compiler.definitions.IConstantDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
+import org.apache.flex.compiler.definitions.metadata.IMetaTag;
+import org.apache.flex.compiler.definitions.metadata.IMetaTagAttribute;
 import org.apache.flex.compiler.internal.tree.as.FunctionNode;
 import org.apache.flex.compiler.tree.as.IASNode;
 import org.apache.flex.compiler.tree.as.IClassNode;
@@ -69,9 +72,9 @@ public class MethodEmitter extends BaseSubEmitter implements
         write(" = function() ");
         writeNewline("{", true);
         // we have a synthesized constructor, implict
-        
+
         getModel().setInScope(true);
-        
+
         emitConstructorFieldInitializers(definition);
         String qualifiedName = DefinitionUtils.toBaseClassQualifiedName(
                 (ITypeDefinition) definition.getParent(), getWalker()
@@ -82,7 +85,7 @@ public class MethodEmitter extends BaseSubEmitter implements
         }
 
         getModel().setInScope(false);
-        
+
         indentPop();
         writeNewline();
         write("}");
@@ -191,6 +194,13 @@ public class MethodEmitter extends BaseSubEmitter implements
         //int i = 0;
         for (IVariableDefinition field : fields)
         {
+            IMetaTag tag = field.getMetaTagByName("Embed");
+            if (tag != null)
+            {
+                emitEmbed(field);
+                writeNewline(";");
+                continue;
+            }
             if (field instanceof IAccessorDefinition)
                 continue;
             // constants do not get initialized
@@ -212,5 +222,67 @@ public class MethodEmitter extends BaseSubEmitter implements
             //else
             //     write(";");
         }
+    }
+
+    private void emitEmbed(IVariableDefinition field)
+    {
+        IMetaTag factoryTag = field.getMetaTagByName("Factory");
+        IMetaTag embedTag = field.getMetaTagByName("Embed");
+
+        write("this.");
+        write(field.getBaseName());
+        write(" = ");
+
+        String factory = factoryTag.getAttributeValue("factoryClass");
+        String type = factoryTag.getAttributeValue("type");
+
+        write(factory);
+        write("(");
+
+        write("\"");
+        write(type);
+        write("\"");
+        write(", ");
+
+        IMetaTagAttribute[] atts1 = factoryTag.getAllAttributes();
+        IMetaTagAttribute[] atts2 = embedTag.getAllAttributes();
+
+        // write properties
+        List<IMetaTagAttribute> list = new ArrayList<IMetaTagAttribute>();
+        for (IMetaTagAttribute att : atts1)
+        {
+            if (!att.getKey().equals("factoryClass")
+                    && !att.getKey().equals("type"))
+            {
+                list.add(att);
+            }
+        }
+
+        for (IMetaTagAttribute att : atts2)
+        {
+            //if (!att.getKey().equals("source"))
+            //{
+                list.add(att);
+           // }
+        }
+
+        write("{");
+        int i = 0;
+        final int len = list.size();
+        for (IMetaTagAttribute attribute : list)
+        {
+            write(attribute.getKey());
+            write(":");
+            write("\"");
+            write(attribute.getValue());
+            write("\"");
+            if (i < len - 1)
+                write(", ");
+            i++;
+        }
+        write("}");
+
+        write(")");
+
     }
 }

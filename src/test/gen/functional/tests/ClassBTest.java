@@ -40,12 +40,13 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("ClassB", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB = function(param1, param2, param3) {"
-                + "\n\tthis.modela = null;\n\tthis.sAncestors = [];\n\tthis."
-                + "tempClass = null;\n\tthis._stageInstance = null;\n\tthis."
-                + "thenContracts = null;\n\tthis.field3 = null;\n\tthis.field2"
-                + " = 42;\n\tthis.field1 = \"Hello\";\n\tthis.j = null;\n\tthis."
-                + "mQuadBatches = null;\n\tthis.names = null;\n\tdemo.foo.ClassA"
-                + ".call(this, param1);\n\tthis.field2 = param2;\n}");
+                + "\n\tthis.modela = null;\n\tthis.sAncestors = [];\n\tthis.tempClass = "
+                + "null;\n\tthis._stageInstance = null;\n\tthis.Background = "
+                + "flash.utils.FlashEmbed.getEmbed(\"flash.display.Bitmap\", "
+                + "{source:\"../startup.jpg\"});\n\tthis.thenContracts = null;\n\t"
+                + "this.field3 = null;\n\tthis.field2 = 42;\n\tthis.field1 = \"Hello\";"
+                + "\n\tthis.j = null;\n\tthis.mQuadBatches = null;\n\tthis.names = null;"
+                + "\n\tdemo.foo.ClassA.call(this, param1);\n\tthis.field2 = param2;\n}");
     }
 
     @Test
@@ -993,6 +994,19 @@ public class ClassBTest extends FunctionalTestBase
         assertOut("demo.foo.ClassB.prototype.multiple_declarations_in_for_container = "
                 + "function() {\n\tvar k = 0;\n\tfor (var i = 0, j = 10; i < j; ++i)"
                 + "\n\t\tk += i * j;\n}");
+    }
+
+    @Test
+    public void multiple_nested_for()
+    {
+        IFunctionNode node = findFunction("multiple_nested_for", classNode);
+        visitor.visitFunction(node);
+        assertOut("demo.foo.ClassB.prototype.multiple_nested_for = function() {"
+                + "\n\tvar total = 0;\n\tvar $1;\n\tfor (var $0 in ($1 = [1, 2, 3])){"
+                + "\n\t\tvar keyA = $1[$0];\n\t\tvar $2;\n\t\tfor (var $1 in ($2 = "
+                + "[4, 5, 6])){\n\t\t\tvar keyB = $2[$1];\n\t\t\tvar $3;\n\t\t\tfor "
+                + "(var $2 in ($3 = [7, 8, 9])){\n\t\t\t\tvar keyC = $3[$2];\n\t\t\t\t"
+                + "total += keyA + keyB + keyC\n\t\t\t}\n\t\t}\n\t}\n}");
     }
 
     @Test
