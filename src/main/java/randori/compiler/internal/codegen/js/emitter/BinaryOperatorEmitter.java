@@ -21,6 +21,7 @@ package randori.compiler.internal.codegen.js.emitter;
 
 import org.apache.flex.compiler.definitions.IAccessorDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
+import org.apache.flex.compiler.definitions.IFunctionDefinition;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.ASTNodeID;
 import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
@@ -31,6 +32,7 @@ import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
 import randori.compiler.internal.utils.ASNodeUtils;
+import randori.compiler.internal.utils.DefinitionNameUtils;
 import randori.compiler.internal.utils.ExpressionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
 import randori.compiler.internal.utils.RandoriUtils;
@@ -58,7 +60,7 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
         IDefinition lhsDefinition = left.resolve(project);
 
         IExpressionNode right = node.getRightOperandNode();
-        //IDefinition rhsDefinition = right.resolve(project);
+        IDefinition rhsDefinition = right.resolve(project);
 
         // Compound statements
         if (ExpressionUtils.isCompoundAssignment(node, lhsDefinition))
@@ -98,7 +100,58 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
         boolean wasAssignment = getModel().isInAssignment();
         getModel().setInAssignment(false);
 
-        getEmitter().getWalker().walk(right);
+        if (rhsDefinition instanceof IFunctionDefinition
+                && right instanceof IIdentifierNode)
+        {
+            // this is not a right hand function call, just a reff to accessor or function
+            write(IRandoriEmitter.STATIC_DELEGATE_NAME);
+            String pre = "this";
+            String parentQName = DefinitionNameUtils.toExportQualifiedName(
+                    rhsDefinition.getParent(), getProject());
+            if (rhsDefinition.isStatic())
+            {
+                pre = parentQName;
+            }
+            String name = getEmitter().stringifyNode(right);
+            if (name.contains("get_"))
+            {
+                name = "get_";
+            }
+            else if (name.contains("set_"))
+            {
+                name = "set_";
+            }
+            else
+            {
+                name = "";
+            }
+            write("(" + pre + ", ");
+            write(pre);
+            write(".");
+            write(name + rhsDefinition.getBaseName());
+            write(")");
+        }
+        //        else if (rhsDefinition instanceof IVariableDefinition
+        //                && right instanceof IIdentifierNode)
+        //        {
+        //            write(IRandoriEmitter.STATIC_DELEGATE_NAME);
+        //            String pre = "this";
+        //            String parentQName = DefinitionNameUtils.toExportQualifiedName(
+        //                    rhsDefinition.getParent(), getProject());
+        //            if (rhsDefinition.isStatic())
+        //            {
+        //                pre = parentQName;
+        //            }
+        //            write("(" + pre + ", ");
+        //            write(pre);
+        //            write(".");
+        //            write(rhsDefinition.getBaseName());
+        //            write(")");
+        //        }
+        else
+        {
+            getEmitter().getWalker().walk(right);
+        }
 
         RandoriUtils.addBinaryRightDependency(right, getModel(), getProject());
 

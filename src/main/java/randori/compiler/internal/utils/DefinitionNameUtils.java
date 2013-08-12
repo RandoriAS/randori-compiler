@@ -43,14 +43,16 @@ public class DefinitionNameUtils
     public static String toExportQualifiedName(IDefinition definition,
             ICompilerProject project)
     {
-        IClassNode typeNode = (IClassNode) DefinitionUtils
-                .findParentTypeNode(definition.getNode().getParent());
+        IClassNode typeNode = null;
         if (definition instanceof ITypeDefinition)
         {
             typeNode = (IClassNode) definition.getNode();
             return MetaDataUtils.getExportQualifiedName(typeNode
                     .getDefinition());
         }
+
+        typeNode = (IClassNode) DefinitionUtils.findParentTypeNode(definition
+                .getNode().getParent());
         String qualifiedName = MetaDataUtils.getExportQualifiedName(typeNode
                 .getDefinition());
         String baseName = definition.getBaseName();

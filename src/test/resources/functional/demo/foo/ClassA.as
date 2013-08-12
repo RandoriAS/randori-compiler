@@ -13,6 +13,8 @@ public class ClassA
         return null;
     }
     
+    public function set renderFunction(value:Function):void {}
+    
     public function get menuItem():MenuItem2
     {
         return null;

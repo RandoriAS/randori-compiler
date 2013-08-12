@@ -707,6 +707,15 @@ public class ClassB extends ClassA
         var objs:Vector.<Object> = new Vector.<Object>(10);
     }
     
+    public function get onComplete():Function { return null; }
+    public function set onComplete(value:Function):void { }
+    
+    public function delegate_assignment():void 
+    {
+        onComplete = onSelectHandler;
+        this.renderFunction = onComplete;
+    }
+    
 }
 }
 
