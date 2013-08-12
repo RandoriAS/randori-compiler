@@ -249,6 +249,9 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     @Override
     public void emitClass(IClassNode node)
     {
+        forInitCounter = 0;
+        forInitCounter = 1;
+        
         // fields, methods
         final IDefinitionNode[] members = node.getAllMemberNodes();
         if (members.length > 0)
@@ -440,18 +443,25 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     {
     }
 
+    private int forInitCounter = 0;
+
+    private int forCounter = 1;
+
     @Override
     public void emitForEachLoop(IForLoopNode node)
     {
         IContainerNode conditionalNode = node.getConditionalsContainerNode();
         IContainerNode containerNode = (IContainerNode) node.getChild(1);
 
-        writeNewline("var $1;");
+        final int value = forInitCounter++;
+        final int name = forCounter++;
+
+        writeNewline("var $" + name + ";");
         writeToken("for");
-        write("(var $0");
+        write("(var $" + value);
         IBinaryOperatorNode bnode = (IBinaryOperatorNode) conditionalNode
                 .getChild(0);
-        write(" in ($1 = ");
+        write(" in ($" + name + " = ");
         getWalker().walk(bnode.getRightOperandNode());
         write("))");
 
@@ -469,7 +479,7 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
             if (i == 0)
             {
                 getWalker().walk(bnode.getLeftOperandNode());
-                writeNewline(" = $1[$0];");
+                writeNewline(" = $" + name + "[$" + value + "];");
             }
 
             getWalker().walk(node.getStatementContentsNode().getChild(i));
