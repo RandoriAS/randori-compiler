@@ -36,7 +36,7 @@ public class VersionInfo
     public static final String RANDORI_BUILD = "1";
     public static final String RANDORI_BUILD_VERSION = "1";
 
-    public static final String RANDORI_COMPILER_VERSION = "0.2.5.2";
+    public static final String RANDORI_COMPILER_VERSION = "0.2.6";
     public static final String RANDORI_COMPILER_NAME = "randori";
 
     public static final String LIB_VERSION_1_0 = "1.0";
