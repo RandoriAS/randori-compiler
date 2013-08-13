@@ -250,7 +250,6 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     public void emitClass(IClassNode node)
     {
         forInitCounter = 0;
-        forInitCounter = 1;
         
         // fields, methods
         final IDefinitionNode[] members = node.getAllMemberNodes();
@@ -445,16 +444,16 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
 
     private int forInitCounter = 0;
 
-    private int forCounter = 1;
-
     @Override
     public void emitForEachLoop(IForLoopNode node)
     {
         IContainerNode conditionalNode = node.getConditionalsContainerNode();
         IContainerNode containerNode = (IContainerNode) node.getChild(1);
 
-        final int value = forInitCounter++;
-        final int name = forCounter++;
+
+        final String value = "v" + forInitCounter;
+        final String name = "n" + forInitCounter;
+        forInitCounter++;
 
         writeNewline("var $" + name + ";");
         writeToken("for");
