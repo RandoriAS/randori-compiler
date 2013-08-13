@@ -1003,10 +1003,10 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("multiple_nested_for", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.multiple_nested_for = function() {"
-                + "\n\tvar total = 0;\n\tvar $1;\n\tfor (var $0 in ($1 = [1, 2, 3])){"
-                + "\n\t\tvar keyA = $1[$0];\n\t\tvar $2;\n\t\tfor (var $1 in ($2 = "
-                + "[4, 5, 6])){\n\t\t\tvar keyB = $2[$1];\n\t\t\tvar $3;\n\t\t\tfor "
-                + "(var $2 in ($3 = [7, 8, 9])){\n\t\t\t\tvar keyC = $3[$2];\n\t\t\t\t"
+                + "\n\tvar total = 0;\n\tvar $n0;\n\tfor (var $v0 in ($n0 = [1, 2, 3])){"
+                + "\n\t\tvar keyA = $n0[$v0];\n\t\tvar $n1;\n\t\tfor (var $v1 in ($n1 = "
+                + "[4, 5, 6])){\n\t\t\tvar keyB = $n1[$v1];\n\t\t\tvar $n2;\n\t\t\tfor "
+                + "(var $v2 in ($n2 = [7, 8, 9])){\n\t\t\t\tvar keyC = $n2[$v2];\n\t\t\t\t"
                 + "total += keyA + keyB + keyC\n\t\t\t}\n\t\t}\n\t}\n}");
     }
 
