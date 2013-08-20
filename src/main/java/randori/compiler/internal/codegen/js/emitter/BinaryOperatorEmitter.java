@@ -55,6 +55,20 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
     @Override
     public void emit(IBinaryOperatorNode node)
     {
+        // THIS IS HARD CODED "filter" but maybe needs to be dynamic at some point
+        // "filter" is applied to E4X expressions and is implemented in JXONTree
+        boolean isFilter = false;
+        if (node instanceof ExpressionNodeBase)
+        {
+            //  Ensure we're not in a with scope or part of a filter expression.
+            final ExpressionNodeBase expressionNode = (ExpressionNodeBase)node;
+            if (expressionNode.inFilter() && expressionNode.hasParenthesis())
+            {
+                isFilter = true;
+                write("filter");
+            }
+        }
+
         ICompilerProject project = getEmitter().getWalker().getProject();
 
         IExpressionNode left = node.getLeftOperandNode();
@@ -72,6 +86,8 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
 
         if (ASNodeUtils.hasParenOpen(node))
             write("(");
+        if (isFilter)
+            write("'");
 
         // if on the left side with '=' , we are in setter mode
         getModel().setInAssignment(ExpressionUtils.isInAssignment(node));
@@ -161,6 +177,8 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
             writeIfNotNative(")", lhsDefinition);
         }
 
+        if (isFilter)
+            write("'");
         if (ASNodeUtils.hasParenClose(node))
             write(")");
     }
