@@ -72,8 +72,6 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
 
         if (ASNodeUtils.hasParenOpen(node))
             write("(");
-        if (isFilter)
-            write("'");
 
         // if on the left side with '=' , we are in setter mode
         getModel().setInAssignment(ExpressionUtils.isInAssignment(node));
