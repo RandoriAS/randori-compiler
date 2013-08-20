@@ -78,6 +78,7 @@ import randori.compiler.internal.utils.MetaDataUtils;
 import randori.compiler.internal.utils.MetaDataUtils.MetaData.Mode;
 import randori.compiler.internal.utils.RandoriUtils;
 
+import org.apache.flex.compiler.internal.tree.as.ExpressionNodeBase;
 /**
  * The base ship...
  * 
@@ -282,7 +283,6 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
             for (IDefinitionNode member : members)
             {
                 IDefinition definition = member.getDefinition();
-
                 if (member.getNodeID() == ASTNodeID.FunctionID)
                 {
                     if (((IFunctionDefinition) definition).isConstructor())
@@ -642,6 +642,7 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
     @Override
     public void emitUnaryOperator(IUnaryOperatorNode node)
     {
+        
         if (node.getNodeID() == ASTNodeID.Op_PreIncrID
                 || node.getNodeID() == ASTNodeID.Op_PreDecrID
                 || node.getNodeID() == ASTNodeID.Op_BitwiseNotID
@@ -673,6 +674,25 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
             write("(");
             getWalker().walk(node.getOperandNode());
             write(")");
+        }
+        else if (node.getNodeID() == ASTNodeID.Op_AtID)
+        {
+            if (node instanceof ExpressionNodeBase )
+            {
+                //  Ensure we're not in a with scope or part of a filter expression.
+                final ExpressionNodeBase expressionNode = (ExpressionNodeBase)node;
+                if (expressionNode.inFilter())        
+                {
+                    getWalker().walk(node.getOperandNode());
+                    return;
+                }
+            }
+
+            write("attribute(");
+            getWalker().walk(node.getOperandNode());
+            write(")");
+            
+            //write(node.getOperator().getOperatorText());
         }
     }
 

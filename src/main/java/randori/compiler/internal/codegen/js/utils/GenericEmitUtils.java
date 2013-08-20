@@ -19,23 +19,25 @@
 
 package randori.compiler.internal.codegen.js.utils;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.flex.compiler.constants.IASKeywordConstants;
+import org.apache.flex.compiler.definitions.IFunctionDefinition;
+import org.apache.flex.compiler.definitions.IParameterDefinition;
+import org.apache.flex.compiler.definitions.IVariableDefinition;
+import org.apache.flex.compiler.definitions.metadata.IMetaTag;
+import org.apache.flex.compiler.definitions.metadata.IMetaTagAttribute;
+import org.apache.flex.compiler.internal.definitions.metadata.MetaTagAttribute;
+import org.apache.flex.compiler.projects.ICompilerProject;
+import org.apache.flex.compiler.tree.as.*;
+import randori.compiler.codegen.as.IASEmitter;
+import randori.compiler.codegen.js.IRandoriEmitter;
+import randori.compiler.internal.utils.DefinitionUtils;
+import randori.compiler.internal.utils.ExpressionUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.flex.compiler.constants.IASKeywordConstants;
-import org.apache.flex.compiler.definitions.IFunctionDefinition;
-import org.apache.flex.compiler.definitions.IParameterDefinition;
-import org.apache.flex.compiler.projects.ICompilerProject;
-import org.apache.flex.compiler.tree.as.IExpressionNode;
-import org.apache.flex.compiler.tree.as.IFunctionCallNode;
-import org.apache.flex.compiler.tree.as.IFunctionNode;
-import org.apache.flex.compiler.tree.as.IParameterNode;
-
-import randori.compiler.codegen.as.IASEmitter;
-import randori.compiler.internal.utils.DefinitionUtils;
-import randori.compiler.internal.utils.ExpressionUtils;
 
 /**
  * @author Michael Schmalle
@@ -199,5 +201,71 @@ public class GenericEmitUtils
                 }
             }
         }
+    }
+
+
+    public static final void emitEmbedFactory(IMetaTag factoryTag, IMetaTag embedTag, IVariableDefinition field,
+            IASEmitter emitter)
+    {
+        String factory = factoryTag.getAttributeValue("factoryClass");
+        String type = factoryTag.getAttributeValue("type");
+
+
+        emitter.write(factory);
+        emitter.write("(");
+
+        emitter.write("\"");
+        emitter.write(type);
+        emitter.write("\"");
+        emitter.write(", ");
+
+        IMetaTagAttribute[] atts1 = factoryTag.getAllAttributes();
+
+        // write properties
+        List<IMetaTagAttribute> list = new ArrayList<IMetaTagAttribute>();
+        for (IMetaTagAttribute att : atts1)
+        {
+            if (!att.getKey().equals("factoryClass")
+                    && !att.getKey().equals("type"))
+            {
+                list.add(att);
+            }
+        }
+        if (embedTag != null)
+        {
+            IMetaTagAttribute[] atts2 = embedTag.getAllAttributes();
+            for (IMetaTagAttribute att : atts2)
+            {
+                //if (!att.getKey().equals("source"))
+                //{
+                    list.add(att);
+               // }
+            }
+        }
+        else
+        {
+            // Use the value as the source
+            String value = DefinitionUtils.returnInitialVariableValue(
+                    (IVariableNode) field.getNode(), (IRandoriEmitter) emitter);
+            list.add(new MetaTagAttribute("source", StringEscapeUtils.escapeJava(value)));
+        }
+
+        emitter.write("{");
+        int i = 0;
+        final int len = list.size();
+        for (IMetaTagAttribute attribute : list)
+        {
+            emitter.write(attribute.getKey());
+            emitter.write(":");
+            emitter.write("\"");
+            emitter.write(attribute.getValue());
+            emitter.write("\"");
+            if (i < len - 1)
+                emitter.write(", ");
+            i++;
+        }
+        emitter.write("}");
+
+        emitter.write(")");
     }
 }

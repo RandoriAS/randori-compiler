@@ -72,6 +72,8 @@ import org.apache.flex.compiler.tree.metadata.IMetaTagsNode;
 import randori.compiler.visitor.as.IASNodeStrategy;
 import randori.compiler.visitor.as.IASNodeVisitor;
 
+import org.apache.flex.compiler.internal.tree.as.ExpressionNodeBase;
+
 /**
  * The {@link ASNodeSwitch} class is an {@link IASNodeStrategy} implementation
  * that handles {@link IASNode} types based on the node interface type.
@@ -100,6 +102,7 @@ public class ASNodeSwitch implements IASNodeStrategy
     @Override
     public void handle(IASNode node)
     {
+        //System.out.println("ASNodeSwitch::handle NodeID: " + node.getNodeID());
         // TODO (mschmalle) Still working on the switch, its complication in the expressions
         switch (node.getNodeID())
         {

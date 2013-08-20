@@ -37,6 +37,7 @@ import randori.compiler.internal.utils.ExpressionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
 import randori.compiler.internal.utils.RandoriUtils;
 
+import org.apache.flex.compiler.internal.tree.as.ExpressionNodeBase;
 /**
  * Handles the production of the {@link IBinaryOperatorNode}.
  * 
@@ -54,6 +55,19 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
     @Override
     public void emit(IBinaryOperatorNode node)
     {
+        // THIS IS HARD CODED "filter" but maybe needs to be dynamic
+        boolean isFilter = false;
+        if (node instanceof ExpressionNodeBase)
+        {
+            //  Ensure we're not in a with scope or part of a filter expression.
+            final ExpressionNodeBase expressionNode = (ExpressionNodeBase)node;
+            if (expressionNode.inFilter() && expressionNode.hasParenthesis())        
+            {
+                isFilter = true;
+                write("filter");
+            }
+        }
+
         ICompilerProject project = getEmitter().getWalker().getProject();
 
         IExpressionNode left = node.getLeftOperandNode();
@@ -71,6 +85,8 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
 
         if (ASNodeUtils.hasParenOpen(node))
             write("(");
+        if (isFilter)
+            write("'");
 
         // if on the left side with '=' , we are in setter mode
         getModel().setInAssignment(ExpressionUtils.isInAssignment(node));
@@ -103,8 +119,9 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
         if (rhsDefinition instanceof IFunctionDefinition
                 && right instanceof IIdentifierNode)
         {
+
             // this is not a right hand function call, just a reff to accessor or function
-            write(IRandoriEmitter.STATIC_DELEGATE_NAME);
+
             String pre = "this";
             String parentQName = DefinitionNameUtils.toExportQualifiedName(
                     rhsDefinition.getParent(), getProject());
@@ -113,23 +130,21 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
                 pre = parentQName;
             }
             String name = getEmitter().stringifyNode(right);
-            if (name.contains("get_"))
+            if (name.contains("get_")
+                || name.contains("set_"))
             {
-                name = "get_";
-            }
-            else if (name.contains("set_"))
-            {
-                name = "set_";
+                getEmitter().getWalker().walk(right);
             }
             else
             {
                 name = "";
+                write(IRandoriEmitter.STATIC_DELEGATE_NAME);
+                write("(" + pre + ", ");
+                write(pre);
+                write(".");
+                write(name + rhsDefinition.getBaseName());
+                write(")");
             }
-            write("(" + pre + ", ");
-            write(pre);
-            write(".");
-            write(name + rhsDefinition.getBaseName());
-            write(")");
         }
         //        else if (rhsDefinition instanceof IVariableDefinition
         //                && right instanceof IIdentifierNode)
@@ -161,6 +176,8 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
             writeIfNotNative(")", lhsDefinition);
         }
 
+        if (isFilter)
+            write("'");
         if (ASNodeUtils.hasParenClose(node))
             write(")");
     }

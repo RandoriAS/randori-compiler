@@ -450,15 +450,15 @@ public class ASBlockWalker implements IASNodeVisitor, IASBlockWalker
                 || node.getLiteralType() == LiteralType.NUMBER
                 || node.getLiteralType() == LiteralType.REGEXP
                 || node.getLiteralType() == LiteralType.STRING
-                || node.getLiteralType() == LiteralType.VOID)
+                || node.getLiteralType() == LiteralType.VOID
+                || node.getLiteralType() == LiteralType.XML)
         {
             emitter.emitLiteral(node);
         }
         else if (node.getLiteralType() == LiteralType.ARRAY
                 || node.getLiteralType() == LiteralType.OBJECT
                 || node.getLiteralType() == LiteralType.VECTOR
-                || node.getLiteralType() == LiteralType.XMLLIST
-                || node.getLiteralType() == LiteralType.XML)
+                || node.getLiteralType() == LiteralType.XMLLIST)
         {
             emitter.emitLiteralContainer((ILiteralContainerNode) node);
         }
@@ -518,7 +518,7 @@ public class ASBlockWalker implements IASNodeVisitor, IASBlockWalker
     @Override
     public void visitUnaryOperator(IUnaryOperatorNode node)
     {
-        debug("visitUnaryOperator()");
+        debug("visitUnaryOperator()" + node.getOperator().getOperatorText());
         emitter.emitUnaryOperator(node);
     }
 
@@ -621,7 +621,7 @@ public class ASBlockWalker implements IASNodeVisitor, IASBlockWalker
 
     protected void debug(String message)
     {
-        if (isDebug)
+        if (true  || isDebug)
         {
             System.out.println(message);
         }
