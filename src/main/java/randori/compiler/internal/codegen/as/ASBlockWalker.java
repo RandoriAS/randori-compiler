@@ -621,7 +621,7 @@ public class ASBlockWalker implements IASNodeVisitor, IASBlockWalker
 
     protected void debug(String message)
     {
-        if (true  || isDebug)
+        if (isDebug)
         {
             System.out.println(message);
         }
