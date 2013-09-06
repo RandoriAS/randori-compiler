@@ -284,7 +284,6 @@ public class IdentifierEmitter extends BaseSubEmitter implements
             //                        definition.getNode(), getProject());
             //                write(headName + ".");
             //            }
-
             if (getModel().isInAssignment()
                     && ExpressionUtils.isRight(getModel().getAssign(), node))
             {

@@ -58,7 +58,7 @@ public class FieldEmitter extends BaseSubEmitter implements
 
         IMetaTag embedTag = definition.getMetaTagByName("Embed");
         IMetaTag factoryTag = definition.getMetaTagByName("Factory");
-        if (embedTag != null || factoryTag != null)
+        if (factoryTag != null)
         {
 
             write(" ");

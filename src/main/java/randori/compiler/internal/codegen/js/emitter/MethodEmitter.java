@@ -40,6 +40,7 @@ import org.apache.flex.compiler.tree.as.IVariableNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
+import randori.compiler.internal.codegen.js.SessionModel;
 import randori.compiler.internal.codegen.js.utils.GenericEmitUtils;
 import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
@@ -117,6 +118,13 @@ public class MethodEmitter extends BaseSubEmitter implements
                     .getProject());
             write(prefix);
             write(" = function");
+
+            // REE GETTER/SETTER Object.define
+            if (definition instanceof IAccessorDefinition)
+            {
+                SessionModel sm = (SessionModel)getEmitter().getModel();
+                sm.addGetterSetter((IAccessorDefinition)definition);
+            }
 
             getEmitter().emitParamters(node);
             getEmitter().emitMethodScope(node);

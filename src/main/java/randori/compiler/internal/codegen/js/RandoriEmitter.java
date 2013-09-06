@@ -271,6 +271,7 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
                 }
 
                 writeNewline(";");
+                // REE footer.emitNewInherit(node);
             }
         }
 
@@ -675,6 +676,7 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
             getWalker().walk(node.getOperandNode());
             write(")");
         }
+        // E4X @name change to .attribute('name')
         else if (node.getNodeID() == ASTNodeID.Op_AtID)
         {
             if (node instanceof ExpressionNodeBase )
@@ -688,9 +690,9 @@ public class RandoriEmitter extends JSEmitter implements IRandoriEmitter
                 }
             }
 
-            write("attribute(");
+            write("attribute('");
             getWalker().walk(node.getOperandNode());
-            write(")");
+            write("')");
             
             //write(node.getOperator().getOperatorText());
         }

@@ -619,7 +619,7 @@ public class ASBlockWalker implements IASNodeVisitor, IASBlockWalker
     // 
     //--------------------------------------------------------------------------
 
-    protected void debug(String message)
+    public void debug(String message)
     {
         if (isDebug)
         {

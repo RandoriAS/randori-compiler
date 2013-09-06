@@ -207,6 +207,8 @@ public class GenericEmitUtils
     public static final void emitEmbedFactory(IMetaTag factoryTag, IMetaTag embedTag, IVariableDefinition field,
             IASEmitter emitter)
     {
+        if (factoryTag == null)
+            return;
         String factory = factoryTag.getAttributeValue("factoryClass");
         String type = factoryTag.getAttributeValue("type");
 

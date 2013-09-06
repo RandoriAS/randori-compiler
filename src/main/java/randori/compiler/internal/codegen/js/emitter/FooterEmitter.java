@@ -21,12 +21,7 @@ package randori.compiler.internal.codegen.js.emitter;
 
 import java.util.Collection;
 
-import org.apache.flex.compiler.definitions.IClassDefinition;
-import org.apache.flex.compiler.definitions.IFunctionDefinition;
-import org.apache.flex.compiler.definitions.IParameterDefinition;
-import org.apache.flex.compiler.definitions.IScopedDefinition;
-import org.apache.flex.compiler.definitions.ITypeDefinition;
-import org.apache.flex.compiler.definitions.IVariableDefinition;
+import org.apache.flex.compiler.definitions.*;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.tree.as.IClassNode;
 import org.apache.flex.compiler.tree.as.IScopedDefinitionNode;
@@ -34,6 +29,7 @@ import org.apache.flex.compiler.tree.as.IVariableNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
+import randori.compiler.internal.codegen.js.SessionModel;
 import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
 import randori.compiler.internal.utils.RandoriUtils;
@@ -69,6 +65,9 @@ public class FooterEmitter extends BaseSubEmitter implements
     @Override
     public void emit(IClassNode node)
     {
+        emitGetterSetter(node, ((SessionModel)getEmitter().getModel() )
+                .getGetterSetter());
+
         emitInherit(node);
         emitClassName(node);
         emitDependencies(node, "Runtime", getEmitter().getModel()
@@ -77,6 +76,41 @@ public class FooterEmitter extends BaseSubEmitter implements
                 .getStaticDependencies());
         emitInjectionPoints(node);
         emitLast(node);
+    }
+
+    public void emitNewInherit(IClassNode node)
+    {
+        // $Inherit(foo.bar.Baz, foo.bar.SuperClass);
+        if (node.getBaseClassName() == null)
+            return;
+
+        final String baseClassName = toBaseQualifiedName(node.getDefinition());
+        if (baseClassName.equals("Object"))
+            return;
+
+        final String qualifiedName = MetaDataUtils.getExportQualifiedName(node
+                .getDefinition());
+
+        //System.out.println("###**### " + node.getContainingScope().getScope());
+
+
+        IClassDefinition bclass = node.getDefinition().resolveBaseClass(
+                getProject());
+        if (bclass != null && bclass.getNode() != null)
+            getEmitter().getModel().addDependency((IScopedDefinition)bclass, bclass.getNode());
+        //node.getContainingScope().getScope()
+        //getEmitter().getModel().
+
+        // NEED TO PUT "baseClassName" IN STATIC DEPENDENCIES  ????
+        //write(INHERIT_NAME);
+        //write("(");
+        writeNewline();
+        write(qualifiedName);
+        write(".prototype = new ");
+
+        write(baseClassName);
+        writeNewline("();");
+        writeNewline();
     }
 
     void emitInherit(IClassNode node)
@@ -112,6 +146,35 @@ public class FooterEmitter extends BaseSubEmitter implements
         write(".className = ");
         write("\"" + qualifiedName + "\"");
         writeNewline(";");
+        writeNewline();
+    }
+
+    void emitGetterSetter(IClassNode node,
+                          Collection<IAccessorDefinition> getterSetterProperties)
+    {
+        // foo.bar.Baz.get[name]Dependencies = function () {
+        //     var p;
+        //     return  [];
+        // };
+
+        final String qualifiedName = MetaDataUtils.getExportQualifiedName(node
+                .getDefinition());
+
+        if (getterSetterProperties.size() > 0)
+        {
+            for (IAccessorDefinition type : getterSetterProperties)
+            {
+                if (!type.isStatic())
+                {
+                    String name = MetaDataUtils.getAccessorName(
+                            (IAccessorDefinition) type, getProject());
+                    writeNewline("Object.defineProperty(" + qualifiedName + ".prototype, '" + name + "', {" );
+                    writeNewline("  get: function() { return this.get_"+name+"(); },");
+                    writeNewline("  set: function(value) { return this.set_"+name+"(value); }");
+                    writeNewline("});");
+                }
+            }
+        }
         writeNewline();
     }
 
