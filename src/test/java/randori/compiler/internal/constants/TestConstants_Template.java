@@ -36,5 +36,5 @@ public class TestConstants_Template
 	
     public static final String RandoriASFramework = "{RANDORI_GIT_PATH}";
     
-    public static final String RandoriSDKBuiltSWC = "{RANDORI_GIT_PATH}/randori-sdk/randori-framework/bin/swc";
+    public static final String RandoriSDKBuiltSWC = TestConstants.RandoriASFramework + "/randori-sdk/randori-framework/bin/swc";
 }
