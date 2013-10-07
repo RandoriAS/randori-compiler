@@ -26,7 +26,7 @@ package randori.compiler.internal.constants;
  */
 public class TestConstants_Template
 {
-    public static final String RandoriASFramework = "C:/Users/Work/Documents/git/RandoriAS/";
+    public static final String RandoriASFramework = "{RANDORI_GIT_PATH}";
     
-    public static final String RandoriSDKBuiltSWC = "C:/Users/Work/Desktop/randori-sdk-latest/";
+    public static final String RandoriSDKBuiltSWC = "{RANDORI_GIT_PATH}/randori-sdk/randori-framework/bin/swc";
 }

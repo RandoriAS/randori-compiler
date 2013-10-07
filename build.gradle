@@ -18,7 +18,11 @@ dependencies {
     compile group: 'commons-io', name: 'commons-io', version: '2.0.1'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.1'
     compile group: 'com.google.guava', name: 'guava', version: '14.0.1'
+	compile group: 'com.googlecode.jatl', name: 'jatl', version: '0.2.2'
+	compile group: 'org.apache.velocity', name: 'velocity', version: '1.6.2'
+	compile group: 'org.antlr', name: 'antlr', version: '3.3'
     compile files('lib/compiler.jar')
+	
 
     testCompile group: 'junit', name: 'junit', version: '4.10'
 
@@ -33,17 +37,17 @@ jar {
 sourceSets {
     main {
         java {
-            srcDir 'src'
+            srcDir 'src/main/java'
         }
+	}
 
-        test {
-            sourceSets {
-                java {
-                    srcDir 'test'
-                }
-            }
-        }
-    }
+    test {
+
+		java {
+			srcDir 'src/test/java'
+		}
+
+	}
 }
 
 task wrapper(type: Wrapper) {
