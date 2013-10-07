@@ -11,7 +11,7 @@ version = '0.2.4-SNAPSHOT'
 
 def isReleaseVersion = !version.endsWith('SNAPSHOT')
 
-sourceCompatibility = 1.5
+sourceCompatibility = 1.7
 
 dependencies {
 
@@ -45,6 +45,7 @@ sourceSets {
 
 		java {
 			srcDir 'src/test/java'
+            srcDir 'src/test/gen'
 		}
 
 	}

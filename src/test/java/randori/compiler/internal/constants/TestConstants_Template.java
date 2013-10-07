@@ -31,6 +31,7 @@ public class TestConstants_Template
 	// randori-framework (the source code for the randori framework)
 	// randori-guice-framework (the source code for the AS3 port of Guice)
 	// randori-compiler (this project)
+	// randori-demos-bundle (needed for some of the code generation tests)
 	//
 	// On windows paths are expected to look like this C:/Folder/Goes/Here
 	
