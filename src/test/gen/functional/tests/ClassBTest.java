@@ -293,7 +293,7 @@ public class ClassBTest extends FunctionalTestBase
         IFunctionNode node = findFunction("jscontext", classNode);
         visitor.visitFunction(node);
         assertOut("demo.foo.ClassB.prototype.jscontext = function() {"
-                + "\nfoo();\r\nvar i = \"was included\";\n}");
+                + "\nfoo();\nvar i = \"was included\";\n}");
     }
 
     @Test

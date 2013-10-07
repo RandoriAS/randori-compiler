@@ -71,7 +71,7 @@ public class RandoriCompilerTestBase
             FilenameNormalization.normalize("temp/out"));
 
     protected File builtinSWC = new File(
-            FilenameNormalization.normalize("temp/builtin.swc"));
+            FilenameNormalization.normalize(TestConstants.RandoriSDKBuiltSWC + "/builtin.swc"));
 
     protected File basepathDir = new File(
             FilenameNormalization

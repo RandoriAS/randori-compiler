@@ -26,7 +26,16 @@ package randori.compiler.internal.constants;
  */
 public class TestConstants_Template
 {
-    public static final String RandoriASFramework = "C:/Users/Work/Documents/git/RandoriAS/";
+	// this is a path where you are expected to have cloned the following repositories from github.com/RandoriAS
+	// randori-sdk (latest compiled version of the SDK)
+	// randori-framework (the source code for the randori framework)
+	// randori-guice-framework (the source code for the AS3 port of Guice)
+	// randori-compiler (this project)
+	// randori-demos-bundle (needed for some of the code generation tests)
+	//
+	// On windows paths are expected to look like this C:/Folder/Goes/Here
+	
+    public static final String RandoriASFramework = "{RANDORI_GIT_PATH}";
     
-    public static final String RandoriSDKBuiltSWC = "C:/Users/Work/Desktop/randori-sdk-latest/";
+    public static final String RandoriSDKBuiltSWC = TestConstants.RandoriASFramework + "/randori-sdk/randori-framework/bin/swc";
 }
