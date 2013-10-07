@@ -36,7 +36,7 @@ import randori.compiler.internal.constants.TestConstants;
  */
 public class RandoriDocTest
 {
-    protected File tempDir = new File(TestConstants.TEMP_DIR, "asdoc");
+    protected File tempDir = new File(TestConstants.RandoriASFramework + "/randori-compiler/temp", "asdoc");
 
     @Before
     public void setUp() throws IOException
@@ -55,14 +55,14 @@ public class RandoriDocTest
     {
         CompilerArguments arguments = new CompilerArguments();
 
-        arguments.addSourcepath(TestConstants.RANDORI_SRC.getAbsolutePath());
-        arguments.addSourcepath(TestConstants.RANDORI_GUICE_SRC
+        arguments.addSourcepath(new File (TestConstants.RandoriASFramework + "/randori-framework/src").getAbsolutePath());
+        arguments.addSourcepath(new File(TestConstants.RandoriASFramework + "/randori-guice-framework/src")
                 .getAbsolutePath());
 
-        arguments.addLibraryPath(TestConstants.BUILTIN_SWC.getAbsolutePath());
-        arguments.addLibraryPath(TestConstants.HTMLCORELIB_SWC
+        arguments.addLibraryPath(new File(TestConstants.RandoriSDKBuiltSWC + "/builtin.swc").getAbsolutePath());
+        arguments.addLibraryPath(new File(TestConstants.RandoriSDKBuiltSWC + "/HTMLCoreLib.swc")
                 .getAbsolutePath());
-        arguments.addLibraryPath(TestConstants.JQUERY_SWC.getAbsolutePath());
+        arguments.addLibraryPath(new File(TestConstants.RandoriSDKBuiltSWC + "/JQuery.swc").getAbsolutePath());
         arguments.setOutput(tempDir.getAbsolutePath());
 
         // RandoriDoc specific args
