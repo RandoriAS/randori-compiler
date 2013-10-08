@@ -167,20 +167,6 @@ public class RandoriUtils
         return sb.toString();
     }
 
-    public static boolean isJQueryStaticJ(IExpressionNode left,
-            IExpressionNode right)
-    {
-        if (left instanceof IIdentifierNode && right instanceof IIdentifierNode)
-        {
-            IIdentifierNode ileft = (IIdentifierNode) left;
-            IIdentifierNode iright = (IIdentifierNode) right;
-            if (ileft.getName().equals("JQueryStatic")
-                    && iright.getName().equals("J"))
-                return true;
-        }
-        return false;
-    }
-
     public static boolean isConstantMemberAccess(IExpressionNode left,
             IExpressionNode right, ICompilerProject project)
     {

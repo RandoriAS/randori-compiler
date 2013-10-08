@@ -19,12 +19,7 @@
 
 package randori.compiler.internal.codegen.js.emitter;
 
-import org.apache.flex.compiler.definitions.IAccessorDefinition;
-import org.apache.flex.compiler.definitions.IClassDefinition;
-import org.apache.flex.compiler.definitions.IConstantDefinition;
-import org.apache.flex.compiler.definitions.IDefinition;
-import org.apache.flex.compiler.definitions.IScopedDefinition;
-import org.apache.flex.compiler.definitions.ITypeDefinition;
+import org.apache.flex.compiler.definitions.*;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.ASTNodeID;
 import org.apache.flex.compiler.tree.as.IContainerNode;
@@ -73,13 +68,6 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
 
         // the left is 'Window', the right is the static method
         getModel().setSkipOperator(isTransparent || isGlobalStatic);
-
-        // JQueryStatic
-        if (RandoriUtils.isJQueryStaticJ(left, right))
-        {
-            write("jQuery");
-            return;
-        }
 
         if (rightDefType != null
                 && rightDefType.getBaseName().equals("Function"))
@@ -132,12 +120,16 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
         if (!getModel().skipOperator())
         {
             // trans 'Foo.bar()' and 'foo.bar.Baz.goo()' calls
-            if (leftDef instanceof IClassDefinition && rightDef != null
-                    && rightDef.isStatic())
-            {
-                // add the static access's parent ClassDefinition
-                getModel().addDependency((IScopedDefinition) leftDef, node);
-                if (right.getParent().getNodeID() != ASTNodeID.MemberAccessExpressionID)
+            if (leftDef instanceof IClassDefinition) {
+
+                if (rightDef != null && rightDef.isStatic()) {
+                    // add the static access's parent ClassDefinition
+                    getModel().addDependency((IScopedDefinition) leftDef, node);
+                }
+
+                // shortcut for both shorthand class mentions and longhand
+                // i.e. both Baz and foo.bar.Baz
+                if (right.getParent().getNodeID() == ASTNodeID.MemberAccessExpressionID)
                 {
                     String qualifiedName = MetaDataUtils
                             .getExportQualifiedName((ITypeDefinition) leftDef);
@@ -148,24 +140,26 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
                     getWalker().walk(left);
                 }
             }
-            //            // trans '_staticVar.foo' to 'my.package._staticVar.foo'
-            //            else if (leftDef instanceof IVariableDefinition
-            //                    && !(leftDef instanceof IAccessorDefinition)
-            //                    && leftDef.isStatic())
-            //            {
-            //                //IDefinition definition = (IDefinition) right.resolve(project);
-            //
-            //                IClassDefinition parent = (IClassDefinition) leftDef
-            //                        .getParent();
-            //                // append the parent's qualified name on the static variable
-            //                if (MetaDataUtils.isClassExport(parent))
-            //                {
-            //                    write(parent.getQualifiedName());
-            //                    write(".");
-            //                }
-            //
-            //                getWalker().walk(left);
-            //            }
+            /*
+                        // trans '_staticVar.foo' to 'my.package._staticVar.foo'
+                        else if (leftDef instanceof IVariableDefinition
+                                && !(leftDef instanceof IAccessorDefinition)
+                                && leftDef.isStatic())
+                        {
+                            //IDefinition definition = (IDefinition) right.resolve(project);
+
+                            IClassDefinition parent = (IClassDefinition) leftDef
+                                    .getParent();
+                            // append the parent's qualified name on the static variable
+                            if (MetaDataUtils.isClassExport(parent))
+                            {
+                                write(parent.getQualifiedName());
+                                write(".");
+                            }
+
+                            getWalker().walk(left);
+                        }
+ */
             else
             {
                 getWalker().walk(left);
@@ -177,6 +171,13 @@ public class MemberAccessExpressionEmitter extends BaseSubEmitter implements
             // we are handling 'this' so don't write the '.'
             if (!DefinitionUtils.isThisIdentifier(left))
             {
+
+                // turn off the "." operator for functions with a JavaScriptMethod() of ""
+                // If this were up higher, the entire left side would not get written
+                if ((rightDef instanceof IFunctionDefinition) && MetaDataUtils.getFunctionBaseName((IFunctionDefinition)rightDef).equals("")) {
+                    getModel().setSkipOperator(true);
+                }
+
                 // if there is a transparent access, skip the '.'
                 if (!getModel().skipOperator())
                     write(node.getOperator().getOperatorText());

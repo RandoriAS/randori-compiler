@@ -306,6 +306,14 @@ public class MetaDataUtils
             return name;
 
         String value = tag.getAttributeValue(ATT_NAME);
+
+        // if you're efficient, you can do
+        // [JavaScriptMethod("methodName")]
+        // instead of
+        // [JavaScriptMethod(name="methodName")]
+        if (value == null)
+            value = tag.getValue();
+
         if (value != null)
             return value;
 
@@ -426,8 +434,8 @@ public class MetaDataUtils
     {
         String path = node.getSourcePath();
         File file = new File(path).getParentFile();
-        String reletivePath = node.getAttributeValue(ATT_FILE);
-        File open = new File(file, reletivePath);
+        String relativePath = node.getAttributeValue(ATT_FILE);
+        File open = new File(file, relativePath);
         String result = "";
         try
         {
@@ -451,8 +459,8 @@ public class MetaDataUtils
 
         String path = node.getSourcePath();
         File file = new File(path).getParentFile();
-        String reletivePath = tag.getAttributeValue(ATT_FILE);
-        File open = new File(file, reletivePath);
+        String relativePath = tag.getAttributeValue(ATT_FILE);
+        File open = new File(file, relativePath);
         String result = "";
         try
         {

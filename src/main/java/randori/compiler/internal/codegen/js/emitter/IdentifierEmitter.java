@@ -159,12 +159,24 @@ public class IdentifierEmitter extends BaseSubEmitter implements
             getModel().addDependency(definition, node);
         }
 
+
+
         if (node.getParent() instanceof IMemberAccessExpressionNode)
         {
-            write(node.getName());
+            // in this case, it might be a fully-qualified expression was already written out
+            // i.e. new foo.bar.Baz();
+            // so we can't just use getExportQualifiedName();
+
+            if (MetaDataUtils.hasJavaScriptName(definition)) {
+                write(MetaDataUtils.getExportQualifiedName(definition));
+            } else {
+                write(node.getName());
+            }
+
         }
         else
         {
+
             String name = MetaDataUtils.getExportQualifiedName(definition);
             write(name);
         }
