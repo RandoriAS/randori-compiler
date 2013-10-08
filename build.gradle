@@ -17,7 +17,7 @@ dependencies {
 
     compile group: 'commons-io', name: 'commons-io', version: '2.0.1'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.1'
-    compile group: 'com.google.guava', name: 'guava', version: '14.0.1'
+    compile group: 'com.google.guava', name: 'guava', version: 'r09'
 	compile group: 'com.googlecode.jatl', name: 'jatl', version: '0.2.2'
 	compile group: 'org.apache.velocity', name: 'velocity', version: '1.6.2'
 	compile group: 'org.antlr', name: 'antlr', version: '3.3'
