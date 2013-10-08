@@ -40,11 +40,11 @@ public class EchoBehaviorTest extends RandoriTestBase
     }
 
     @Test
-    public void test_onRegister()
+    public void test_initialize()
     {
-        IFunctionNode node = findFunction("onRegister", classNode);
+        IFunctionNode node = findFunction("initialize", classNode);
         visitor.visitFunction(node);
-        assertOut("behaviors.EchoBehavior.prototype.onRegister = function() {"
+        assertOut("behaviors.EchoBehavior.prototype.initialize = function() {"
                 + "\n\tthis.decoratedElement.innerText = \"Echo\";\n}");
     }
 

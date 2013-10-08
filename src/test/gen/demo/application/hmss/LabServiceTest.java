@@ -17,9 +17,9 @@ public class LabServiceTest extends RandoriTestBase
     {
         IFunctionNode node = findFunction("LabService", classNode);
         visitor.visitFunction(node);
-        assertOut("services.LabService = function(xmlHttpRequest, gadgets) {\n\t"
+        assertOut("services.LabService = function(xmlHttpRequest, targets) {\n\t"
                 + "this.path = null;\n\trandori.service.AbstractService.call("
-                + "this, xmlHttpRequest);\n\tthis.gadgets = gadgets;\n\tthis.path = "
+                + "this, xmlHttpRequest);\n\tthis.targets = targets;\n\tthis.path = "
                 + "\"assets\\/data\\/gadgets.txt\";\n}");
     }
     
