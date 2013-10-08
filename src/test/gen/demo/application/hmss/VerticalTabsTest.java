@@ -55,13 +55,13 @@ public class VerticalTabsTest extends RandoriTestBase
     }
 
     @Test
-    public void test_onRegister()
+    public void test_initialize()
     {
-        IFunctionNode node = findFunction("onRegister", classNode);
+        IFunctionNode node = findFunction("initialize", classNode);
         visitor.visitFunction(node);
-        assertOut("behaviors.VerticalTabs.prototype.onRegister = function() {"
+        assertOut("behaviors.VerticalTabs.prototype.initialize = function() {"
                 + "\n\tthis.listChanged.add($createStaticDelegate(this, this.listChangedHandler));"
-                + "\n\trandori.behaviors.List.prototype.onRegister.call(this);\n}");
+                + "\n\trandori.behaviors.List.prototype.initialize.call(this);\n}");
     }
 
     @Test
