@@ -30,6 +30,7 @@ import org.apache.flex.compiler.definitions.ITypeDefinition;
 import org.apache.flex.compiler.definitions.IVariableDefinition;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.definitions.metadata.IMetaTagAttribute;
+import org.apache.flex.compiler.internal.definitions.metadata.MetaTagAttribute;
 import org.apache.flex.compiler.internal.tree.as.FunctionNode;
 import org.apache.flex.compiler.tree.as.IASNode;
 import org.apache.flex.compiler.tree.as.IClassNode;
@@ -39,6 +40,8 @@ import org.apache.flex.compiler.tree.as.IVariableNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
+import randori.compiler.internal.codegen.js.SessionModel;
+import randori.compiler.internal.codegen.js.utils.GenericEmitUtils;
 import randori.compiler.internal.utils.DefinitionUtils;
 import randori.compiler.internal.utils.MetaDataUtils;
 import randori.compiler.internal.utils.RandoriUtils;
@@ -115,6 +118,13 @@ public class MethodEmitter extends BaseSubEmitter implements
                     .getProject());
             write(prefix);
             write(" = function");
+
+            // REE GETTER/SETTER Object.define
+            if (definition instanceof IAccessorDefinition)
+            {
+                SessionModel sm = (SessionModel)getEmitter().getModel();
+                sm.addGetterSetter((IAccessorDefinition)definition);
+            }
 
             getEmitter().emitParamters(node);
             getEmitter().emitMethodScope(node);
@@ -194,13 +204,8 @@ public class MethodEmitter extends BaseSubEmitter implements
         //int i = 0;
         for (IVariableDefinition field : fields)
         {
-            IMetaTag tag = field.getMetaTagByName("Embed");
-            if (tag != null)
-            {
-                emitEmbed(field);
-                writeNewline(";");
-                continue;
-            }
+            
+
             if (field instanceof IAccessorDefinition)
                 continue;
             // constants do not get initialized
@@ -209,9 +214,21 @@ public class MethodEmitter extends BaseSubEmitter implements
             if (DefinitionUtils.isVariableAParameter(field,
                     definition.getParameters()))
                 continue;
+
+
             write("this.");
             write(field.getBaseName());
             write(" = ");
+
+
+            IMetaTag embedTag = field.getMetaTagByName("Embed");
+            IMetaTag factoryTag = field.getMetaTagByName("Factory");
+            if (embedTag != null || factoryTag != null)
+            {
+                GenericEmitUtils.emitEmbedFactory(factoryTag, embedTag, field, getEmitter());
+                writeNewline(";");
+                continue;
+            }
 
             String value = DefinitionUtils.returnInitialVariableValue(
                     (IVariableNode) field.getNode(), getEmitter());
@@ -222,67 +239,5 @@ public class MethodEmitter extends BaseSubEmitter implements
             //else
             //     write(";");
         }
-    }
-
-    private void emitEmbed(IVariableDefinition field)
-    {
-        IMetaTag factoryTag = field.getMetaTagByName("Factory");
-        IMetaTag embedTag = field.getMetaTagByName("Embed");
-
-        write("this.");
-        write(field.getBaseName());
-        write(" = ");
-
-        String factory = factoryTag.getAttributeValue("factoryClass");
-        String type = factoryTag.getAttributeValue("type");
-
-        write(factory);
-        write("(");
-
-        write("\"");
-        write(type);
-        write("\"");
-        write(", ");
-
-        IMetaTagAttribute[] atts1 = factoryTag.getAllAttributes();
-        IMetaTagAttribute[] atts2 = embedTag.getAllAttributes();
-
-        // write properties
-        List<IMetaTagAttribute> list = new ArrayList<IMetaTagAttribute>();
-        for (IMetaTagAttribute att : atts1)
-        {
-            if (!att.getKey().equals("factoryClass")
-                    && !att.getKey().equals("type"))
-            {
-                list.add(att);
-            }
-        }
-
-        for (IMetaTagAttribute att : atts2)
-        {
-            //if (!att.getKey().equals("source"))
-            //{
-                list.add(att);
-           // }
-        }
-
-        write("{");
-        int i = 0;
-        final int len = list.size();
-        for (IMetaTagAttribute attribute : list)
-        {
-            write(attribute.getKey());
-            write(":");
-            write("\"");
-            write(attribute.getValue());
-            write("\"");
-            if (i < len - 1)
-                write(", ");
-            i++;
-        }
-        write("}");
-
-        write(")");
-
     }
 }

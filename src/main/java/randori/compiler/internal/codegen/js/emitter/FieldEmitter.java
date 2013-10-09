@@ -20,12 +20,14 @@
 package randori.compiler.internal.codegen.js.emitter;
 
 import org.apache.flex.compiler.definitions.IVariableDefinition;
+import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.tree.as.IEmbedNode;
 import org.apache.flex.compiler.tree.as.IExpressionNode;
 import org.apache.flex.compiler.tree.as.IVariableNode;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
+import randori.compiler.internal.codegen.js.utils.GenericEmitUtils;
 import randori.compiler.internal.utils.RandoriUtils;
 
 /**
@@ -48,11 +50,26 @@ public class FieldEmitter extends BaseSubEmitter implements
     {
         IVariableDefinition definition = (IVariableDefinition) node
                 .getDefinition();
+        // Handle case where [Embed] or [Factory] metadata is present
 
         String prefix = RandoriUtils.toFieldPrefix(definition, getWalker()
                 .getProject());
         write(prefix);
-        emitAssignedValue(node.getAssignedValueNode());
+
+        IMetaTag embedTag = definition.getMetaTagByName("Embed");
+        IMetaTag factoryTag = definition.getMetaTagByName("Factory");
+        if (factoryTag != null)
+        {
+
+            write(" ");
+            write("=");
+            write(" ");
+            GenericEmitUtils.emitEmbedFactory(factoryTag, embedTag, definition, getEmitter());
+        }
+        else
+        {
+            emitAssignedValue(node.getAssignedValueNode());
+        }
     }
 
     private void emitAssignedValue(IExpressionNode node)

@@ -138,6 +138,7 @@ public class DefinitionUtils
         }
         IReference reference = typeNode.getDefinition().getBaseClassReference();
 
+
         List<String> imports = resolveImports(typeNode.getDefinition());
         String qualifiedName = toQualifiedName(reference);
         if (qualifiedName.indexOf(".") != -1)

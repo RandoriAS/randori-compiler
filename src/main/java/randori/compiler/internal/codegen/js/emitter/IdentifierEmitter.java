@@ -70,7 +70,6 @@ public class IdentifierEmitter extends BaseSubEmitter implements
         }
 
         IDefinition definition = node.resolve(getProject());
-
         if (definition instanceof IAccessorDefinition)
         {
             emitIdentifierAccessor(node, (IAccessorDefinition) definition);
@@ -107,12 +106,14 @@ public class IdentifierEmitter extends BaseSubEmitter implements
         // figure out Class.FOO static var and qualify it
         if (node.getParent() instanceof IMemberAccessExpressionNode)
         {
+
             IMemberAccessExpressionNode mnode = (IMemberAccessExpressionNode) node
                     .getParent();
             if (mnode.getRightOperandNode() instanceof IIdentifierNode)
             {
                 IDefinition rightDef = mnode.getRightOperandNode().resolve(
                         getProject());
+
                 if (rightDef instanceof IVariableDefinition)
                 {
                     IVariableDefinition vdef = (IVariableDefinition) rightDef;
@@ -255,10 +256,10 @@ public class IdentifierEmitter extends BaseSubEmitter implements
     {
         if (!MetaDataUtils.isNative(definition))
         {
+
             String baseName = MetaDataUtils.getAccessorName(definition,
                     getProject());
             String headName = getAccessorName(definition, node, getProject());
-
             if (getModel().skipOperator())
             {
                 // TODO make sure this logic is correct; if (Window.console != null) {
@@ -295,7 +296,6 @@ public class IdentifierEmitter extends BaseSubEmitter implements
             //                        definition.getNode(), getProject());
             //                write(headName + ".");
             //            }
-
             if (getModel().isInAssignment()
                     && ExpressionUtils.isRight(getModel().getAssign(), node))
             {
@@ -324,8 +324,10 @@ public class IdentifierEmitter extends BaseSubEmitter implements
     private void emitIdentifierFunction(IIdentifierNode node,
             IFunctionDefinition definition)
     {
-        if (definition.isStatic() && definition.getNode() != null)
+        if (definition.isStatic() && definition.getNode() != null
+             && !(node.getParent() instanceof IMemberAccessExpressionNode))
         {
+
             String qualifiedName = DefinitionNameUtils.toExportQualifiedName(
                     definition, getProject());
             write(qualifiedName);

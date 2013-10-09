@@ -105,9 +105,22 @@ public class FunctionCallEmitter extends BaseSubEmitter implements
         }
         else if (definition instanceof IClassDefinition)
         {
+            // TODO Think about giving a warning if ((IIdentifierNode)node.getNameNode()).getName() == "int" case
+            String castName = ((IIdentifierNode)node.getNameNode()).getName() + "";
             // cast Foo(bar); just walk the value in parens
-            walkParameters(node);
-            return;
+            if (castName.equals("int"))
+            {
+                write("~~");
+                write("(");
+                walkParameters(node);
+                write(")");
+                return;
+            }
+            else
+            {
+                walkParameters(node);
+                return;
+            }
         }
         else if (fnode.getNameNode() instanceof IMemberAccessExpressionNode)
         {

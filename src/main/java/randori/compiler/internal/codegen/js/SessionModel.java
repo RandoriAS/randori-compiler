@@ -25,11 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.flex.compiler.definitions.IClassDefinition;
-import org.apache.flex.compiler.definitions.IDefinition;
-import org.apache.flex.compiler.definitions.IFunctionDefinition;
-import org.apache.flex.compiler.definitions.IScopedDefinition;
-import org.apache.flex.compiler.definitions.IVariableDefinition;
+import org.apache.flex.compiler.definitions.*;
 import org.apache.flex.compiler.definitions.metadata.IMetaTag;
 import org.apache.flex.compiler.internal.scopes.TypeScope;
 import org.apache.flex.compiler.tree.as.IASNode;
@@ -47,6 +43,8 @@ import randori.compiler.internal.utils.MetaDataUtils.MetaData;
  */
 public class SessionModel implements ISessionModel
 {
+    private HashMap<String, IAccessorDefinition> getterSetterProperties = new HashMap<String, IAccessorDefinition>();
+
     private HashMap<String, IScopedDefinition> runtimeDependencies = new HashMap<String, IScopedDefinition>();
 
     private HashMap<String, IScopedDefinition> staticDependencies = new HashMap<String, IScopedDefinition>();
@@ -131,6 +129,20 @@ public class SessionModel implements ISessionModel
     //--------------------------------------------------------------------------
     // Dependencies
     //--------------------------------------------------------------------------
+
+
+    public void addGetterSetter(IAccessorDefinition definition)
+    {
+        if (getterSetterProperties.containsKey(definition.getQualifiedName()))
+            return;
+
+        getterSetterProperties.put(definition.getQualifiedName(), definition);
+    }
+
+    public Collection<IAccessorDefinition> getGetterSetter()
+    {
+        return getterSetterProperties.values();
+    }
 
     @Override
     public void addDependency(IScopedDefinition definition, IASNode node)

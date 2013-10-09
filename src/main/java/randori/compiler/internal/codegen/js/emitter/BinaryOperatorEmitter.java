@@ -22,21 +22,18 @@ package randori.compiler.internal.codegen.js.emitter;
 import org.apache.flex.compiler.definitions.IAccessorDefinition;
 import org.apache.flex.compiler.definitions.IDefinition;
 import org.apache.flex.compiler.definitions.IFunctionDefinition;
+import org.apache.flex.compiler.definitions.ITypeDefinition;
+import org.apache.flex.compiler.internal.tree.as.BinaryOperatorAssignmentNode;
+import org.apache.flex.compiler.internal.tree.as.IdentifierNode;
 import org.apache.flex.compiler.projects.ICompilerProject;
 import org.apache.flex.compiler.tree.ASTNodeID;
-import org.apache.flex.compiler.tree.as.IBinaryOperatorNode;
-import org.apache.flex.compiler.tree.as.IExpressionNode;
-import org.apache.flex.compiler.tree.as.IIdentifierNode;
-import org.apache.flex.compiler.tree.as.IMemberAccessExpressionNode;
+import org.apache.flex.compiler.tree.as.*;
 
 import randori.compiler.codegen.js.IRandoriEmitter;
 import randori.compiler.codegen.js.ISubEmitter;
-import randori.compiler.internal.utils.ASNodeUtils;
-import randori.compiler.internal.utils.DefinitionNameUtils;
-import randori.compiler.internal.utils.ExpressionUtils;
-import randori.compiler.internal.utils.MetaDataUtils;
-import randori.compiler.internal.utils.RandoriUtils;
+import randori.compiler.internal.utils.*;
 
+import org.apache.flex.compiler.internal.tree.as.ExpressionNodeBase;
 /**
  * Handles the production of the {@link IBinaryOperatorNode}.
  * 
@@ -54,6 +51,20 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
     @Override
     public void emit(IBinaryOperatorNode node)
     {
+        // THIS IS HARD CODED "filter" but maybe needs to be dynamic at some point
+        // "filter" is applied to E4X expressions and is implemented in JXONTree
+        boolean isFilter = false;
+        if (node instanceof ExpressionNodeBase)
+        {
+            //  Ensure we're not in a with scope or part of a filter expression.
+            final ExpressionNodeBase expressionNode = (ExpressionNodeBase)node;
+            if (expressionNode.inFilter() && expressionNode.hasParenthesis())
+            {
+                isFilter = true;
+                write("filter");
+            }
+        }
+
         ICompilerProject project = getEmitter().getWalker().getProject();
 
         IExpressionNode left = node.getLeftOperandNode();
@@ -61,6 +72,30 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
 
         IExpressionNode right = node.getRightOperandNode();
         IDefinition rhsDefinition = right.resolve(project);
+
+        // This is a special case for array assessor on flash.utils.ByteArray
+        // when an assignment is being made. Array assessor for retrieving data is separate
+        if (left.getNodeID() == ASTNodeID.ArrayIndexExpressionID
+            && node.getOperator().getOperatorText() == "=")
+        {
+            IDynamicAccessNode arrayNode = (IDynamicAccessNode)left;
+            IDefinition definition = arrayNode.getLeftOperandNode().resolve(project);
+            if (definition != null && arrayNode.getLeftOperandNode() instanceof IdentifierNode && definition.getTypeReference() != null
+                    && definition.getTypeReference().getName().indexOf("ByteArray") > -1)
+            {
+                //System.out.println("**** ASSIGNMENT WITH ARRAY ASSESSOR ****");
+                // TODO Check for ByteArray builtin
+                getModel().setInAssignment(false);
+                getEmitter().getWalker().walk(arrayNode.getLeftOperandNode());
+                write(".setValueByPosition(");
+                getEmitter().getWalker().walk(arrayNode.getRightOperandNode());
+                write(",");
+                // TODO not sure if need to do same checks as below
+                getEmitter().getWalker().walk(right);
+                write(")");
+                return;
+            }
+        }
 
         // Compound statements
         if (ExpressionUtils.isCompoundAssignment(node, lhsDefinition))
@@ -71,10 +106,23 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
 
         if (ASNodeUtils.hasParenOpen(node))
             write("(");
+        if (isFilter)
+            write("'");
 
         // if on the left side with '=' , we are in setter mode
         getModel().setInAssignment(ExpressionUtils.isInAssignment(node));
         getModel().setAssign(node);
+
+        // Case where right is another BinaryOperatorAssignment
+        if (right instanceof BinaryOperatorAssignmentNode)
+        {
+            emitBinaryRightAssignment(rhsDefinition, right);
+            writeNewline(";");
+
+            // Need to reset to this parent node
+            getModel().setInAssignment(ExpressionUtils.isInAssignment(node));
+            getModel().setAssign(node);
+        }
 
         getEmitter().getWalker().walk(left);
 
@@ -100,11 +148,34 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
         boolean wasAssignment = getModel().isInAssignment();
         getModel().setInAssignment(false);
 
+        // Right was another Binary Assignment so we just need the getter to set this left side
+        // TODO this is still potentially prone to side affects in the getter functions
+        if (right instanceof BinaryOperatorAssignmentNode)
+            getEmitter().getWalker().walk(((IBinaryOperatorNode)right).getLeftOperandNode());
+        else
+            emitBinaryRightAssignment(rhsDefinition, right);
+
+        if (!MetaDataUtils.isNative(lhsDefinition) && wasAssignment
+                && lhsDefinition instanceof IAccessorDefinition)
+        {
+            writeIfNotNative(")", lhsDefinition);
+        }
+
+        if (isFilter)
+            write("'");
+        if (ASNodeUtils.hasParenClose(node))
+            write(")");
+    }
+
+    private void emitBinaryRightAssignment(IDefinition rhsDefinition, IExpressionNode right)
+    {
+
         if (rhsDefinition instanceof IFunctionDefinition
                 && right instanceof IIdentifierNode)
         {
+
             // this is not a right hand function call, just a reff to accessor or function
-            write(IRandoriEmitter.STATIC_DELEGATE_NAME);
+
             String pre = "this";
             String parentQName = DefinitionNameUtils.toExportQualifiedName(
                     rhsDefinition.getParent(), getProject());
@@ -113,23 +184,21 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
                 pre = parentQName;
             }
             String name = getEmitter().stringifyNode(right);
-            if (name.contains("get_"))
+            if (name.contains("get_")
+                    || name.contains("set_"))
             {
-                name = "get_";
-            }
-            else if (name.contains("set_"))
-            {
-                name = "set_";
+                getEmitter().getWalker().walk(right);
             }
             else
             {
                 name = "";
+                write(IRandoriEmitter.STATIC_DELEGATE_NAME);
+                write("(" + pre + ", ");
+                write(pre);
+                write(".");
+                write(name + rhsDefinition.getBaseName());
+                write(")");
             }
-            write("(" + pre + ", ");
-            write(pre);
-            write(".");
-            write(name + rhsDefinition.getBaseName());
-            write(")");
         }
         //        else if (rhsDefinition instanceof IVariableDefinition
         //                && right instanceof IIdentifierNode)
@@ -154,15 +223,6 @@ public class BinaryOperatorEmitter extends BaseSubEmitter implements
         }
 
         RandoriUtils.addBinaryRightDependency(right, getModel(), getProject());
-
-        if (!MetaDataUtils.isNative(lhsDefinition) && wasAssignment
-                && lhsDefinition instanceof IAccessorDefinition)
-        {
-            writeIfNotNative(")", lhsDefinition);
-        }
-
-        if (ASNodeUtils.hasParenClose(node))
-            write(")");
     }
 
     private void emitCompoundAssignment(IBinaryOperatorNode node,
